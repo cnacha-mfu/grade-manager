@@ -53,34 +53,1137 @@
 </head>
 <body>
 <div class="wrap">
-  <nav id="toc"><div class="title">Contents</div></nav>
-  <main id="content"><p class="loading">Loading PRD…</p></main>
+  <nav id="toc"><div class="title">Contents</div>
+<a class="h2" href="#s1">1. Summary</a>
+<a class="h2" href="#s2">2. Problem statement</a>
+<a class="h3" href="#s3">2.1 Current process (from the Grade Report Submission Process slides)</a>
+<a class="h3" href="#s4">2.2 Evidence from semester 2/2025</a>
+<a class="h3" href="#s5">2.3 Pain points</a>
+<a class="h2" href="#s6">3. Goals and non-goals</a>
+<a class="h3" href="#s7">Goals</a>
+<a class="h3" href="#s8">Non-goals (v1)</a>
+<a class="h2" href="#s9">4. Users and roles</a>
+<a class="h2" href="#s10">5. User journeys</a>
+<a class="h3" href="#s11">5.1 Lecturer: submit grades</a>
+<a class="h3" href="#s12">5.2 Round 1: buddy review</a>
+<a class="h3" href="#s13">5.3 Round 2: program review</a>
+<a class="h3" href="#s14">5.4 School office</a>
+<a class="h2" href="#s15">6. Functional requirements</a>
+<a class="h3" href="#s16">6.1 Uploads</a>
+<a class="h3" href="#s17">6.2 Error and consistency checks</a>
+<a class="h3" href="#s18">6.3 REG 100% score announcement verification</a>
+<a class="h3" href="#s19">6.4 Submission checklist (migrated from the Google Form)</a>
+<a class="h3" href="#s20">6.5 Review and approval workflow</a>
+<a class="h3" href="#s21">6.6 Dashboards and exports</a>
+<a class="h3" href="#s22">6.7 Audit and records</a>
+<a class="h3" href="#s23">6.8 Dead-simple UI</a>
+<a class="h3" href="#s24">6.9 Visibility: everything is open to all ADT lecturers</a>
+<a class="h2" href="#s25">7. Non-functional requirements</a>
+<a class="h2" href="#s26">8. Data model (high level)</a>
+<a class="h2" href="#s27">9. Integrations</a>
+<a class="h2" href="#s28">10. Success metrics</a>
+<a class="h2" href="#s29">11. Rollout plan</a>
+<a class="h2" href="#s30">12. Open questions and risks</a>
+<a class="h2" href="#s31">13. Future ideas</a>
+</nav>
+  <main id="content">
+<h1>PRD: ADT Grade Manager</h1>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Product</strong></td>
+<td>ADT Grade Manager (working name)</td>
+</tr>
+<tr>
+<td><strong>Owner</strong></td>
+<td>School of Applied Digital Technology (ADT), Mae Fah Luang University</td>
+</tr>
+<tr>
+<td><strong>Author</strong></td>
+<td><a href="mailto:nacha.cho@mfu.ac.th">nacha.cho@mfu.ac.th</a></td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Draft v0.2</td>
+</tr>
+<tr>
+<td><strong>Last updated</strong></td>
+<td>2026-09-23</td>
+</tr>
+<tr>
+<td><strong>Replaces</strong></td>
+<td>Google Form &quot;ADT Grade Submission&quot; (<code>docs.google.com/forms/d/1Vp8lhabfDXFABCzy8axUCtqeegiq_6Mvmqmrv4W11wA</code>), its response Sheets, and the &quot;School Check&quot; sheet</td>
+</tr>
+</tbody></table></div>
+<p><strong>Sources used for this draft</strong> (Google Drive, ADT folder):</p>
+<ul>
+<li><em>ADT Grade Submission 2-2025 (Responses)</em>: the latest form. The checklist in §6.4 is based on its questions. The sheet also holds the Program Check / School Check / Comments columns, which give the error evidence in §2.</li>
+<li><em>ADT Grade Submission 2-2024 (Responses)</em> and <em>2-2024 - School Check</em>: the previous form version, which had extra upload fields.</li>
+<li><em>ADT - Grading Guideline</em>: the &quot;Practices for Grade Submission&quot; document and its submission checklist.</li>
+<li><em>ADT School - Grade Report Submission Process.pptx</em>: the current process flow.</li>
+</ul>
+<hr>
+<h2 id="s1">1. Summary</h2>
+<p>At the end of each semester, ADT lecturers do the following:</p>
+<ol>
+<li>Prepare the REG grade report and supporting documents.</li>
+<li>Fill in the <strong>ADT Grade Submission</strong> Google Form, which uploads the files and asks self-declared Yes/No checklist questions.</li>
+<li>Hand in printed documents.</li>
+</ol>
+<p>The program and then the school committee check each course by hand in the response sheet before the grades go to the Registrar&#39;s Office.</p>
+<p>The form checks nothing. Reviewers read every grade report and score summary by eye, and write the problems they find into a free-text &quot;Comments&quot; column. In semester 2/2025, <strong>17 of about 90 submissions</strong> had to be corrected after review (§2).</p>
+<p><strong>ADT Grade Manager</strong> replaces the form and the review sheet with a web app where a lecturer:</p>
+<ol>
+<li><strong>Uploads</strong> the REG grade report and score summary (Grade Entry) for a course section.</li>
+<li>Gets an <strong>automatic check for likely errors</strong>, including the mistakes reviewers actually find: wrong use of I/M/F/U, totals over 100, REG criteria that don&#39;t match TQF3, and borderline rounding.</li>
+<li><strong>Proves that 100% of the accumulated marks were announced to students on REG</strong> before grades are submitted, by uploading a <strong>screenshot of the REG score-announcement page</strong>. This is the only evidence REG can provide (§6.3).</li>
+<li>Completes the <strong>same checklist as the old Google Form</strong> (§6.4), with as many items as possible checked automatically.</li>
+<li>Submits the course for <strong>two rounds of review</strong>: <strong>Round 1 by a buddy</strong> (a peer lecturer) and <strong>Round 2 by the program</strong>. In each round the reviewer <strong>verifies every checklist item</strong> against the evidence and marks it <em>Verified</em> or <em>Issue</em>. This replaces the Program Check / School Check / Comments columns of the sheet.</li>
+</ol>
+<h2 id="s2">2. Problem statement</h2>
+<h3 id="s3">2.1 Current process (from the <em>Grade Report Submission Process</em> slides)</h3>
+<pre><code>Prepare grade report &amp; documents → Fill in Google Form checklist → Submit printed report &amp; documents
+    → Program check (with summary sheet) → School committee check (with summary sheet) → Submit to Registrar Office
+</code></pre>
+<h3 id="s4">2.2 Evidence from semester 2/2025</h3>
+<p>The reviewer comments in the 2/2025 response sheet show which errors the form doesn&#39;t catch:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Error category</th>
+<th>Cases</th>
+<th>Examples of reviewer comments (translated)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Wrong use of I / M / F / U</strong></td>
+<td>11</td>
+<td>&quot;Change F to M (100+ students)&quot;; &quot;Student got M, but the course has no exam: give I&quot;; &quot;I grade: leave the score fields blank&quot;; &quot;I given but all score fields filled&quot;; &quot;Give I where U was given&quot;; &quot;Check that I and F match the Grade Entry&quot;; &quot;Change F to I&quot;</td>
+</tr>
+<tr>
+<td><strong>Scores not announced or not visible on REG</strong></td>
+<td>3</td>
+<td>&quot;REG scores are not shown to students at all&quot;; &quot;Score items in REG were not printed&quot;; &quot;Group/Individual project marks not shown&quot;</td>
+</tr>
+<tr>
+<td><strong>REG grading criteria don&#39;t match TQF3</strong></td>
+<td>3</td>
+<td>&quot;Grade policy in REG and TQF3 do not match&quot;; &quot;Adjust the REG score items to match TQF3&quot;</td>
+</tr>
+<tr>
+<td><strong>Accumulated score over 100%</strong></td>
+<td>1</td>
+<td>&quot;Accumulated score exceeds 100%; print from <em>Display Calculated Score</em>&quot;</td>
+</tr>
+<tr>
+<td><strong>Borderline or rounding decision</strong></td>
+<td>1</td>
+<td>&quot;Re-check the accumulated score: should 69.99 be rounded up to B? (student no. 84)&quot;</td>
+</tr>
+</tbody></table></div>
+<p>The response data also has many <strong>data-quality problems</strong> that a structured system would prevent:</p>
+<ul>
+<li>The TQF3 link points to a different course code or a different academic year.</li>
+<li>The template placeholder <code>…/[academic year]/[semester]/[course code]</code> was submitted unchanged.</li>
+<li>A Drive link was given instead of the TQF3 link.</li>
+<li>A course code was typed into the phone-number field.</li>
+<li>Several courses, or a section suffix (e.g. <code>1306412_Sec_01</code>), were typed into one course-code field.</li>
+<li>The same course was submitted 2–3 times.</li>
+<li>A course had no submission and had to be added to the sheet by hand.</li>
+</ul>
+<h3 id="s5">2.3 Pain points</h3>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Pain point</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Every checklist item is self-declared. In 2/2025, almost every row answered &quot;Yes&quot; to everything.</td>
+<td>The checklist doesn&#39;t separate correct submissions from wrong ones. Real errors are only found by reviewers reading the files.</td>
+</tr>
+<tr>
+<td>&quot;Shared evaluation results with students&quot; does not verify <strong>100%</strong> of the marks.</td>
+<td>Students may see their grade before they have seen every score component. This leads to appeals.</td>
+</tr>
+<tr>
+<td>Reviewer findings are free text in one Comments cell, and the fix status is a second free-text cell (&quot;แก้ไขแล้ว&quot;, i.e. &quot;fixed&quot;).</td>
+<td>No per-issue tracking, no notification to the lecturer, and no history.</td>
+</tr>
+<tr>
+<td>Printed documents are handed in alongside the digital ones.</td>
+<td>Two versions of the truth. Paper takes effort and is hard to audit.</td>
+</tr>
+<tr>
+<td>A new form and sheet are copied every semester, and the questions drift (the 2/2024 and 2/2025 versions differ).</td>
+<td>Semesters can&#39;t be compared. Setup is manual every time.</td>
+</tr>
+<tr>
+<td>Nothing tracks which courses are missing.</td>
+<td>The office finds missing courses by hand, close to the deadline.</td>
+</tr>
+</tbody></table></div>
+<h2 id="s6">3. Goals and non-goals</h2>
+<h3 id="s7">Goals</h3>
+<ul>
+<li><strong>G1.</strong> Catch the error categories in §2.2 automatically before submission. Target: at least 80% fewer &quot;fix required&quot; comments from reviewers, compared with 2/2025.</li>
+<li><strong>G2.</strong> Guarantee that every approved section has <strong>verified evidence that 100% of accumulated marks were announced on REG</strong>, and that the announced scores match the grade report.</li>
+<li><strong>G3.</strong> Keep <strong>every question of the current Google Form</strong> (§6.4). Auto-verify the ones the uploaded data can answer.</li>
+<li><strong>G4.</strong> Replace the Program Check / School Check / Comments columns with a tracked <strong>two-round review (buddy, then program)</strong>. Every checklist item is verified in each round, and issues are tracked one by one.</li>
+<li><strong>G5.</strong> Remove the need for printed documents, subject to approval by the Registrar&#39;s Office (see Q7).</li>
+<li><strong>G6.</strong> A typical section takes 10 minutes or less from the moment the REG files are ready.</li>
+<li><strong>G7.</strong> The UI is <strong>dead simple for everyone</strong>: lecturers, buddies, program reviewers and the office. A first-time user completes their task <strong>with no training and no manual</strong> (§6.8).</li>
+<li><strong>G8.</strong> <strong>Full transparency within ADT</strong>: every ADT lecturer can view every course, its grades and its submission, including reviews and issues (§6.9).</li>
+</ul>
+<h3 id="s8">Non-goals (v1)</h3>
+<ul>
+<li>Writing grades back into REG. Lecturers still enter and confirm official grades in REG.</li>
+<li>Replacing REG&#39;s Grade Entry or a lecturer&#39;s own calculation spreadsheet.</li>
+<li>Handling student grade appeals.</li>
+<li>Schools other than ADT, although the design should allow them later.</li>
+</ul>
+<h2 id="s9">4. Users and roles</h2>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Who</th>
+<th>Main needs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Lecturer</strong> (course coordinator)</td>
+<td>The instructor responsible for a course section</td>
+<td>Upload, see errors, fix them, complete the checklist, submit, track status</td>
+</tr>
+<tr>
+<td><strong>Co-lecturer</strong></td>
+<td>Other instructors on the section</td>
+<td>View and comment. Can upload if delegated.</td>
+</tr>
+<tr>
+<td><strong>Buddy reviewer</strong> (Round 1)</td>
+<td>A peer lecturer assigned to the section, not an instructor of it</td>
+<td>Verify each checklist item against the evidence, raise issues, pass or return</td>
+</tr>
+<tr>
+<td><strong>Program reviewer</strong> (Round 2)</td>
+<td>Program chair or delegate for each ADT program</td>
+<td>Confirm the buddy&#39;s verification item by item, raise issues, approve or return</td>
+</tr>
+<tr>
+<td><strong>School committee</strong></td>
+<td>ADT academic committee / Dean&#39;s office</td>
+<td>Overview across programs. Receives the approved sections for sending to the Registrar (Q9).</td>
+</tr>
+<tr>
+<td><strong>School office (admin)</strong></td>
+<td>ADT academic services staff</td>
+<td>Set up the semester and courses, import rosters, set deadlines, send reminders, export for the Registrar</td>
+</tr>
+<tr>
+<td><strong>System admin</strong></td>
+<td>IT</td>
+<td>Users, roles, integrations, backups</td>
+</tr>
+</tbody></table></div>
+<p>Sign-in uses MFU Google Workspace SSO (<code>@mfu.ac.th</code> only). In 2/2025 at least one lecturer submitted from a personal Gmail address, so the system should prevent that.</p>
+<p>Roles decide only who can <strong>change</strong> things. <strong>Every ADT lecturer can view everything</strong> (§6.9).</p>
+<h2 id="s10">5. User journeys</h2>
+<h3 id="s11">5.1 Lecturer: submit grades</h3>
+<ol>
+<li>Sign in with MFU SSO. The <strong>course list</strong> opens, filtered to <strong>My courses</strong>, showing each section&#39;s status and deadline. Clearing the filter shows every ADT section (§6.9).</li>
+<li>Open a section. Course code, course name, section, credits, the enrolled roster and the <strong>TQF3 link</strong> (<code>https://tqf.mfu.ac.th/#/pdf/{year}/{semester}/{course}</code>) are generated and filled in automatically.</li>
+<li>Upload the REG files:<ul>
+<li><strong>Grade report</strong> (from REG)</li>
+<li><strong>Score summary</strong>: either the REG Grade Entry export with criteria details, or a custom spreadsheet</li>
+<li><strong>Screenshot of the REG score-announcement page</strong>, showing that every component, 100% in total, is announced to students. This is the evidence for the 100% announcement (§6.3).</li>
+<li><strong>Signed student list for the final exam</strong> (if there was a final exam)</li>
+<li><strong>Student Exam Absence forms</strong> (if any)</li>
+</ul>
+</li>
+<li>The system parses the files and shows the <strong>validation report</strong> (§6.2): blocking errors, warnings, and info items.</li>
+<li>Fix the problems. Typically this means correcting the grades or criteria in REG, exporting again, and re-uploading. Warnings can also be <strong>acknowledged with a reason</strong>, for example &quot;Criteria changed from TQF3 because of a change in learning activities&quot;.</li>
+<li>Complete the <strong>checklist</strong> (§6.4). Items the system has already verified are ticked, locked and linked to their evidence.</li>
+<li>Confirm the declaration that the instructor has signed the grade report. An e-signature may be allowed later (Q7).</li>
+<li><strong>Submit</strong>. This is blocked while any error is open. The assigned <strong>buddy</strong> is notified.</li>
+<li>If the section is returned in either round, the lecturer sees the issues one by one, fixes them, and resubmits. Every version is kept.</li>
+</ol>
+<h3 id="s12">5.2 Round 1: buddy review</h3>
+<ol>
+<li>The buddy opens the course list with the <strong>To review as buddy</strong> filter (or follows the link in the email), and sees their assigned sections with the review deadlines.</li>
+<li>The buddy opens a submission. The <strong>review screen is the checklist</strong> (§6.4): one row per item. Each row shows:<ul>
+<li>the lecturer&#39;s answer</li>
+<li>the automatic check result, where there is one</li>
+<li>the evidence, opened side by side (grade report, score summary, REG screenshot, signed exam list, absence forms, TQF3 link)</li>
+</ul>
+</li>
+<li>For <strong>every checklist item</strong>, the buddy records one of:<ul>
+<li><strong>Verified</strong>: the evidence supports the answer.</li>
+<li><strong>Issue</strong>: a note is required, for example &quot;M given but the course has no final exam: should be I&quot;.</li>
+<li><strong>N/A</strong>: only where the item doesn&#39;t apply, for example no M grades means no absence form is needed.</li>
+</ul>
+</li>
+<li>Items that pass their automatic checks are pre-marked <strong>Verified (auto)</strong>. The buddy can override one to <strong>Issue</strong>. Items that need judgment can&#39;t be pre-marked, and the buddy must decide them: #7c/#10 (REG 100% screenshot), #8, #9, #12, #15, #19 and any acknowledged warnings.</li>
+<li>The buddy can also raise an issue on a student row, for example a borderline 69.99.</li>
+<li><strong>Pass to program</strong> is only possible once every item is marked. If any item has an Issue, the only action is <strong>Return to lecturer</strong>.</li>
+</ol>
+<h3 id="s13">5.3 Round 2: program review</h3>
+<ol>
+<li>The program reviewer opens the course list with the <strong>To review as program</strong> filter. Sections show the five statuses: <em>Not submitted · With buddy · With program · Returned · Approved</em>.</li>
+<li>They open a submission that has passed buddy review. They see the same checklist, now with <strong>the buddy&#39;s verdict and notes for each item</strong>, plus:<ul>
+<li>the validation summary and any acknowledged warnings with their reasons</li>
+<li>the grade distribution, including I/M/W/RESIGNED counts</li>
+<li>a comparison with previous offerings of the course</li>
+</ul>
+</li>
+<li>For <strong>every checklist item</strong>, the reviewer <strong>confirms</strong> the buddy&#39;s verdict or marks an <strong>Issue</strong>. &quot;Confirm all verified&quot; is allowed only for items the system checked automatically. The judgment items (#7c/#10, #8, #9, #12, #15, #19) must each be confirmed individually.</li>
+<li><strong>Approve</strong>, or <strong>Return to lecturer</strong>. When a returned section is resubmitted, it goes back to <strong>Round 2 only</strong> if the fix affects only items the program raised, and to <strong>Round 1</strong> otherwise (configurable, Q10).</li>
+</ol>
+<h3 id="s14">5.4 School office</h3>
+<ol>
+<li>Create the semester, for example 1/2569. Import the ADT course/section/lecturer list and the REG rosters. Set the deadlines for submission, buddy review and program review. <strong>Assign buddies</strong> (§6.5, FR-5.6).</li>
+<li>Monitor completion. Sections with no submission are visible from day one, instead of being found by hand.</li>
+<li>Send reminders. Export the package for the Registrar&#39;s Office.</li>
+</ol>
+<h2 id="s15">6. Functional requirements</h2>
+<h3 id="s16">6.1 Uploads</h3>
+<ul>
+<li><strong>FR-1.1</strong> Accept the REG exports (<code>.xlsx</code>, <code>.xls</code>, <code>.csv</code>, <code>.pdf</code>) and custom spreadsheets, up to 20 MB per file.</li>
+<li><strong>FR-1.2</strong> Parse the known REG layouts: the Grade report, the Grade Entry with criteria details, and the Set list of scores / Display Calculated Score. A column mapper handles custom spreadsheets and remembers each lecturer&#39;s mapping.</li>
+<li><strong>FR-1.3</strong> A PDF upload (for example a signed exam list or an absence form) is stored as evidence and is not parsed.</li>
+<li><strong>FR-1.4</strong> Uploads are versioned. Only the latest version can be submitted, and earlier versions can be viewed and compared.</li>
+<li><strong>FR-1.5</strong> The system stores the <strong>grading criteria</strong> from REG Grade Entry for each section, along with the TQF3 evaluation plan once it has been entered or imported (§6.2, C-17).</li>
+</ul>
+<h3 id="s17">6.2 Error and consistency checks</h3>
+<p>Severity levels:</p>
+<ul>
+<li><strong>Error</strong>: blocks submission.</li>
+<li><strong>Warning</strong>: must be fixed or acknowledged with a reason.</li>
+<li><strong>Info</strong>: shown only.</li>
+</ul>
+<p><strong>Structure and roster</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Check</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C-01</td>
+<td>A file is unreadable, or a required column (student ID, total, grade) is missing</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-02</td>
+<td>A student ID is not a valid MFU ID</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-03</td>
+<td>Duplicate student IDs</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-04</td>
+<td>A student on the REG roster is missing from the grade report, or the reverse</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-05</td>
+<td>An enrolled student has no grade</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-06</td>
+<td>A grade is not in the allowed set: A, B+, B, C+, C, D+, D, F, S, U, I, M, W, RESIGNED</td>
+<td>Error</td>
+</tr>
+</tbody></table></div>
+<p><strong>Scores and totals</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Check</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C-07</td>
+<td>The component weights in the score summary <strong>don&#39;t add up to 100</strong></td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-08</td>
+<td>A student&#39;s accumulated total is <strong>over 100</strong>, or a component is over its maximum. <em>(2/2025: &quot;the accumulated score exceeds 100%&quot;)</em></td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-09</td>
+<td>The weighted components don&#39;t add up to the reported total (tolerance ±0.01)</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-10</td>
+<td>The score summary has no average and SD. The system computes and attaches them automatically.</td>
+<td>Info</td>
+</tr>
+</tbody></table></div>
+<p><strong>Grade versus score</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Check</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C-11</td>
+<td>A letter grade doesn&#39;t match the total under the section&#39;s REG criteria</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-12</td>
+<td>The criteria cutoffs are non-monotonic, overlap, or leave gaps</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-13</td>
+<td>A total is <strong>within 0.5 of a cutoff</strong>, e.g. 69.99 vs a cutoff of 70. The lecturer must confirm there is no rounding. <em>(2/2025: &quot;should 69.99 be rounded to B?&quot;)</em></td>
+<td>Warning</td>
+</tr>
+</tbody></table></div>
+<p><strong>Special grades</strong> (rules taken from the <em>ADT - Grading Guideline</em>)</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Check</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C-14</td>
+<td><strong>F</strong> is given to a student who has no final-exam score and is not on the signed final-exam list. They are probably absent from the final, so the grade should be <strong>M</strong>. <em>(2/2025: &quot;change F to M, 100+ students&quot;)</em></td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-15</td>
+<td><strong>M</strong> is given in a course with <strong>no final exam</strong> (e.g. TDS, project or studio courses). The grade should be <strong>I</strong>. <em>(2/2025: 2 cases)</em></td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-16</td>
+<td>An <strong>I</strong> grade has all score fields filled. Incomplete components should be left blank. <em>(2/2025: 5 cases)</em></td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-17</td>
+<td><strong>U</strong> is given where the guideline calls for <strong>I</strong> (missing work, student has not made contact), or I and F are inconsistent with the Grade Entry. <em>(2/2025: 2 cases)</em></td>
+<td>Warning</td>
+</tr>
+<tr>
+<td>C-18</td>
+<td>An <strong>M</strong> grade has no Exam Absence form uploaded, or no reason recorded</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td>C-19</td>
+<td>A <strong>RESIGNED</strong> student attended the exam but has no score summary. The form requires one.</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-20</td>
+<td>An <strong>I</strong> grade has no reason and no completion plan</td>
+<td>Warning</td>
+</tr>
+</tbody></table></div>
+<p><strong>REG, TQF3 and data quality</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Check</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C-21</td>
+<td>The <strong>grading criteria in REG don&#39;t match the TQF3 evaluation plan</strong> (component names, weights, or grade cutoffs). A reason is needed if they differ on purpose. <em>(2/2025: 3 cases)</em></td>
+<td>Warning</td>
+</tr>
+<tr>
+<td>C-22</td>
+<td>The TQF3 link doesn&#39;t match the course code, year or semester. The system generates the link, so this only applies to manual overrides.</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>C-23</td>
+<td>The grade distribution is unusual, for example more than 50% A, more than 30% F, or a single grade for everyone. The thresholds are configurable.</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td>C-24</td>
+<td>The distribution differs a lot from the average of the course&#39;s last 3 offerings</td>
+<td>Info</td>
+</tr>
+<tr>
+<td>C-25</td>
+<td>Summary of the distribution, mean and SD, and the counts of I/M/W/RESIGNED</td>
+<td>Info</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>FR-2.1</strong> The checks finish within 5 seconds for 500 students.</li>
+<li><strong>FR-2.2</strong> Each finding shows the student row, the actual value, the expected value, and a suggested fix. The suggested fix says what to change <strong>in REG</strong>, because REG is the source of truth.</li>
+<li><strong>FR-2.3</strong> Admins can enable or disable each check, change its severity and set its thresholds for each semester.</li>
+<li><strong>FR-2.4</strong> The validation report is kept with each submission version, so reviewers can see what was flagged and what was acknowledged.</li>
+</ul>
+<h3 id="s18">6.3 REG 100% score announcement verification</h3>
+<p><strong>Rule:</strong> before grades are submitted, students must have been able to see their accumulated scores on REG for <strong>every</strong> evaluation component, adding up to <strong>100%</strong> of the course mark. They must also have been given a deadline to review and dispute them (<em>Grading Guideline</em>, steps 2–3).</p>
+<p>The current form only asks whether <em>some</em> results were shared (&quot;I have shared some part of evaluation results to the students&quot;). The <em>Grading Guideline</em> also advises lecturers to &quot;consider disclosing less than 100%&quot;. This PRD <strong>raises the requirement to 100%</strong> (see Q3).</p>
+<p><strong>Constraint:</strong> REG has no export or API that shows which score components have been announced to students. The <strong>only evidence is a screenshot of the REG page</strong> where the lecturer announces scores, as the current Google Form requires. The system is therefore built around that screenshot. Automated reading of it only assists the reviewer, whose confirmation is the final check.</p>
+<ul>
+<li><strong>FR-3.1</strong> <strong>Required upload:</strong> one or more screenshots (PNG or JPG, or a PDF) of the REG score-announcement page for the section. Together they must show every score component with its weight and its announced/published status. The system blocks submission until there is at least one screenshot.</li>
+<li><strong>FR-3.2</strong> <strong>Upload guidance:</strong> the upload screen shows an annotated example of the correct REG page and what must be visible (the course code and section, every component row, the weights, the announcement status, and ideally the date). It also warns about common mistakes, such as a cropped list, the wrong section, or only some of the components.</li>
+<li><strong>FR-3.3</strong> <strong>Assisted reading (OCR):</strong> the system tries to read the course code, section, component names, weights and announcement status from the screenshot, then pre-fills a summary for the reviewer:<ul>
+<li><strong>R-1 (Warning):</strong> the course code or section in the screenshot doesn&#39;t match the submission.</li>
+<li><strong>R-2 (Warning):</strong> the announced weights read from the screenshot don&#39;t add up to <strong>100%</strong>.</li>
+<li><strong>R-3 (Warning):</strong> a component in the Grade Entry criteria (from the uploaded score summary) doesn&#39;t appear as announced in the screenshot. For example, group or individual project marks are missing, as happened in 2/2025.</li>
+<li>If OCR can&#39;t read the screenshot, the section is marked &quot;needs manual reading&quot;. This never blocks submission, because the reviewer checks it anyway.</li>
+</ul>
+</li>
+<li><strong>FR-3.4</strong> <strong>Lecturer declaration (Confirm):</strong><ul>
+<li>&quot;All evaluation components, totalling 100%, are announced to students on REG, as shown in the attached screenshot.&quot;</li>
+<li>The <strong>announcement date</strong> and the <strong>review/dispute deadline</strong> given to students. The deadline must be before submission (Warning otherwise).</li>
+<li>&quot;If there are any missing marks, I have already communicated with the students.&quot;</li>
+</ul>
+</li>
+<li><strong>FR-3.5</strong> <strong>Two-round confirmation (required):</strong> in both rounds, the reviewer sees the screenshot next to the OCR summary and the Grade Entry criteria. The <strong>buddy</strong> must mark <strong>&quot;REG 100% announcement verified&quot;</strong> (or Issue), and the <strong>program reviewer</strong> must confirm it. Neither can pre-mark it automatically.</li>
+<li><strong>FR-3.6</strong> The dashboard shows a badge for each section: <strong>REG 100%: Missing / Uploaded / Verified by buddy / Confirmed by program / Issue raised</strong>.</li>
+<li><strong>FR-3.7</strong> Future: if REG ever provides an export or API for announcement status, it replaces the screenshot (Q2).</li>
+</ul>
+<h3 id="s19">6.4 Submission checklist (migrated from the Google Form)</h3>
+<p>Every question of the <strong>2/2025 ADT Grade Submission form</strong> is kept, in its original order and wording, so records stay comparable across semesters. Each item gets one of these types:</p>
+<ul>
+<li><strong>Auto</strong>: verified by the system from the uploaded data. Ticked and locked, with a link to the evidence.</li>
+<li><strong>Confirm</strong>: the lecturer answers Yes/No. A reason is needed where the form had an &quot;Other&quot; option.</li>
+<li><strong>Prefill</strong>: data the system fills in, which the lecturer can correct.</li>
+<li><strong>Upload</strong>: a required or optional file.</li>
+</ul>
+<div class="table"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Question in the Google Form</th>
+<th>Answers in the old form</th>
+<th>New type</th>
+<th>How it is satisfied in the new system</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Email Address</td>
+<td>text</td>
+<td>Prefill</td>
+<td>From SSO. <code>@mfu.ac.th</code> only.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Mobile Phone Number</td>
+<td>text</td>
+<td>Prefill</td>
+<td>Saved in the lecturer profile and validated as a phone number.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Course Code</td>
+<td>text</td>
+<td>Prefill</td>
+<td>Chosen from the imported section list, one section per submission. This removes free-text codes like <code>1306412_Sec_01</code>.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Course Name</td>
+<td>text</td>
+<td>Prefill</td>
+<td>From the course list.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>URL link to TQF3</td>
+<td>text</td>
+<td>Auto</td>
+<td>Generated as <code>tqf.mfu.ac.th/#/pdf/{year}/{sem}/{course}</code> (C-22).</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Grade report (From REG system)</td>
+<td>Yes</td>
+<td>Upload + Auto</td>
+<td>Parsed. Checks C-01 to C-06 and C-11.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Score summary (or Grade entry from REG)</td>
+<td><em>Grade entry from REG (with criteria details noted)</em> / <em>In custom spreadsheet</em> (either or both)</td>
+<td>Upload + Auto</td>
+<td>Parsed. Checks C-07 to C-10. The source type is recorded.</td>
+</tr>
+<tr>
+<td>7a</td>
+<td><em>(2/2024 form)</em> URL link to the custom spreadsheet used to calculate scores (if any)</td>
+<td>text</td>
+<td>Upload (optional)</td>
+<td>Upload the file itself instead of a link.</td>
+</tr>
+<tr>
+<td>7b</td>
+<td><em>(2/2024 form)</em> Set list of scores (from REG, at the bottom of the Grade Entry Criterion page)</td>
+<td>Yes</td>
+<td>Upload</td>
+<td>Supporting document.</td>
+</tr>
+<tr>
+<td>7c</td>
+<td><strong>Screenshot of the REG score-announcement page</strong> (current form)</td>
+<td>file</td>
+<td><strong>Upload (required)</strong> + Reviewer confirm</td>
+<td>The REG 100% evidence (§6.3). Read by OCR to help the reviewer, then confirmed by the reviewer.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Exam&#39;s student list with signature for the final exam</td>
+<td>Yes / blank</td>
+<td>Upload</td>
+<td>Required if the course has a final exam. Used by C-14.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Student&#39;s Exam Absence form (if available)</td>
+<td>Yes / No</td>
+<td>Upload (conditional)</td>
+<td>Required for each M grade (C-18).</td>
+</tr>
+<tr>
+<td>10</td>
+<td>I have shared some part of the evaluation results with the students.</td>
+<td>Yes / No</td>
+<td>Confirm (stricter) + Reviewer confirm</td>
+<td>Replaced by the <strong>100% declaration</strong> plus the screenshot (#7c). OCR-assisted and confirmed by the reviewer (§6.3).</td>
+</tr>
+<tr>
+<td>11</td>
+<td>If there are any missing marks, I have already communicated with the students.</td>
+<td>Yes / No</td>
+<td>Confirm</td>
+<td>§6.3, R-6. Warning if the answer is No while I grades exist.</td>
+</tr>
+<tr>
+<td>12</td>
+<td>I have signed the grade report.</td>
+<td>Yes / No</td>
+<td>Confirm (+ Upload)</td>
+<td>Signed PDF, or an e-signature later (Q7).</td>
+</tr>
+<tr>
+<td>13</td>
+<td>The score summary includes a total score of 100.</td>
+<td>Yes / No</td>
+<td><strong>Auto</strong></td>
+<td>C-07, C-08.</td>
+</tr>
+<tr>
+<td>14</td>
+<td>The score summary includes statistical details such as average and SD.</td>
+<td>Yes / No</td>
+<td><strong>Auto</strong></td>
+<td>C-10. The system computes them.</td>
+</tr>
+<tr>
+<td>15</td>
+<td>The grading policy is included in the evaluation plan in TQF3.</td>
+<td>Yes / No</td>
+<td>Confirm + Auto</td>
+<td>Confirm, then checked against the TQF3 plan (C-21).</td>
+</tr>
+<tr>
+<td>16</td>
+<td>This class includes students who resigned (RESIGNED is given). The score summary must be provided if they attended the examination.</td>
+<td>Yes / No</td>
+<td><strong>Auto</strong></td>
+<td>Detected from the grades. C-19.</td>
+</tr>
+<tr>
+<td>17</td>
+<td>This class includes students who withdrew (W is given).</td>
+<td>Yes / No</td>
+<td><strong>Auto</strong></td>
+<td>Detected from the grades.</td>
+</tr>
+<tr>
+<td>18</td>
+<td>This class includes students absent from the final exam (M is given).</td>
+<td>Yes / No</td>
+<td><strong>Auto</strong></td>
+<td>Detected from the grades. Checks C-14, C-15 and C-18.</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Grading policy: does the score summary align with the evaluation criteria in the course syllabus (TQF3)? If not, give the reason in &quot;Other&quot;.</td>
+<td>Yes / Other (reason)</td>
+<td>Auto + Confirm</td>
+<td>C-21. A reason is required when they differ, e.g. &quot;changed due to learning activities&quot;.</td>
+</tr>
+<tr>
+<td>—</td>
+<td><em>(Review sheet)</em> Program Check</td>
+<td>TRUE / FALSE</td>
+<td>Workflow</td>
+<td>Replaced by <strong>Round 1 (buddy)</strong> and <strong>Round 2 (program)</strong>, with a verdict for each item (§6.5).</td>
+</tr>
+<tr>
+<td>—</td>
+<td><em>(Review sheet)</em> School Check</td>
+<td>TRUE / FALSE</td>
+<td>Workflow</td>
+<td>School committee sign-off before sending to the Registrar, if kept (Q9).</td>
+</tr>
+<tr>
+<td>—</td>
+<td><em>(Review sheet)</em> Comments / fix status</td>
+<td>free text</td>
+<td>Workflow</td>
+<td>Issues on each item, with open/resolved status.</td>
+</tr>
+</tbody></table></div>
+<p><strong>Review verdicts for each item.</strong> Every row above (#1–#19, #7a–#7c) has two review columns: <strong>Buddy verdict</strong> and <strong>Program verdict</strong>. Each is Verified / Issue (with a note) / N/A. The table below sets how each item is reviewed:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Item type</th>
+<th>Buddy (Round 1)</th>
+<th>Program (Round 2)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prefill (#1–#5)</td>
+<td>Pre-marked Verified (auto). Can override.</td>
+<td>Bulk confirm allowed</td>
+</tr>
+<tr>
+<td>Auto, check passed (#6, #7, #13, #14, #16–#18)</td>
+<td>Pre-marked Verified (auto). Buddy should spot-check the evidence and can override.</td>
+<td>Bulk confirm allowed</td>
+</tr>
+<tr>
+<td>Auto, warning acknowledged by the lecturer</td>
+<td><strong>Must decide.</strong> Is the reason acceptable?</td>
+<td><strong>Must confirm individually</strong></td>
+</tr>
+<tr>
+<td>Judgment (#7c/#10 REG 100% screenshot, #8, #9, #11, #12, #15, #19)</td>
+<td><strong>Must decide.</strong> Opens the evidence.</td>
+<td><strong>Must confirm individually</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>Result:</strong> 8 of the 16 self-declared Yes/No items (#6–#19) become fully or partly <strong>automatic</strong>. The REG 100% item (#10) is backed by a required screenshot and a reviewer&#39;s confirmation, and the only purely self-declared items left are #11 and #12.</p>
+<blockquote>
+<p>Note: the Drive connector can&#39;t read the Google Form itself. This list is built from the column headers of the 1/2024, 2/2024 and 2/2025 response sheets. The linked form was edited on 2026-09-22, so any question added since 2/2025 (such as the screenshot upload) needs checking against the live form.</p>
+</blockquote>
+<ul>
+<li><strong>FR-4.1</strong> Admins can edit the checklist for each semester (add, reorder, change type) without a code change. The version used is stored with each submission.</li>
+<li><strong>FR-4.2</strong> A one-time <strong>import of past response sheets</strong> (2/2024, 1/2024 and 2/2025), including the Program Check / School Check / Comments columns, so reports cover earlier semesters.</li>
+</ul>
+<h3 id="s20">6.5 Review and approval workflow</h3>
+<ul>
+<li><strong>FR-5.1</strong> Status flow:<pre><code>Draft → Submitted
+      → Round 1: Buddy review ──(Issue)──→ Returned → Resubmitted → Round 1
+      → Round 2: Program review ──(Issue)──→ Returned → Resubmitted → Round 2 (or Round 1, see Q10)
+      → Approved → [School sign-off, optional, Q9] → Sent to Registrar (locked)
+</code></pre>
+</li>
+<li><strong>FR-5.2</strong> <strong>Verification against the checklist:</strong> each round stores a verdict for <strong>every checklist item</strong> (Verified / Issue / N/A), along with the reviewer, a timestamp, and a note that is required for Issue and N/A. A round can&#39;t be completed while any item has no verdict.</li>
+<li><strong>FR-5.3</strong> <strong>Issues:</strong> reviewers raise issues on a checklist item, an automatic check, a student row, or the whole section. Each issue stays open until the lecturer fixes it and <strong>the reviewer who raised it</strong> resolves it. This replaces the &quot;Comments&quot; and &quot;แก้ไขแล้ว&quot; (&quot;fixed&quot;) cells.</li>
+<li><strong>FR-5.4</strong> <strong>Round rules:</strong><ul>
+<li>The buddy can&#39;t be an instructor of the section.</li>
+<li>The program reviewer can&#39;t be the section&#39;s buddy or an instructor of it.</li>
+<li>A lecturer can&#39;t review their own section in either round.</li>
+<li>On resubmission, earlier verdicts are kept. Items affected by the changed files are <strong>reset</strong>, and must be verified again.</li>
+</ul>
+</li>
+<li><strong>FR-5.5</strong> Email notifications (MFU mail):<ul>
+<li>on submit (to the buddy)</li>
+<li>on passing to the program (to the program reviewer)</li>
+<li>on return and on new issues (to the lecturer)</li>
+<li>on approval</li>
+<li>deadline reminders for each stage (T-3 days, T-1 day, overdue)</li>
+</ul>
+</li>
+<li><strong>FR-5.6</strong> <strong>Buddy assignment:</strong><ul>
+<li>The office or the program chair assigns a buddy to each section, either one by one or by rule. Rules include reciprocal pairs, a rotation within the program, or buddies across programs.</li>
+<li>Assignments can be bulk-imported from a sheet.</li>
+<li>Each buddy&#39;s workload is shown, and assignments can be changed while review is in progress.</li>
+<li>Default: a buddy from the <strong>same program</strong>. The admin can change this.</li>
+</ul>
+</li>
+<li><strong>FR-5.7</strong> A <strong>review summary</strong> is generated for each section: the checklist, both rounds&#39; verdicts, and the issue history. It replaces the summary sheet reviewers receive today, and can be exported as PDF for the Registrar package.</li>
+<li><strong>FR-5.8</strong> Only an admin can reopen a locked section, and must record a reason, for example a grade change after an appeal.</li>
+</ul>
+<h3 id="s21">6.6 Dashboards and exports</h3>
+<ul>
+<li><strong>FR-6.1</strong> <strong>One course list for everyone</strong>: every ADT section in the semester, with its status and REG 100% badge, searchable by course code, name or lecturer. Quick filters: <strong>My courses</strong>, <strong>To review as buddy</strong>, <strong>To review as program</strong>, <strong>All</strong>. There are no separate dashboards to learn. The filters do the job.</li>
+<li><strong>FR-6.2</strong> A summary strip at the top of the list, visible to everyone:<ul>
+<li>completion by program and by stage (not started / buddy review / program review / approved), including sections <strong>not started</strong></li>
+<li>overdue buddy reviews and buddy workload</li>
+<li>the REG 100% badge</li>
+<li>the count of open issues</li>
+<li>I/M/W/RESIGNED counts</li>
+<li>the grade distribution for each course, compared with previous offerings</li>
+</ul>
+</li>
+<li><strong>FR-6.3</strong> Exports:<ul>
+<li>a completion report (<code>.xlsx</code>)</li>
+<li>a Registrar package (a ZIP of the final files plus a summary)</li>
+<li>a checklist export in the same column layout as the old response sheet, so it stays continuous with past records</li>
+</ul>
+</li>
+</ul>
+<h3 id="s22">6.7 Audit and records</h3>
+<ul>
+<li><strong>FR-7.1</strong> Every action (upload, acknowledgement, checklist answer, submit, issue, approve, reopen) is logged with the user and a timestamp. Viewing and downloading another lecturer&#39;s files are logged too (§6.9).</li>
+<li><strong>FR-7.2</strong> Records are kept for at least 5 years, or longer if MFU&#39;s records policy requires.</li>
+</ul>
+<h3 id="s23">6.8 Dead-simple UI</h3>
+<p>The system must be usable by every lecturer, including those who rarely use web tools, <strong>with no training</strong>. These are requirements, not suggestions.</p>
+<ul>
+<li><strong>FR-8.1</strong> <strong>Three screens in total:</strong><ol>
+<li><strong>Course list</strong>: everyone, every section (FR-6.1).</li>
+<li><strong>Course page</strong>: one page per section with everything about it (files, checks, checklist, reviews, issues, history).</li>
+<li><strong>Admin</strong>: office only.
+There are no other screens, pop-up wizards or separate dashboards.</li>
+</ol>
+</li>
+<li><strong>FR-8.2</strong> <strong>The course page is one vertical page with three numbered steps:</strong> <strong>① Upload → ② Fix → ③ Submit</strong>. Each step shows a clear state (done / needs attention / not started), and the page always shows <strong>one obvious next action</strong> as the only primary button: <em>Upload files</em>, <em>Fix 3 problems</em>, <em>Submit</em>, <em>Review</em>, <em>Approve</em>.</li>
+<li><strong>FR-8.3</strong> <strong>Upload is drag-and-drop into one box.</strong> The system detects each file&#39;s type (grade report, score summary, REG screenshot, exam list, absence form) and asks only when it can&#39;t tell. Nothing is typed that the system already knows (FR-1, §6.4 Prefill).</li>
+<li><strong>FR-8.4</strong> <strong>Problems are written in plain language, with the fix</strong>, for example &quot;3 students have F but no final exam score. They were probably absent: change to M in REG.&quot; Error codes (C-xx) are hidden from lecturers and shown only in a details view for reviewers and admins.</li>
+<li><strong>FR-8.5</strong> <strong>The checklist and the review use the same table.</strong> One row per item, with at most three buttons per row: <strong>✓ Verified</strong>, <strong>✗ Issue</strong>, <strong>N/A</strong>. The evidence opens in a side panel without leaving the page. A buddy or program reviewer sees exactly what the lecturer saw, with their own column added.</li>
+<li><strong>FR-8.6</strong> <strong>Five statuses everywhere</strong>, shown as coloured labels with text: <em>Not submitted · With buddy · With program · Returned · Approved</em>. The same words are used in the list, the page and the emails.</li>
+<li><strong>FR-8.7</strong> <strong>Every email has one link</strong> that opens the exact course page, with the action waiting. There is no need to search.</li>
+<li><strong>FR-8.8</strong> <strong>Language:</strong> a one-click Thai / English switch. The same plain wording is used in both.</li>
+<li><strong>FR-8.9</strong> <strong>Forgiving:</strong> drafts save automatically. Re-uploading replaces the file and keeps the history. Nothing is lost by closing the browser.</li>
+<li><strong>FR-8.10</strong> <strong>Usability acceptance test before the pilot:</strong> 5 lecturers and 2 reviewers who have never seen the system complete submit, buddy review and program review <strong>without help</strong>. The median is 10 minutes or less for a submission and 5 minutes or less for a review. Every step where someone got stuck is fixed before launch.</li>
+</ul>
+<h3 id="s24">6.9 Visibility: everything is open to all ADT lecturers</h3>
+<ul>
+<li><p><strong>FR-9.1</strong> <strong>Every signed-in ADT lecturer can view every section in every semester</strong>, whether or not they teach it:</p>
+<ul>
+<li>course details and lecturers</li>
+<li>uploaded files (grade report, score summary, REG screenshot, exam list, absence forms)</li>
+<li>student grades and scores</li>
+<li>validation results and acknowledged warnings</li>
+<li>the checklist and both review rounds&#39; verdicts</li>
+<li>issues and their history</li>
+<li>the grade distribution</li>
+</ul>
+</li>
+<li><p><strong>FR-9.2</strong> <strong>Viewing is open, and changing is restricted:</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Who</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>View anything</td>
+<td>All ADT lecturers, reviewers, office</td>
+</tr>
+<tr>
+<td>Upload, fix, submit, acknowledge warnings</td>
+<td>The section&#39;s lecturers</td>
+</tr>
+<tr>
+<td>Round 1 verdicts, raise or resolve buddy issues</td>
+<td>The assigned buddy</td>
+</tr>
+<tr>
+<td>Round 2 verdicts, approve or return</td>
+<td>The program reviewer</td>
+</tr>
+<tr>
+<td>Comment on any section (without a verdict)</td>
+<td>Any ADT lecturer</td>
+</tr>
+<tr>
+<td>Setup, buddy assignment, reopen, exports</td>
+<td>Office / admin</td>
+</tr>
+</tbody></table></div>
+</li>
+<li><p><strong>FR-9.3</strong> <strong>Access is limited to ADT staff.</strong> Viewing requires MFU SSO <em>and</em> membership of the ADT staff list maintained by the office. Students and staff outside ADT have no access.</p>
+</li>
+<li><p><strong>FR-9.4</strong> <strong>Personal contact data isn&#39;t part of the &quot;open&quot; set.</strong> Lecturer phone numbers are visible only to the office and to the section&#39;s reviewers.</p>
+</li>
+</ul>
+<h2 id="s25">7. Non-functional requirements</h2>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Security &amp; privacy</strong></td>
+<td>MFU SSO plus the ADT staff list only. <strong>All ADT lecturers can view all sections</strong>. Editing is role-based (§6.9). Views and downloads are logged. Complies with Thailand&#39;s PDPA, subject to a DPO review of the open-visibility policy (R3). TLS in transit and encryption at rest. Emails contain links, never student data. Phone numbers are visible only to the office and reviewers.</td>
+</tr>
+<tr>
+<td><strong>Hosting</strong></td>
+<td>MFU-managed infrastructure or an approved cloud.</td>
+</tr>
+<tr>
+<td><strong>Performance</strong></td>
+<td>Validation finishes in 5 seconds or less for 500 students. Pages load in under 2 seconds on campus.</td>
+</tr>
+<tr>
+<td><strong>Availability</strong></td>
+<td>99.5% during the submission window, which usually falls in the second week of May and the first half of December.</td>
+</tr>
+<tr>
+<td><strong>Usability</strong></td>
+<td>Dead simple (§6.8): three screens, one primary action per screen, plain-language messages, no training needed. Thai and English UI. Desktop browsers. The course list and the course page can be read on mobile.</td>
+</tr>
+<tr>
+<td><strong>Accessibility</strong></td>
+<td>WCAG 2.1 AA for core flows.</td>
+</tr>
+<tr>
+<td><strong>Backup</strong></td>
+<td>Daily backups, with a restore tested each semester.</td>
+</tr>
+</tbody></table></div>
+<h2 id="s26">8. Data model (high level)</h2>
+<ul>
+<li><strong>Semester</strong>: year and term, deadlines, active checks, checklist version.</li>
+<li><strong>Program → Course → Section</strong>: lecturers, roster, whether the course has a final exam, REG criteria, TQF3 plan.</li>
+<li><strong>Student</strong>: ID and name. <strong>Enrollment</strong> links a student to a section.</li>
+<li><strong>Submission → Version</strong>: the files, parsed rows, validation results, REG announcement evidence, checklist answers and acknowledgements.</li>
+<li><strong>BuddyAssignment</strong>: section, buddy, assigned by, and when.</li>
+<li><strong>ReviewRound</strong>: round (1 = buddy, 2 = program), reviewer, version reviewed, started and completed times, outcome (passed/approved or returned).</li>
+<li><strong>ItemVerdict</strong>: review round, checklist item, verdict (Verified / Issue / N/A), whether it was set automatically, and a note.</li>
+<li><strong>Issue</strong>: raised by, round, target (checklist item, check, row or section), status.</li>
+<li><strong>AuditLog</strong>.</li>
+</ul>
+<h2 id="s27">9. Integrations</h2>
+<div class="table"><table>
+<thead>
+<tr>
+<th>System</th>
+<th>v1</th>
+<th>Later</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MFU Google Workspace SSO</td>
+<td>Sign-in</td>
+<td>—</td>
+</tr>
+<tr>
+<td>REG (reg.mfu.ac.th)</td>
+<td>Upload of the Grade report and Grade Entry exports, plus an imported roster. The <strong>100% announcement is a screenshot only</strong>, since REG has no export for it.</td>
+<td>API or DB view for the roster, criteria, announcement status and final grades</td>
+</tr>
+<tr>
+<td>TQF system (tqf.mfu.ac.th)</td>
+<td>Generated link</td>
+<td>Read the evaluation plan to automate C-21</td>
+</tr>
+<tr>
+<td>MFU email</td>
+<td>Notifications</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Google Sheets (old responses)</td>
+<td>One-time import (FR-4.2)</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<h2 id="s28">10. Success metrics</h2>
+<ul>
+<li>100% of ADT sections submit through the system by the second semester after launch.</li>
+<li>100% of approved sections have a REG announcement screenshot <strong>verified by the buddy and confirmed by the program</strong>.</li>
+<li>100% of approved sections have a verdict on every checklist item in both rounds.</li>
+<li>At least 70% of the issues that reach program review have already been caught by the buddy, so Round 2 finds few new problems.</li>
+<li>The median buddy review takes 2 working days or less.</li>
+<li>&quot;Fix required&quot; reviewer issues fall by at least 80% compared with the 2/2025 baseline (17 of about 90).</li>
+<li>Zero I/M/F/U misuse issues found after submission, because they are caught by C-14 to C-17.</li>
+<li>Zero duplicate or missing section submissions.</li>
+<li>The median time from first upload to submit is 10 minutes or less.</li>
+<li>Lecturer satisfaction is at least 4/5, with a System Usability Scale (SUS) score of 80 or more.</li>
+<li>90% or more of lecturers submit their first section without asking the office for help.</li>
+</ul>
+<h2 id="s29">11. Rollout plan</h2>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Scope</th>
+<th>Timing (proposed)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>0: Discovery</strong></td>
+<td>Collect sample REG exports (Grade report, Grade Entry) and <strong>10 or more sample screenshots of the REG announcement page</strong> for the OCR and the example image. Confirm the rules for I, M and RESIGNED with the committee. Interview 3–5 lecturers and reviewers.</td>
+<td>Oct 2026</td>
+</tr>
+<tr>
+<td><strong>1: MVP</strong></td>
+<td>Uploads and parsers, checks C-01 to C-19, REG screenshot evidence, the migrated checklist, buddy assignment, the <strong>two-round review (buddy → program)</strong> with a verdict on each item, the dashboard</td>
+<td>Nov 2026</td>
+</tr>
+<tr>
+<td><strong>2: Pilot</strong></td>
+<td>Semester 1/2569 (grades due early Dec 2026), 1–2 programs, with the Google Form kept as backup</td>
+<td>Dec 2026</td>
+</tr>
+<tr>
+<td><strong>3: School-wide</strong></td>
+<td>All ADT programs for semester 2/2569 (May 2027). Retire the Google Form and the printed checklist. Import historical responses.</td>
+<td>May 2027</td>
+</tr>
+<tr>
+<td><strong>4: Enhancements</strong></td>
+<td>Automating C-21 against TQF3, REG API integration, e-signature, appeals</td>
+<td>Ongoing</td>
+</tr>
+</tbody></table></div>
+<h2 id="s30">12. Open questions and risks</h2>
+<div class="table"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Item</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Q1</td>
+<td>The linked form (&quot;ADT Grade Submission 1-2024&quot;, edited 2026-09-22) and the 2/2025 form have different question sets. Which version is the current baseline for 1/2569?</td>
+<td>School office</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>Can REG export the Grade report and Grade Entry criteria in a stable format? Could it ever expose the announcement status, so the screenshot is no longer needed?</td>
+<td>IT / REG office</td>
+</tr>
+<tr>
+<td>Q2b</td>
+<td>Which REG page, exactly, is the required screenshot of, and what must be visible in it? This defines the example image in FR-3.2 and the OCR layout.</td>
+<td>School office</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td><strong>Policy change:</strong> the new system requires <strong>100%</strong> of accumulated marks to be announced, but the current <em>Grading Guideline</em> suggests disclosing less than 100%. Does the committee approve this change, and will the guideline be updated?</td>
+<td>Academic committee</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>What is the minimum review period between announcing scores and submitting grades?</td>
+<td>Academic committee</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td>Final rules for M, I, U and RESIGNED. For example: is M always wrong in a course with no final exam? Should I always have blank components?</td>
+<td>Academic committee</td>
+</tr>
+<tr>
+<td>Q6</td>
+<td>Which courses have no final exam (TDS, projects, co-op)? This must be a flag on each section so that C-14 and C-15 can run.</td>
+<td>Program chairs</td>
+</tr>
+<tr>
+<td>Q7</td>
+<td>Will the Registrar&#39;s Office accept digital submission or e-signature in place of printed, signed grade reports?</td>
+<td>Registrar&#39;s Office</td>
+</tr>
+<tr>
+<td>Q8</td>
+<td>Should borderline rounding (C-13) follow one ADT-wide rule, or each lecturer&#39;s policy?</td>
+<td>Academic committee</td>
+</tr>
+<tr>
+<td>Q9</td>
+<td>Does the <strong>school committee</strong> still sign off after the two review rounds (the old &quot;School Check&quot; column)? Or is program approval final, with the school only overseeing?</td>
+<td>Dean&#39;s office</td>
+</tr>
+<tr>
+<td>Q10</td>
+<td>After a Round 2 return and a fix, does the section go back to the buddy, or straight to the program? The proposed default is Round 2 only, unless the fix touches items beyond those the program raised.</td>
+<td>Academic committee</td>
+</tr>
+<tr>
+<td>Q11</td>
+<td>How are buddies assigned: pairs within the same program, rotation, or across programs? How long does a buddy have to review?</td>
+<td>Program chairs</td>
+</tr>
+<tr>
+<td>R1</td>
+<td>REG export formats may change without notice. Mitigation: versioned parsers, plus a manual column mapping as fallback.</td>
+<td>Product</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>The 100% evidence is a screenshot, which can be cropped, from the wrong section, or out of date. Mitigations: an example image, OCR cross-checks against the course code and Grade Entry, and a required reviewer confirmation.</td>
+<td>Product</td>
+</tr>
+<tr>
+<td>R5</td>
+<td>Buddies may rubber-stamp by accepting auto-verified items without looking. Mitigations: judgment items can&#39;t be bulk-marked, a spot-check prompt, and reports comparing Round 2 findings with Round 1.</td>
+<td>Product</td>
+</tr>
+<tr>
+<td>R6</td>
+<td>A buddy review adds a stage, which squeezes a tight deadline. Mitigations: a separate buddy deadline, reminders, and buddies can be reassigned.</td>
+<td>School office</td>
+</tr>
+<tr>
+<td>R4</td>
+<td>OCR accuracy on REG screenshots (Thai and English text, varying resolutions). Mitigation: OCR only assists and never blocks; falls back to reading by hand.</td>
+<td>Product</td>
+</tr>
+<tr>
+<td>R3</td>
+<td>PDPA: <strong>every ADT lecturer can see all students&#39; grades and scores</strong>, including students they don&#39;t teach, and the system also stores lecturer phone numbers. Mitigations:<br>• a DPO review of the open-visibility policy before the pilot, with the lawful purpose documented as academic quality assurance and peer review<br>• ADT staff only (FR-9.3)<br>• views and downloads are logged<br>• phone numbers are restricted (FR-9.4)<br>If the DPO requires it, fallback option: other lecturers see <strong>student IDs masked</strong> (e.g. 6531xxxx12) while everything else stays visible.</td>
+<td>Product / DPO</td>
+</tr>
+<tr>
+<td>R7</td>
+<td>Open visibility may make some lecturers uncomfortable, for example about their grade distributions being compared. Mitigations: communicate that the purpose is shared quality and peer learning, not ranking, and don&#39;t build a lecturer leaderboard.</td>
+<td>Dean&#39;s office</td>
+</tr>
+</tbody></table></div>
+<h2 id="s31">13. Future ideas</h2>
+<ul>
+<li>Grade-change requests after approval</li>
+<li>A student-facing status view</li>
+<li>Reports for AUN-QA and TQF5, built from the stored distributions</li>
+<li>Expansion to other MFU schools</li>
+</ul>
+
+
+</main>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
-<script>
-  fetch('prd.md', { cache: 'no-cache' })
-    .then(r => r.text())
-    .then(md => {
-      const main = document.getElementById('content');
-      main.innerHTML = marked.parse(md, { gfm: true });
-      main.querySelectorAll('table').forEach(t => {
-        const w = document.createElement('div'); w.className = 'table';
-        t.parentNode.insertBefore(w, t); w.appendChild(t);
-      });
-      const toc = document.getElementById('toc');
-      main.querySelectorAll('h2, h3').forEach((h, i) => {
-        h.id = h.id || 's' + i;
-        const a = document.createElement('a');
-        a.href = '#' + h.id; a.textContent = h.textContent;
-        a.className = h.tagName.toLowerCase();
-        toc.appendChild(a);
-      });
-      if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
-    })
-    .catch(() => {
-      document.getElementById('content').innerHTML =
-        '<p>Could not load <a href="prd.md">prd.md</a>.</p>';
-    });
-</script>
 </body>
 </html>
