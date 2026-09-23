@@ -73,7 +73,7 @@ The response data also has many **data-quality problems** that a structured syst
 | Every checklist item is self-declared. In 2/2025, almost every row answered "Yes" to everything. | The checklist doesn't separate correct submissions from wrong ones. Real errors are only found by reviewers reading the files. |
 | "Shared evaluation results with students" does not verify **100%** of the marks. | Students may see their grade before they have seen every score component. This leads to appeals. |
 | Reviewer findings are free text in one Comments cell, and the fix status is a second free-text cell ("แก้ไขแล้ว", i.e. "fixed"). | No per-issue tracking, no notification to the lecturer, and no history. |
-| Printed documents are handed in alongside the digital ones. | Two versions of the truth. Paper takes effort and is hard to audit. |
+| Printed documents are handed in alongside the digital ones, and nothing records what has been received. | Reviewers can't tell whether the signed exam list or the absence forms have arrived. Missing paper is found late. |
 | A new form and sheet are copied every semester, and the questions drift (the 2/2024 and 2/2025 versions differ). | Semesters can't be compared. Setup is manual every time. |
 | Nothing tracks which courses are missing. | The office finds missing courses by hand, close to the deadline. |
 
@@ -84,7 +84,7 @@ The response data also has many **data-quality problems** that a structured syst
 - **G2.** Guarantee that every approved section has **verified evidence that 100% of accumulated marks were announced on REG**, and that the announced scores match the grade report.
 - **G3.** Keep **every question of the current Google Form** (§6.4). Auto-verify the ones the uploaded data can answer.
 - **G4.** Replace the Program Check / School Check / Comments columns with a tracked **two-round review (buddy, then program)**. Every checklist item is verified in each round, and issues are tracked one by one.
-- **G5.** Remove the need for printed documents, subject to approval by the Registrar's Office (see Q7).
+- **G5.** **No scanning.** Signed paper documents (the final-exam name list, absence forms and the signed grade report) are handed to the **school secretary** as they are today, and never scanned or uploaded. The system records **receipt by the secretary**, so everyone can see which paper documents are in (§6.10). Only files that are already digital are uploaded: REG exports, the score spreadsheet and the REG screenshot.
 - **G6.** A typical section takes 10 minutes or less from the moment the REG files are ready.
 - **G7.** The UI is **dead simple for everyone**: lecturers, buddies, program reviewers and the office. A first-time user completes their task **with no training and no manual** (§6.8).
 - **G8.** **Full transparency within ADT**: every ADT lecturer can view every course, its grades and its submission, including reviews and issues (§6.9).
@@ -103,6 +103,7 @@ The response data also has many **data-quality problems** that a structured syst
 | **Co-lecturer** | Other instructors on the section | View and comment. Can upload if delegated. |
 | **Buddy reviewer** (Round 1) | A peer lecturer assigned to the section, not an instructor of it | Verify each checklist item against the evidence, raise issues, pass or return |
 | **Program reviewer** (Round 2) | Program chair or delegate for each ADT program | Confirm the buddy's verification item by item, raise issues, approve or return |
+| **School secretary** | ADT secretary who receives the paper documents | Mark each required paper document as **received** (or missing) for each section. Keep the physical file. |
 | **School committee** | ADT academic committee / Dean's office | Overview across programs. Receives the approved sections for sending to the Registrar (Q9). |
 | **School office (admin)** | ADT academic services staff | Set up the semester and courses, import rosters, set deadlines, send reminders, export for the Registrar |
 | **System admin** | IT | Users, roles, integrations, backups |
@@ -116,16 +117,19 @@ Roles decide only who can **change** things. **Every ADT lecturer can view every
 ### 5.1 Lecturer: submit grades
 1. Sign in with MFU SSO. The **course list** opens, filtered to **My courses**, showing each section's status and deadline. Clearing the filter shows every ADT section (§6.9).
 2. Open a section. Course code, course name, section, credits, the enrolled roster and the **TQF3 link** (`https://tqf.mfu.ac.th/#/pdf/{year}/{semester}/{course}`) are generated and filled in automatically.
-3. Upload the REG files:
+3. Upload the **digital** files. Nothing is scanned.
    - **Grade report** (from REG)
    - **Score summary**: either the REG Grade Entry export with criteria details, or a custom spreadsheet
    - **Screenshot of the REG score-announcement page**, showing that every component, 100% in total, is announced to students. This is the evidence for the 100% announcement (§6.3).
-   - **Signed student list for the final exam** (if there was a final exam)
-   - **Student Exam Absence forms** (if any)
+
+   **Hand the paper documents to the secretary** (§6.10). Don't scan them. The course page lists which ones the section needs:
+   - the **signed final-exam name list** (if there was a final exam)
+   - the **Student Exam Absence forms** (one for each M grade)
+   - the **signed grade report**
 4. The system parses the files and shows the **validation report** (§6.2): blocking errors, warnings, and info items.
 5. Fix the problems. Typically this means correcting the grades or criteria in REG, exporting again, and re-uploading. Warnings can also be **acknowledged with a reason**, for example "Criteria changed from TQF3 because of a change in learning activities".
 6. Complete the **checklist** (§6.4). Items the system has already verified are ticked, locked and linked to their evidence.
-7. Confirm the declaration that the instructor has signed the grade report. An e-signature may be allowed later (Q7).
+7. Confirm that the paper documents have been, or will be, handed to the secretary. Their status shows as *Awaiting secretary* until the secretary marks them received.
 8. **Submit**. This is blocked while any error is open. The assigned **buddy** is notified.
 9. If the section is returned in either round, the lecturer sees the issues one by one, fixes them, and resubmits. Every version is kept.
 
@@ -134,12 +138,13 @@ Roles decide only who can **change** things. **Every ADT lecturer can view every
 2. The buddy opens a submission. The **review screen is the checklist** (§6.4): one row per item. Each row shows:
    - the lecturer's answer
    - the automatic check result, where there is one
-   - the evidence, opened side by side (grade report, score summary, REG screenshot, signed exam list, absence forms, TQF3 link)
+   - the evidence, opened side by side (grade report, score summary, REG screenshot, TQF3 link)
+   - for paper documents, the **secretary's receipt status** instead of a file
 3. For **every checklist item**, the buddy records one of:
    - **Verified**: the evidence supports the answer.
    - **Issue**: a note is required, for example "M given but the course has no final exam: should be I".
    - **N/A**: only where the item doesn't apply, for example no M grades means no absence form is needed.
-4. Items that pass their automatic checks are pre-marked **Verified (auto)**. The buddy can override one to **Issue**. Items that need judgment can't be pre-marked, and the buddy must decide them: #7c/#10 (REG 100% screenshot), #8, #9, #12, #15, #19 and any acknowledged warnings.
+4. Items that pass their automatic checks are pre-marked **Verified (auto)**. The buddy can override one to **Issue**. Items that need judgment can't be pre-marked, and the buddy must decide them: #7c/#10 (REG 100% screenshot), #15, #19 and any acknowledged warnings. The paper-document items (#8, #9, #12) are verified by the **secretary's receipt**, not by the buddy (§6.10).
 5. The buddy can also raise an issue on a student row, for example a borderline 69.99.
 6. **Pass to program** is only possible once every item is marked. If any item has an Issue, the only action is **Return to lecturer**.
 
@@ -149,8 +154,8 @@ Roles decide only who can **change** things. **Every ADT lecturer can view every
    - the validation summary and any acknowledged warnings with their reasons
    - the grade distribution, including I/M/W/RESIGNED counts
    - a comparison with previous offerings of the course
-3. For **every checklist item**, the reviewer **confirms** the buddy's verdict or marks an **Issue**. "Confirm all verified" is allowed only for items the system checked automatically. The judgment items (#7c/#10, #8, #9, #12, #15, #19) must each be confirmed individually.
-4. **Approve**, or **Return to lecturer**. When a returned section is resubmitted, it goes back to **Round 2 only** if the fix affects only items the program raised, and to **Round 1** otherwise (configurable, Q10).
+3. For **every checklist item**, the reviewer **confirms** the buddy's verdict or marks an **Issue**. "Confirm all verified" is allowed only for items the system checked automatically. The judgment items (#7c/#10, #15, #19) must each be confirmed individually.
+4. **Approve**, or **Return to lecturer**. Approval is blocked until the secretary has marked every required paper document **received**. When a returned section is resubmitted, it goes back to **Round 2 only** if the fix affects only items the program raised, and to **Round 1** otherwise (configurable, Q10).
 
 ### 5.4 School office
 1. Create the semester, for example 1/2569. Import the ADT course/section/lecturer list and the REG rosters. Set the deadlines for submission, buddy review and program review. **Assign buddies** (§6.5, FR-5.6).
@@ -160,9 +165,9 @@ Roles decide only who can **change** things. **Every ADT lecturer can view every
 ## 6. Functional requirements
 
 ### 6.1 Uploads
-- **FR-1.1** Accept the REG exports (`.xlsx`, `.xls`, `.csv`, `.pdf`) and custom spreadsheets, up to 20 MB per file.
+- **FR-1.1** Accept the REG exports (`.xlsx`, `.xls`, `.csv`, or a PDF exported from REG), custom spreadsheets, and the REG screenshot, up to 20 MB per file. **Scans of paper documents aren't accepted.** Paper goes to the secretary (§6.10).
 - **FR-1.2** Parse the known REG layouts: the Grade report, the Grade Entry with criteria details, and the Set list of scores / Display Calculated Score. A column mapper handles custom spreadsheets and remembers each lecturer's mapping.
-- **FR-1.3** A PDF upload (for example a signed exam list or an absence form) is stored as evidence and is not parsed.
+- **FR-1.3** There are no uploads for signed or paper documents. The upload box explains this in plain words: "Signed exam lists and absence forms go to the secretary. No need to scan."
 - **FR-1.4** Uploads are versioned. Only the latest version can be submitted, and earlier versions can be viewed and compared.
 - **FR-1.5** The system stores the **grading criteria** from REG Grade Entry for each section, along with the TQF3 evaluation plan once it has been entered or imported (§6.2, C-17).
 
@@ -205,11 +210,11 @@ Severity levels:
 
 | ID | Check | Severity |
 |---|---|---|
-| C-14 | **F** is given to a student who has no final-exam score and is not on the signed final-exam list. They are probably absent from the final, so the grade should be **M**. *(2/2025: "change F to M, 100+ students")* | Error |
+| C-14 | **F** is given to a student whose **final-exam score is blank** in the score summary. They are probably absent from the final, so the grade should be **M**. This is checked from the data. The paper exam list isn't needed. *(2/2025: "change F to M, 100+ students")* | Error |
 | C-15 | **M** is given in a course with **no final exam** (e.g. TDS, project or studio courses). The grade should be **I**. *(2/2025: 2 cases)* | Error |
 | C-16 | An **I** grade has all score fields filled. Incomplete components should be left blank. *(2/2025: 5 cases)* | Error |
 | C-17 | **U** is given where the guideline calls for **I** (missing work, student has not made contact), or I and F are inconsistent with the Grade Entry. *(2/2025: 2 cases)* | Warning |
-| C-18 | An **M** grade has no Exam Absence form uploaded, or no reason recorded | Warning |
+| C-18 | There are **M** grades, so the section needs Exam Absence forms. The number of M grades is shown to the secretary, who marks the forms received (§6.10). | Info |
 | C-19 | A **RESIGNED** student attended the exam but has no score summary. The form requires one. | Error |
 | C-20 | An **I** grade has no reason and no completion plan | Warning |
 
@@ -271,11 +276,11 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
 | 7a | *(2/2024 form)* URL link to the custom spreadsheet used to calculate scores (if any) | text | Upload (optional) | Upload the file itself instead of a link. |
 | 7b | *(2/2024 form)* Set list of scores (from REG, at the bottom of the Grade Entry Criterion page) | Yes | Upload | Supporting document. |
 | 7c | **Screenshot of the REG score-announcement page** (current form) | file | **Upload (required)** + Reviewer confirm | The REG 100% evidence (§6.3). Read by OCR to help the reviewer, then confirmed by the reviewer. |
-| 8 | Exam's student list with signature for the final exam | Yes / blank | Upload | Required if the course has a final exam. Used by C-14. |
-| 9 | Student's Exam Absence form (if available) | Yes / No | Upload (conditional) | Required for each M grade (C-18). |
+| 8 | Exam's student list with signature for the final exam | Yes / blank | **Paper → secretary** | Required if the course has a final exam. The secretary marks it received. Not scanned. |
+| 9 | Student's Exam Absence form (if available) | Yes / No | **Paper → secretary** | Required for each M grade. The secretary marks how many were received against the M count (C-18). Not scanned. |
 | 10 | I have shared some part of the evaluation results with the students. | Yes / No | Confirm (stricter) + Reviewer confirm | Replaced by the **100% declaration** plus the screenshot (#7c). OCR-assisted and confirmed by the reviewer (§6.3). |
 | 11 | If there are any missing marks, I have already communicated with the students. | Yes / No | Confirm | §6.3, R-6. Warning if the answer is No while I grades exist. |
-| 12 | I have signed the grade report. | Yes / No | Confirm (+ Upload) | Signed PDF, or an e-signature later (Q7). |
+| 12 | I have signed the grade report. | Yes / No | **Paper → secretary** | The signed grade report is handed to the secretary, who marks it received. Not scanned. |
 | 13 | The score summary includes a total score of 100. | Yes / No | **Auto** | C-07, C-08. |
 | 14 | The score summary includes statistical details such as average and SD. | Yes / No | **Auto** | C-10. The system computes them. |
 | 15 | The grading policy is included in the evaluation plan in TQF3. | Yes / No | Confirm + Auto | Confirm, then checked against the TQF3 plan (C-21). |
@@ -294,9 +299,10 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
 | Prefill (#1–#5) | Pre-marked Verified (auto). Can override. | Bulk confirm allowed |
 | Auto, check passed (#6, #7, #13, #14, #16–#18) | Pre-marked Verified (auto). Buddy should spot-check the evidence and can override. | Bulk confirm allowed |
 | Auto, warning acknowledged by the lecturer | **Must decide.** Is the reason acceptable? | **Must confirm individually** |
-| Judgment (#7c/#10 REG 100% screenshot, #8, #9, #11, #12, #15, #19) | **Must decide.** Opens the evidence. | **Must confirm individually** |
+| Judgment (#7c/#10 REG 100% screenshot, #11, #15, #19) | **Must decide.** Opens the evidence. | **Must confirm individually** |
+| Paper (#8, #9, #12) | Shows the secretary's receipt status. Read-only for the buddy. | Approval blocked until all are **received** |
 
-**Result:** 8 of the 16 self-declared Yes/No items (#6–#19) become fully or partly **automatic**. The REG 100% item (#10) is backed by a required screenshot and a reviewer's confirmation, and the only purely self-declared items left are #11 and #12.
+**Result:** 8 of the 16 self-declared Yes/No items (#6–#19) become fully or partly **automatic**. Three (#8, #9, #12) are confirmed by the **secretary's receipt of the paper document**. The REG 100% item (#10) is backed by a required screenshot and a reviewer's confirmation, and the only purely self-declared item left is #11.
 
 > Note: the Drive connector can't read the Google Form itself. This list is built from the column headers of the 1/2024, 2/2024 and 2/2025 response sheets. The linked form was edited on 2026-09-22, so any question added since 2/2025 (such as the screenshot upload) needs checking against the live form.
 
@@ -333,7 +339,7 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
 - **FR-5.8** Only an admin can reopen a locked section, and must record a reason, for example a grade change after an appeal.
 
 ### 6.6 Dashboards and exports
-- **FR-6.1** **One course list for everyone**: every ADT section in the semester, with its status and REG 100% badge, searchable by course code, name or lecturer. Quick filters: **My courses**, **To review as buddy**, **To review as program**, **All**. There are no separate dashboards to learn. The filters do the job.
+- **FR-6.1** **One course list for everyone**: every ADT section in the semester, with its status and REG 100% badge, searchable by course code, name or lecturer. Quick filters: **My courses**, **To review as buddy**, **To review as program**, **Paper to receive** (secretary), **All**. There are no separate dashboards to learn. The filters do the job.
 - **FR-6.2** A summary strip at the top of the list, visible to everyone:
   - completion by program and by stage (not started / buddy review / program review / approved), including sections **not started**
   - overdue buddy reviews and buddy workload
@@ -360,7 +366,7 @@ The system must be usable by every lecturer, including those who rarely use web 
   3. **Admin**: office only.
   There are no other screens, pop-up wizards or separate dashboards.
 - **FR-8.2** **The course page is one vertical page with three numbered steps:** **① Upload → ② Fix → ③ Submit**. Each step shows a clear state (done / needs attention / not started), and the page always shows **one obvious next action** as the only primary button: *Upload files*, *Fix 3 problems*, *Submit*, *Review*, *Approve*.
-- **FR-8.3** **Upload is drag-and-drop into one box.** The system detects each file's type (grade report, score summary, REG screenshot, exam list, absence form) and asks only when it can't tell. Nothing is typed that the system already knows (FR-1, §6.4 Prefill).
+- **FR-8.3** **Upload is drag-and-drop into one box.** The system detects each file's type (grade report, score summary, REG screenshot) and asks only when it can't tell. Paper documents never appear as uploads. They appear as a short "Give to secretary" list with tick marks. Nothing is typed that the system already knows (FR-1, §6.4 Prefill).
 - **FR-8.4** **Problems are written in plain language, with the fix**, for example "3 students have F but no final exam score. They were probably absent: change to M in REG." Error codes (C-xx) are hidden from lecturers and shown only in a details view for reviewers and admins.
 - **FR-8.5** **The checklist and the review use the same table.** One row per item, with at most three buttons per row: **✓ Verified**, **✗ Issue**, **N/A**. The evidence opens in a side panel without leaving the page. A buddy or program reviewer sees exactly what the lecturer saw, with their own column added.
 - **FR-8.6** **Five statuses everywhere**, shown as coloured labels with text: *Not submitted · With buddy · With program · Returned · Approved*. The same words are used in the list, the page and the emails.
@@ -373,7 +379,7 @@ The system must be usable by every lecturer, including those who rarely use web 
 
 - **FR-9.1** **Every signed-in ADT lecturer can view every section in every semester**, whether or not they teach it:
   - course details and lecturers
-  - uploaded files (grade report, score summary, REG screenshot, exam list, absence forms)
+  - uploaded files (grade report, score summary, REG screenshot) and the receipt status of the paper documents
   - student grades and scores
   - validation results and acknowledged warnings
   - the checklist and both review rounds' verdicts
@@ -388,10 +394,29 @@ The system must be usable by every lecturer, including those who rarely use web 
   | Round 1 verdicts, raise or resolve buddy issues | The assigned buddy |
   | Round 2 verdicts, approve or return | The program reviewer |
   | Comment on any section (without a verdict) | Any ADT lecturer |
+  | Mark paper documents received or missing | School secretary |
   | Setup, buddy assignment, reopen, exports | Office / admin |
 
 - **FR-9.3** **Access is limited to ADT staff.** Viewing requires MFU SSO *and* membership of the ADT staff list maintained by the office. Students and staff outside ADT have no access.
 - **FR-9.4** **Personal contact data isn't part of the "open" set.** Lecturer phone numbers are visible only to the office and to the section's reviewers.
+
+### 6.10 Paper documents: handed to the secretary, never scanned
+
+Signed documents stay on paper. The system tracks **whether they have been received**, not their content.
+
+- **FR-10.1** **Required paper documents** are listed automatically for each section:
+
+  | Document | Required when |
+  |---|---|
+  | Signed final-exam name list | The section has a final exam (set per section, Q6) |
+  | Student Exam Absence form | Once for each student with an **M** grade (count taken from the grade report) |
+  | Signed grade report | Always |
+
+- **FR-10.2** The lecturer's course page shows these as a **"Give to secretary"** checklist with a status for each: *Awaiting secretary · Received · Missing*. Nothing needs uploading.
+- **FR-10.3** **Secretary view:** no extra screen is needed. The secretary uses the course list with the **Paper to receive** filter, which shows each section and the paper documents it needs, with the tick boxes right in the list. The secretary ticks **Received** when a document is handed in. For absence forms, they enter the number received, which is checked against the M count. They can mark **Missing**, with a note, which notifies the lecturer. Each tick records the secretary's name and the time.
+- **FR-10.4** The secretary can search by course code or lecturer, so they can tick everything a lecturer hands in at the counter at once.
+- **FR-10.5** A buddy can review before the paper arrives. **Program approval is blocked** until every required paper document is *Received*.
+- **FR-10.6** No scan or photo of a paper document is stored anywhere in the system. The physical file stays with the secretary.
 
 ## 7. Non-functional requirements
 
@@ -414,6 +439,7 @@ The system must be usable by every lecturer, including those who rarely use web 
 - **BuddyAssignment**: section, buddy, assigned by, and when.
 - **ReviewRound**: round (1 = buddy, 2 = program), reviewer, version reviewed, started and completed times, outcome (passed/approved or returned).
 - **ItemVerdict**: review round, checklist item, verdict (Verified / Issue / N/A), whether it was set automatically, and a note.
+- **PaperDocument**: section, type (exam list / absence form / signed grade report), number required, number received, status, received by, and when.
 - **Issue**: raised by, round, target (checklist item, check, row or section), status.
 - **AuditLog**.
 
@@ -449,7 +475,7 @@ The system must be usable by every lecturer, including those who rarely use web 
 | **1: MVP** | Uploads and parsers, checks C-01 to C-19, REG screenshot evidence, the migrated checklist, buddy assignment, the **two-round review (buddy → program)** with a verdict on each item, the dashboard | Nov 2026 |
 | **2: Pilot** | Semester 1/2569 (grades due early Dec 2026), 1–2 programs, with the Google Form kept as backup | Dec 2026 |
 | **3: School-wide** | All ADT programs for semester 2/2569 (May 2027). Retire the Google Form and the printed checklist. Import historical responses. | May 2027 |
-| **4: Enhancements** | Automating C-21 against TQF3, REG API integration, e-signature, appeals | Ongoing |
+| **4: Enhancements** | Automating C-21 against TQF3, REG API integration, appeals | Ongoing |
 
 ## 12. Open questions and risks
 
@@ -462,7 +488,7 @@ The system must be usable by every lecturer, including those who rarely use web 
 | Q4 | What is the minimum review period between announcing scores and submitting grades? | Academic committee |
 | Q5 | Final rules for M, I, U and RESIGNED. For example: is M always wrong in a course with no final exam? Should I always have blank components? | Academic committee |
 | Q6 | Which courses have no final exam (TDS, projects, co-op)? This must be a flag on each section so that C-14 and C-15 can run. | Program chairs |
-| Q7 | Will the Registrar's Office accept digital submission or e-signature in place of printed, signed grade reports? | Registrar's Office |
+| Q7 | Which paper documents does the secretary pass on to the Registrar's Office, and when? Should the system record that hand-over as well? | School office |
 | Q8 | Should borderline rounding (C-13) follow one ADT-wide rule, or each lecturer's policy? | Academic committee |
 | Q9 | Does the **school committee** still sign off after the two review rounds (the old "School Check" column)? Or is program approval final, with the school only overseeing? | Dean's office |
 | Q10 | After a Round 2 return and a fix, does the section go back to the buddy, or straight to the program? The proposed default is Round 2 only, unless the fix touches items beyond those the program raised. | Academic committee |

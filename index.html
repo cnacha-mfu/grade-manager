@@ -78,13 +78,14 @@
 <a class="h3" href="#s22">6.7 Audit and records</a>
 <a class="h3" href="#s23">6.8 Dead-simple UI</a>
 <a class="h3" href="#s24">6.9 Visibility: everything is open to all ADT lecturers</a>
-<a class="h2" href="#s25">7. Non-functional requirements</a>
-<a class="h2" href="#s26">8. Data model (high level)</a>
-<a class="h2" href="#s27">9. Integrations</a>
-<a class="h2" href="#s28">10. Success metrics</a>
-<a class="h2" href="#s29">11. Rollout plan</a>
-<a class="h2" href="#s30">12. Open questions and risks</a>
-<a class="h2" href="#s31">13. Future ideas</a>
+<a class="h3" href="#s25">6.10 Paper documents: handed to the secretary, never scanned</a>
+<a class="h2" href="#s26">7. Non-functional requirements</a>
+<a class="h2" href="#s27">8. Data model (high level)</a>
+<a class="h2" href="#s28">9. Integrations</a>
+<a class="h2" href="#s29">10. Success metrics</a>
+<a class="h2" href="#s30">11. Rollout plan</a>
+<a class="h2" href="#s31">12. Open questions and risks</a>
+<a class="h2" href="#s32">13. Future ideas</a>
 </nav>
   <main id="content">
 <h1>PRD: ADT Grade Manager</h1>
@@ -217,8 +218,8 @@
 <td>No per-issue tracking, no notification to the lecturer, and no history.</td>
 </tr>
 <tr>
-<td>Printed documents are handed in alongside the digital ones.</td>
-<td>Two versions of the truth. Paper takes effort and is hard to audit.</td>
+<td>Printed documents are handed in alongside the digital ones, and nothing records what has been received.</td>
+<td>Reviewers can&#39;t tell whether the signed exam list or the absence forms have arrived. Missing paper is found late.</td>
 </tr>
 <tr>
 <td>A new form and sheet are copied every semester, and the questions drift (the 2/2024 and 2/2025 versions differ).</td>
@@ -236,7 +237,7 @@
 <li><strong>G2.</strong> Guarantee that every approved section has <strong>verified evidence that 100% of accumulated marks were announced on REG</strong>, and that the announced scores match the grade report.</li>
 <li><strong>G3.</strong> Keep <strong>every question of the current Google Form</strong> (§6.4). Auto-verify the ones the uploaded data can answer.</li>
 <li><strong>G4.</strong> Replace the Program Check / School Check / Comments columns with a tracked <strong>two-round review (buddy, then program)</strong>. Every checklist item is verified in each round, and issues are tracked one by one.</li>
-<li><strong>G5.</strong> Remove the need for printed documents, subject to approval by the Registrar&#39;s Office (see Q7).</li>
+<li><strong>G5.</strong> <strong>No scanning.</strong> Signed paper documents (the final-exam name list, absence forms and the signed grade report) are handed to the <strong>school secretary</strong> as they are today, and never scanned or uploaded. The system records <strong>receipt by the secretary</strong>, so everyone can see which paper documents are in (§6.10). Only files that are already digital are uploaded: REG exports, the score spreadsheet and the REG screenshot.</li>
 <li><strong>G6.</strong> A typical section takes 10 minutes or less from the moment the REG files are ready.</li>
 <li><strong>G7.</strong> The UI is <strong>dead simple for everyone</strong>: lecturers, buddies, program reviewers and the office. A first-time user completes their task <strong>with no training and no manual</strong> (§6.8).</li>
 <li><strong>G8.</strong> <strong>Full transparency within ADT</strong>: every ADT lecturer can view every course, its grades and its submission, including reviews and issues (§6.9).</li>
@@ -278,6 +279,11 @@
 <td>Confirm the buddy&#39;s verification item by item, raise issues, approve or return</td>
 </tr>
 <tr>
+<td><strong>School secretary</strong></td>
+<td>ADT secretary who receives the paper documents</td>
+<td>Mark each required paper document as <strong>received</strong> (or missing) for each section. Keep the physical file.</td>
+</tr>
+<tr>
 <td><strong>School committee</strong></td>
 <td>ADT academic committee / Dean&#39;s office</td>
 <td>Overview across programs. Receives the approved sections for sending to the Registrar (Q9).</td>
@@ -298,22 +304,35 @@
 <h2 id="s10">5. User journeys</h2>
 <h3 id="s11">5.1 Lecturer: submit grades</h3>
 <ol>
-<li>Sign in with MFU SSO. The <strong>course list</strong> opens, filtered to <strong>My courses</strong>, showing each section&#39;s status and deadline. Clearing the filter shows every ADT section (§6.9).</li>
-<li>Open a section. Course code, course name, section, credits, the enrolled roster and the <strong>TQF3 link</strong> (<code>https://tqf.mfu.ac.th/#/pdf/{year}/{semester}/{course}</code>) are generated and filled in automatically.</li>
-<li>Upload the REG files:<ul>
+<li><p>Sign in with MFU SSO. The <strong>course list</strong> opens, filtered to <strong>My courses</strong>, showing each section&#39;s status and deadline. Clearing the filter shows every ADT section (§6.9).</p>
+</li>
+<li><p>Open a section. Course code, course name, section, credits, the enrolled roster and the <strong>TQF3 link</strong> (<code>https://tqf.mfu.ac.th/#/pdf/{year}/{semester}/{course}</code>) are generated and filled in automatically.</p>
+</li>
+<li><p>Upload the <strong>digital</strong> files. Nothing is scanned.</p>
+<ul>
 <li><strong>Grade report</strong> (from REG)</li>
 <li><strong>Score summary</strong>: either the REG Grade Entry export with criteria details, or a custom spreadsheet</li>
 <li><strong>Screenshot of the REG score-announcement page</strong>, showing that every component, 100% in total, is announced to students. This is the evidence for the 100% announcement (§6.3).</li>
-<li><strong>Signed student list for the final exam</strong> (if there was a final exam)</li>
-<li><strong>Student Exam Absence forms</strong> (if any)</li>
+</ul>
+<p><strong>Hand the paper documents to the secretary</strong> (§6.10). Don&#39;t scan them. The course page lists which ones the section needs:</p>
+<ul>
+<li>the <strong>signed final-exam name list</strong> (if there was a final exam)</li>
+<li>the <strong>Student Exam Absence forms</strong> (one for each M grade)</li>
+<li>the <strong>signed grade report</strong></li>
 </ul>
 </li>
-<li>The system parses the files and shows the <strong>validation report</strong> (§6.2): blocking errors, warnings, and info items.</li>
-<li>Fix the problems. Typically this means correcting the grades or criteria in REG, exporting again, and re-uploading. Warnings can also be <strong>acknowledged with a reason</strong>, for example &quot;Criteria changed from TQF3 because of a change in learning activities&quot;.</li>
-<li>Complete the <strong>checklist</strong> (§6.4). Items the system has already verified are ticked, locked and linked to their evidence.</li>
-<li>Confirm the declaration that the instructor has signed the grade report. An e-signature may be allowed later (Q7).</li>
-<li><strong>Submit</strong>. This is blocked while any error is open. The assigned <strong>buddy</strong> is notified.</li>
-<li>If the section is returned in either round, the lecturer sees the issues one by one, fixes them, and resubmits. Every version is kept.</li>
+<li><p>The system parses the files and shows the <strong>validation report</strong> (§6.2): blocking errors, warnings, and info items.</p>
+</li>
+<li><p>Fix the problems. Typically this means correcting the grades or criteria in REG, exporting again, and re-uploading. Warnings can also be <strong>acknowledged with a reason</strong>, for example &quot;Criteria changed from TQF3 because of a change in learning activities&quot;.</p>
+</li>
+<li><p>Complete the <strong>checklist</strong> (§6.4). Items the system has already verified are ticked, locked and linked to their evidence.</p>
+</li>
+<li><p>Confirm that the paper documents have been, or will be, handed to the secretary. Their status shows as <em>Awaiting secretary</em> until the secretary marks them received.</p>
+</li>
+<li><p><strong>Submit</strong>. This is blocked while any error is open. The assigned <strong>buddy</strong> is notified.</p>
+</li>
+<li><p>If the section is returned in either round, the lecturer sees the issues one by one, fixes them, and resubmits. Every version is kept.</p>
+</li>
 </ol>
 <h3 id="s12">5.2 Round 1: buddy review</h3>
 <ol>
@@ -321,7 +340,8 @@
 <li>The buddy opens a submission. The <strong>review screen is the checklist</strong> (§6.4): one row per item. Each row shows:<ul>
 <li>the lecturer&#39;s answer</li>
 <li>the automatic check result, where there is one</li>
-<li>the evidence, opened side by side (grade report, score summary, REG screenshot, signed exam list, absence forms, TQF3 link)</li>
+<li>the evidence, opened side by side (grade report, score summary, REG screenshot, TQF3 link)</li>
+<li>for paper documents, the <strong>secretary&#39;s receipt status</strong> instead of a file</li>
 </ul>
 </li>
 <li>For <strong>every checklist item</strong>, the buddy records one of:<ul>
@@ -330,7 +350,7 @@
 <li><strong>N/A</strong>: only where the item doesn&#39;t apply, for example no M grades means no absence form is needed.</li>
 </ul>
 </li>
-<li>Items that pass their automatic checks are pre-marked <strong>Verified (auto)</strong>. The buddy can override one to <strong>Issue</strong>. Items that need judgment can&#39;t be pre-marked, and the buddy must decide them: #7c/#10 (REG 100% screenshot), #8, #9, #12, #15, #19 and any acknowledged warnings.</li>
+<li>Items that pass their automatic checks are pre-marked <strong>Verified (auto)</strong>. The buddy can override one to <strong>Issue</strong>. Items that need judgment can&#39;t be pre-marked, and the buddy must decide them: #7c/#10 (REG 100% screenshot), #15, #19 and any acknowledged warnings. The paper-document items (#8, #9, #12) are verified by the <strong>secretary&#39;s receipt</strong>, not by the buddy (§6.10).</li>
 <li>The buddy can also raise an issue on a student row, for example a borderline 69.99.</li>
 <li><strong>Pass to program</strong> is only possible once every item is marked. If any item has an Issue, the only action is <strong>Return to lecturer</strong>.</li>
 </ol>
@@ -343,8 +363,8 @@
 <li>a comparison with previous offerings of the course</li>
 </ul>
 </li>
-<li>For <strong>every checklist item</strong>, the reviewer <strong>confirms</strong> the buddy&#39;s verdict or marks an <strong>Issue</strong>. &quot;Confirm all verified&quot; is allowed only for items the system checked automatically. The judgment items (#7c/#10, #8, #9, #12, #15, #19) must each be confirmed individually.</li>
-<li><strong>Approve</strong>, or <strong>Return to lecturer</strong>. When a returned section is resubmitted, it goes back to <strong>Round 2 only</strong> if the fix affects only items the program raised, and to <strong>Round 1</strong> otherwise (configurable, Q10).</li>
+<li>For <strong>every checklist item</strong>, the reviewer <strong>confirms</strong> the buddy&#39;s verdict or marks an <strong>Issue</strong>. &quot;Confirm all verified&quot; is allowed only for items the system checked automatically. The judgment items (#7c/#10, #15, #19) must each be confirmed individually.</li>
+<li><strong>Approve</strong>, or <strong>Return to lecturer</strong>. Approval is blocked until the secretary has marked every required paper document <strong>received</strong>. When a returned section is resubmitted, it goes back to <strong>Round 2 only</strong> if the fix affects only items the program raised, and to <strong>Round 1</strong> otherwise (configurable, Q10).</li>
 </ol>
 <h3 id="s14">5.4 School office</h3>
 <ol>
@@ -355,9 +375,9 @@
 <h2 id="s15">6. Functional requirements</h2>
 <h3 id="s16">6.1 Uploads</h3>
 <ul>
-<li><strong>FR-1.1</strong> Accept the REG exports (<code>.xlsx</code>, <code>.xls</code>, <code>.csv</code>, <code>.pdf</code>) and custom spreadsheets, up to 20 MB per file.</li>
+<li><strong>FR-1.1</strong> Accept the REG exports (<code>.xlsx</code>, <code>.xls</code>, <code>.csv</code>, or a PDF exported from REG), custom spreadsheets, and the REG screenshot, up to 20 MB per file. <strong>Scans of paper documents aren&#39;t accepted.</strong> Paper goes to the secretary (§6.10).</li>
 <li><strong>FR-1.2</strong> Parse the known REG layouts: the Grade report, the Grade Entry with criteria details, and the Set list of scores / Display Calculated Score. A column mapper handles custom spreadsheets and remembers each lecturer&#39;s mapping.</li>
-<li><strong>FR-1.3</strong> A PDF upload (for example a signed exam list or an absence form) is stored as evidence and is not parsed.</li>
+<li><strong>FR-1.3</strong> There are no uploads for signed or paper documents. The upload box explains this in plain words: &quot;Signed exam lists and absence forms go to the secretary. No need to scan.&quot;</li>
 <li><strong>FR-1.4</strong> Uploads are versioned. Only the latest version can be submitted, and earlier versions can be viewed and compared.</li>
 <li><strong>FR-1.5</strong> The system stores the <strong>grading criteria</strong> from REG Grade Entry for each section, along with the TQF3 evaluation plan once it has been entered or imported (§6.2, C-17).</li>
 </ul>
@@ -474,7 +494,7 @@
 </thead>
 <tbody><tr>
 <td>C-14</td>
-<td><strong>F</strong> is given to a student who has no final-exam score and is not on the signed final-exam list. They are probably absent from the final, so the grade should be <strong>M</strong>. <em>(2/2025: &quot;change F to M, 100+ students&quot;)</em></td>
+<td><strong>F</strong> is given to a student whose <strong>final-exam score is blank</strong> in the score summary. They are probably absent from the final, so the grade should be <strong>M</strong>. This is checked from the data. The paper exam list isn&#39;t needed. <em>(2/2025: &quot;change F to M, 100+ students&quot;)</em></td>
 <td>Error</td>
 </tr>
 <tr>
@@ -494,8 +514,8 @@
 </tr>
 <tr>
 <td>C-18</td>
-<td>An <strong>M</strong> grade has no Exam Absence form uploaded, or no reason recorded</td>
-<td>Warning</td>
+<td>There are <strong>M</strong> grades, so the section needs Exam Absence forms. The number of M grades is shown to the secretary, who marks the forms received (§6.10).</td>
+<td>Info</td>
 </tr>
 <tr>
 <td>C-19</td>
@@ -665,15 +685,15 @@
 <td>8</td>
 <td>Exam&#39;s student list with signature for the final exam</td>
 <td>Yes / blank</td>
-<td>Upload</td>
-<td>Required if the course has a final exam. Used by C-14.</td>
+<td><strong>Paper → secretary</strong></td>
+<td>Required if the course has a final exam. The secretary marks it received. Not scanned.</td>
 </tr>
 <tr>
 <td>9</td>
 <td>Student&#39;s Exam Absence form (if available)</td>
 <td>Yes / No</td>
-<td>Upload (conditional)</td>
-<td>Required for each M grade (C-18).</td>
+<td><strong>Paper → secretary</strong></td>
+<td>Required for each M grade. The secretary marks how many were received against the M count (C-18). Not scanned.</td>
 </tr>
 <tr>
 <td>10</td>
@@ -693,8 +713,8 @@
 <td>12</td>
 <td>I have signed the grade report.</td>
 <td>Yes / No</td>
-<td>Confirm (+ Upload)</td>
-<td>Signed PDF, or an e-signature later (Q7).</td>
+<td><strong>Paper → secretary</strong></td>
+<td>The signed grade report is handed to the secretary, who marks it received. Not scanned.</td>
 </tr>
 <tr>
 <td>13</td>
@@ -792,12 +812,17 @@
 <td><strong>Must confirm individually</strong></td>
 </tr>
 <tr>
-<td>Judgment (#7c/#10 REG 100% screenshot, #8, #9, #11, #12, #15, #19)</td>
+<td>Judgment (#7c/#10 REG 100% screenshot, #11, #15, #19)</td>
 <td><strong>Must decide.</strong> Opens the evidence.</td>
 <td><strong>Must confirm individually</strong></td>
 </tr>
+<tr>
+<td>Paper (#8, #9, #12)</td>
+<td>Shows the secretary&#39;s receipt status. Read-only for the buddy.</td>
+<td>Approval blocked until all are <strong>received</strong></td>
+</tr>
 </tbody></table></div>
-<p><strong>Result:</strong> 8 of the 16 self-declared Yes/No items (#6–#19) become fully or partly <strong>automatic</strong>. The REG 100% item (#10) is backed by a required screenshot and a reviewer&#39;s confirmation, and the only purely self-declared items left are #11 and #12.</p>
+<p><strong>Result:</strong> 8 of the 16 self-declared Yes/No items (#6–#19) become fully or partly <strong>automatic</strong>. Three (#8, #9, #12) are confirmed by the <strong>secretary&#39;s receipt of the paper document</strong>. The REG 100% item (#10) is backed by a required screenshot and a reviewer&#39;s confirmation, and the only purely self-declared item left is #11.</p>
 <blockquote>
 <p>Note: the Drive connector can&#39;t read the Google Form itself. This list is built from the column headers of the 1/2024, 2/2024 and 2/2025 response sheets. The linked form was edited on 2026-09-22, so any question added since 2/2025 (such as the screenshot upload) needs checking against the live form.</p>
 </blockquote>
@@ -842,7 +867,7 @@
 </ul>
 <h3 id="s21">6.6 Dashboards and exports</h3>
 <ul>
-<li><strong>FR-6.1</strong> <strong>One course list for everyone</strong>: every ADT section in the semester, with its status and REG 100% badge, searchable by course code, name or lecturer. Quick filters: <strong>My courses</strong>, <strong>To review as buddy</strong>, <strong>To review as program</strong>, <strong>All</strong>. There are no separate dashboards to learn. The filters do the job.</li>
+<li><strong>FR-6.1</strong> <strong>One course list for everyone</strong>: every ADT section in the semester, with its status and REG 100% badge, searchable by course code, name or lecturer. Quick filters: <strong>My courses</strong>, <strong>To review as buddy</strong>, <strong>To review as program</strong>, <strong>Paper to receive</strong> (secretary), <strong>All</strong>. There are no separate dashboards to learn. The filters do the job.</li>
 <li><strong>FR-6.2</strong> A summary strip at the top of the list, visible to everyone:<ul>
 <li>completion by program and by stage (not started / buddy review / program review / approved), including sections <strong>not started</strong></li>
 <li>overdue buddy reviews and buddy workload</li>
@@ -875,7 +900,7 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 </ol>
 </li>
 <li><strong>FR-8.2</strong> <strong>The course page is one vertical page with three numbered steps:</strong> <strong>① Upload → ② Fix → ③ Submit</strong>. Each step shows a clear state (done / needs attention / not started), and the page always shows <strong>one obvious next action</strong> as the only primary button: <em>Upload files</em>, <em>Fix 3 problems</em>, <em>Submit</em>, <em>Review</em>, <em>Approve</em>.</li>
-<li><strong>FR-8.3</strong> <strong>Upload is drag-and-drop into one box.</strong> The system detects each file&#39;s type (grade report, score summary, REG screenshot, exam list, absence form) and asks only when it can&#39;t tell. Nothing is typed that the system already knows (FR-1, §6.4 Prefill).</li>
+<li><strong>FR-8.3</strong> <strong>Upload is drag-and-drop into one box.</strong> The system detects each file&#39;s type (grade report, score summary, REG screenshot) and asks only when it can&#39;t tell. Paper documents never appear as uploads. They appear as a short &quot;Give to secretary&quot; list with tick marks. Nothing is typed that the system already knows (FR-1, §6.4 Prefill).</li>
 <li><strong>FR-8.4</strong> <strong>Problems are written in plain language, with the fix</strong>, for example &quot;3 students have F but no final exam score. They were probably absent: change to M in REG.&quot; Error codes (C-xx) are hidden from lecturers and shown only in a details view for reviewers and admins.</li>
 <li><strong>FR-8.5</strong> <strong>The checklist and the review use the same table.</strong> One row per item, with at most three buttons per row: <strong>✓ Verified</strong>, <strong>✗ Issue</strong>, <strong>N/A</strong>. The evidence opens in a side panel without leaving the page. A buddy or program reviewer sees exactly what the lecturer saw, with their own column added.</li>
 <li><strong>FR-8.6</strong> <strong>Five statuses everywhere</strong>, shown as coloured labels with text: <em>Not submitted · With buddy · With program · Returned · Approved</em>. The same words are used in the list, the page and the emails.</li>
@@ -889,7 +914,7 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <li><p><strong>FR-9.1</strong> <strong>Every signed-in ADT lecturer can view every section in every semester</strong>, whether or not they teach it:</p>
 <ul>
 <li>course details and lecturers</li>
-<li>uploaded files (grade report, score summary, REG screenshot, exam list, absence forms)</li>
+<li>uploaded files (grade report, score summary, REG screenshot) and the receipt status of the paper documents</li>
 <li>student grades and scores</li>
 <li>validation results and acknowledged warnings</li>
 <li>the checklist and both review rounds&#39; verdicts</li>
@@ -926,6 +951,10 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <td>Any ADT lecturer</td>
 </tr>
 <tr>
+<td>Mark paper documents received or missing</td>
+<td>School secretary</td>
+</tr>
+<tr>
 <td>Setup, buddy assignment, reopen, exports</td>
 <td>Office / admin</td>
 </tr>
@@ -936,7 +965,43 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <li><p><strong>FR-9.4</strong> <strong>Personal contact data isn&#39;t part of the &quot;open&quot; set.</strong> Lecturer phone numbers are visible only to the office and to the section&#39;s reviewers.</p>
 </li>
 </ul>
-<h2 id="s25">7. Non-functional requirements</h2>
+<h3 id="s25">6.10 Paper documents: handed to the secretary, never scanned</h3>
+<p>Signed documents stay on paper. The system tracks <strong>whether they have been received</strong>, not their content.</p>
+<ul>
+<li><p><strong>FR-10.1</strong> <strong>Required paper documents</strong> are listed automatically for each section:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Required when</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Signed final-exam name list</td>
+<td>The section has a final exam (set per section, Q6)</td>
+</tr>
+<tr>
+<td>Student Exam Absence form</td>
+<td>Once for each student with an <strong>M</strong> grade (count taken from the grade report)</td>
+</tr>
+<tr>
+<td>Signed grade report</td>
+<td>Always</td>
+</tr>
+</tbody></table></div>
+</li>
+<li><p><strong>FR-10.2</strong> The lecturer&#39;s course page shows these as a <strong>&quot;Give to secretary&quot;</strong> checklist with a status for each: <em>Awaiting secretary · Received · Missing</em>. Nothing needs uploading.</p>
+</li>
+<li><p><strong>FR-10.3</strong> <strong>Secretary view:</strong> no extra screen is needed. The secretary uses the course list with the <strong>Paper to receive</strong> filter, which shows each section and the paper documents it needs, with the tick boxes right in the list. The secretary ticks <strong>Received</strong> when a document is handed in. For absence forms, they enter the number received, which is checked against the M count. They can mark <strong>Missing</strong>, with a note, which notifies the lecturer. Each tick records the secretary&#39;s name and the time.</p>
+</li>
+<li><p><strong>FR-10.4</strong> The secretary can search by course code or lecturer, so they can tick everything a lecturer hands in at the counter at once.</p>
+</li>
+<li><p><strong>FR-10.5</strong> A buddy can review before the paper arrives. <strong>Program approval is blocked</strong> until every required paper document is <em>Received</em>.</p>
+</li>
+<li><p><strong>FR-10.6</strong> No scan or photo of a paper document is stored anywhere in the system. The physical file stays with the secretary.</p>
+</li>
+</ul>
+<h2 id="s26">7. Non-functional requirements</h2>
 <div class="table"><table>
 <thead>
 <tr>
@@ -973,7 +1038,7 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <td>Daily backups, with a restore tested each semester.</td>
 </tr>
 </tbody></table></div>
-<h2 id="s26">8. Data model (high level)</h2>
+<h2 id="s27">8. Data model (high level)</h2>
 <ul>
 <li><strong>Semester</strong>: year and term, deadlines, active checks, checklist version.</li>
 <li><strong>Program → Course → Section</strong>: lecturers, roster, whether the course has a final exam, REG criteria, TQF3 plan.</li>
@@ -982,10 +1047,11 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <li><strong>BuddyAssignment</strong>: section, buddy, assigned by, and when.</li>
 <li><strong>ReviewRound</strong>: round (1 = buddy, 2 = program), reviewer, version reviewed, started and completed times, outcome (passed/approved or returned).</li>
 <li><strong>ItemVerdict</strong>: review round, checklist item, verdict (Verified / Issue / N/A), whether it was set automatically, and a note.</li>
+<li><strong>PaperDocument</strong>: section, type (exam list / absence form / signed grade report), number required, number received, status, received by, and when.</li>
 <li><strong>Issue</strong>: raised by, round, target (checklist item, check, row or section), status.</li>
 <li><strong>AuditLog</strong>.</li>
 </ul>
-<h2 id="s27">9. Integrations</h2>
+<h2 id="s28">9. Integrations</h2>
 <div class="table"><table>
 <thead>
 <tr>
@@ -1020,7 +1086,7 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <td>—</td>
 </tr>
 </tbody></table></div>
-<h2 id="s28">10. Success metrics</h2>
+<h2 id="s29">10. Success metrics</h2>
 <ul>
 <li>100% of ADT sections submit through the system by the second semester after launch.</li>
 <li>100% of approved sections have a REG announcement screenshot <strong>verified by the buddy and confirmed by the program</strong>.</li>
@@ -1034,7 +1100,7 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <li>Lecturer satisfaction is at least 4/5, with a System Usability Scale (SUS) score of 80 or more.</li>
 <li>90% or more of lecturers submit their first section without asking the office for help.</li>
 </ul>
-<h2 id="s29">11. Rollout plan</h2>
+<h2 id="s30">11. Rollout plan</h2>
 <div class="table"><table>
 <thead>
 <tr>
@@ -1065,11 +1131,11 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 </tr>
 <tr>
 <td><strong>4: Enhancements</strong></td>
-<td>Automating C-21 against TQF3, REG API integration, e-signature, appeals</td>
+<td>Automating C-21 against TQF3, REG API integration, appeals</td>
 <td>Ongoing</td>
 </tr>
 </tbody></table></div>
-<h2 id="s30">12. Open questions and risks</h2>
+<h2 id="s31">12. Open questions and risks</h2>
 <div class="table"><table>
 <thead>
 <tr>
@@ -1115,8 +1181,8 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 </tr>
 <tr>
 <td>Q7</td>
-<td>Will the Registrar&#39;s Office accept digital submission or e-signature in place of printed, signed grade reports?</td>
-<td>Registrar&#39;s Office</td>
+<td>Which paper documents does the secretary pass on to the Registrar&#39;s Office, and when? Should the system record that hand-over as well?</td>
+<td>School office</td>
 </tr>
 <tr>
 <td>Q8</td>
@@ -1174,7 +1240,7 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <td>Dean&#39;s office</td>
 </tr>
 </tbody></table></div>
-<h2 id="s31">13. Future ideas</h2>
+<h2 id="s32">13. Future ideas</h2>
 <ul>
 <li>Grade-change requests after approval</li>
 <li>A student-facing status view</li>
