@@ -7,6 +7,7 @@
 | **Author** | nacha.cho@mfu.ac.th |
 | **Status** | Draft v0.3 (open questions answered by the Acting Dean, 2026-09-23) |
 | **Last updated** | 2026-09-23 |
+| **Prototype** | [Clickable prototype for every role](prototype/) (sample data) |
 | **Replaces** | Google Form "ADT Grade Submission" (`docs.google.com/forms/d/1Vp8lhabfDXFABCzy8axUCtqeegiq_6Mvmqmrv4W11wA`), its response Sheets, and the "School Check" sheet |
 
 **Sources used for this draft** (Google Drive, ADT folder):

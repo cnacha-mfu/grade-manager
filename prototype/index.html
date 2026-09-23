@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADT Grade Manager — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4f1; --card: #ffffff; --fg: #1f2328; --muted: #646b75; --line: #e4e0da;
+    --accent: #9b3b2f; --accent-2: #7a2e25; --accent-soft: #f7e9e6;
+    --ok: #1f7a4d; --ok-soft: #e3f3ea; --warn: #9a6400; --warn-soft: #fbf0d9;
+    --err: #b42318; --err-soft: #fde7e5; --info: #2457a6; --info-soft: #e5eefb;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 2px 10px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 14.5px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  a { color: var(--accent); }
+  .demo-banner { background: #2b2f36; color: #e8e8e8; font-size: 12.5px; padding: 6px 16px; text-align: center; }
+  .demo-banner b { color: #fff; }
+  header.top { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+  .top-inner { max-width: 1240px; margin: 0 auto; padding: 10px 16px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .brand { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .brand .dot { width: 26px; height: 26px; border-radius: 7px; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 13px; }
+  .roles { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 10px; flex-wrap: wrap; }
+  .roles button { border: 0; background: transparent; padding: 6px 12px; border-radius: 7px; cursor: pointer; color: var(--muted); font-weight: 500; }
+  .roles button.on { background: var(--card); color: var(--fg); box-shadow: var(--shadow); }
+  .who { margin-left: auto; font-size: 13px; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+  .who b { color: var(--fg); font-weight: 600; }
+  .linkbtn { background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; text-decoration: underline; }
+  main { max-width: 1240px; margin: 0 auto; padding: 20px 16px 80px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 17px; margin: 0 0 10px; }
+  h3 { font-size: 15px; margin: 0 0 8px; }
+  .sub { color: var(--muted); margin: 0 0 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 18px; }
+  .stack > * + * { margin-top: 14px; }
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .grow { flex: 1; }
+  .btn { border: 1px solid var(--line); background: var(--card); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 500; }
+  .btn:hover { border-color: #cfc9c1; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { background: var(--accent-2); }
+  .btn.big { padding: 11px 20px; font-size: 15px; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.ghost { background: transparent; }
+  .btn.small { padding: 4px 10px; font-size: 13px; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+  .chip.notsub { background: #eceae6; color: #555; }
+  .chip.buddy { background: var(--info-soft); color: var(--info); }
+  .chip.program { background: #efe6fa; color: #6a3aa8; }
+  .chip.returned { background: var(--warn-soft); color: var(--warn); }
+  .chip.approved { background: var(--ok-soft); color: var(--ok); }
+  .chip.err { background: var(--err-soft); color: var(--err); }
+  .chip.muted { background: #eceae6; color: #666; font-weight: 500; }
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .summary .card { padding: 12px 14px; }
+  .summary .n { font-size: 24px; font-weight: 700; }
+  .summary .l { color: var(--muted); font-size: 12.5px; }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filters button { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+  .filters button.on { background: var(--fg); color: #fff; border-color: var(--fg); }
+  .search { border: 1px solid var(--line); border-radius: 8px; padding: 7px 12px; min-width: 240px; background: var(--card); }
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); font-weight: 600; }
+  tr.clickable:hover td { background: #faf8f5; cursor: pointer; }
+  .code { font-weight: 600; }
+  .muted { color: var(--muted); }
+  .small { font-size: 12.5px; }
+  .hint { background: var(--info-soft); color: #1d3f78; border-radius: 10px; padding: 10px 14px; font-size: 13.5px; }
+  .hint.warn { background: var(--warn-soft); color: #6f4900; }
+  .hint.err { background: var(--err-soft); color: #8a1b13; }
+  .hint.ok { background: var(--ok-soft); color: #135a37; }
+  /* wizard */
+  .steps { display: flex; gap: 0; margin: 6px 0 18px; flex-wrap: wrap; }
+  .steps .s { flex: 1; min-width: 120px; display: flex; align-items: center; gap: 8px; padding: 8px 10px; color: var(--muted); font-size: 13px; border-bottom: 3px solid var(--line); }
+  .steps .s .num { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-size: 12px; font-weight: 700; flex: none; }
+  .steps .s.done { color: var(--ok); border-color: var(--ok); }
+  .steps .s.done .num { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .steps .s.cur { color: var(--fg); font-weight: 600; border-color: var(--accent); }
+  .steps .s.cur .num { border-color: var(--accent); color: var(--accent); }
+  .wiz-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; gap: 12px; flex-wrap: wrap; }
+  .kv { display: grid; grid-template-columns: 160px 1fr; gap: 6px 14px; }
+  .kv div:nth-child(odd) { color: var(--muted); }
+  .drop { border: 2px dashed #cfc7bd; border-radius: 12px; padding: 26px; text-align: center; background: #fcfbf9; transition: .15s; }
+  .drop.over { border-color: var(--accent); background: var(--accent-soft); }
+  .drop .big { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .file { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+  .file .ic { width: 32px; height: 32px; border-radius: 8px; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .paste { border: 2px dashed #cfc7bd; border-radius: 12px; min-height: 180px; display: grid; place-items: center; text-align: center; padding: 14px; background: #fcfbf9; cursor: pointer; outline: none; }
+  .paste.active { border-color: var(--accent); background: var(--accent-soft); }
+  .paste.filled { border-style: solid; border-color: var(--ok); background: #fff; padding: 6px; }
+  .paste img { max-width: 100%; max-height: 260px; border-radius: 6px; display: block; }
+  .guide { border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: var(--card); }
+  .guide ol { margin: 6px 0 10px; padding-left: 20px; }
+  .guide li { margin: 4px 0; }
+  kbd { background: #f0ede8; border: 1px solid #d9d3cb; border-bottom-width: 2px; border-radius: 5px; padding: 0 6px; font-size: 12.5px; font-family: inherit; font-weight: 600; }
+  .sample { position: relative; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .sample img { width: 100%; display: block; }
+  .sample .tag { position: absolute; top: 6px; left: 6px; background: var(--ok); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .mark { position: absolute; border: 3px solid #f0a500; border-radius: 6px; box-shadow: 0 0 0 9999px rgba(0,0,0,0); pointer-events: none; }
+  .donts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+  .dont { border: 1px solid var(--err-soft); background: #fff8f7; border-radius: 8px; padding: 8px; font-size: 12px; color: #8a1b13; }
+  .dont b { display: block; margin-bottom: 2px; }
+  .problem { border: 1px solid var(--line); border-left: 4px solid var(--err); border-radius: 10px; padding: 14px; background: var(--card); }
+  .problem.warn { border-left-color: #e0a100; }
+  .problem.done { border-left-color: var(--ok); opacity: .8; }
+  .problem .t { font-weight: 600; margin-bottom: 4px; }
+  .q { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .seg button { border: 0; background: var(--card); padding: 6px 14px; cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button.on { background: var(--fg); color: #fff; }
+  .seg button.on.v { background: var(--ok); }
+  .seg button.on.i { background: var(--err); }
+  .seg button.on.n { background: #6b7280; }
+  input[type=date], input[type=text], input[type=number], select, textarea { border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; background: var(--card); }
+  textarea { width: 100%; min-height: 60px; }
+  .paperlist { display: grid; gap: 8px; }
+  .paperlist .p { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
+  .layout-review { display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 16px; align-items: start; }
+  .panel { position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow: auto; }
+  .panel img { max-width: 100%; border: 1px solid var(--line); border-radius: 8px; }
+  .ticks label { display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; }
+  .mini { font-size: 12.5px; border-collapse: collapse; width: 100%; }
+  .mini td, .mini th { padding: 4px 8px; border: 1px solid var(--line); text-transform: none; letter-spacing: 0; font-size: 12.5px; }
+  .v-auto { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; }
+  .issue-note { margin-top: 6px; }
+  .issue-note input { width: 100%; border-color: var(--err); }
+  .verdict-read { font-size: 13px; }
+  .timeline { list-style: none; padding: 0; margin: 0; }
+  .timeline li { padding: 6px 0 6px 18px; border-left: 2px solid var(--line); position: relative; font-size: 13.5px; }
+  .timeline li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); position: absolute; left: -5px; top: 12px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .bars { display: flex; gap: 6px; align-items: flex-end; height: 90px; }
+  .bars .b { flex: 1; background: var(--accent); border-radius: 4px 4px 0 0; position: relative; min-height: 2px; opacity: .85; }
+  .bars .b span { position: absolute; top: -18px; left: 0; right: 0; text-align: center; font-size: 11px; color: var(--muted); }
+  .bars-l { display: flex; gap: 6px; font-size: 11.5px; color: var(--muted); }
+  .bars-l div { flex: 1; text-align: center; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 16px; flex-wrap: wrap; }
+  .tabs button { border: 0; background: none; padding: 9px 14px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; font-weight: 500; }
+  .tabs button.on { color: var(--fg); border-color: var(--accent); }
+  .toggle { position: relative; width: 38px; height: 22px; border-radius: 999px; background: #d6d1ca; border: 0; cursor: pointer; flex: none; }
+  .toggle::after { content: ""; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: .15s; }
+  .toggle.on { background: var(--ok); }
+  .toggle.on::after { left: 19px; }
+  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: #22262c; color: #fff; padding: 11px 18px; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,.2); font-size: 14px; z-index: 50; max-width: 90vw; }
+  .back { display: inline-flex; gap: 6px; align-items: center; margin-bottom: 10px; color: var(--muted); cursor: pointer; background: none; border: 0; padding: 0; }
+  .back:hover { color: var(--fg); }
+  .pill-count { display: inline-block; min-width: 18px; padding: 0 5px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 11px; text-align: center; margin-left: 4px; }
+  @media (max-width: 980px) {
+    .layout-review { grid-template-columns: 1fr; }
+    .panel { position: static; max-height: none; }
+    .shots, .grid2, .grid3 { grid-template-columns: 1fr; }
+    .who { margin-left: 0; width: 100%; }
+    .donts { grid-template-columns: 1fr; }
+    .kv { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="demo-banner"><b>Prototype</b>: sample data only. Nothing is saved, and the names and student IDs are made up. Use the role buttons to switch between users. <a href="../" style="color:#9cc3ff">Read the PRD</a></div>
+<header class="top"><div class="top-inner" id="top"></div></header>
+<main id="app"></main>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+/* ------------------------------------------------------------------ data */
+const PEOPLE = {
+  anan:   { name: 'Dr. Anan Sukjai',          program: 'SE' },
+  busaba: { name: 'Dr. Busaba Kaewta',        program: 'SE' },
+  chai:   { name: 'Asst. Prof. Chai Rattana', program: 'SE', chair: true },
+  nok:    { name: 'Dr. Nok Siriwan',          program: 'SE' },
+  pim:    { name: 'Dr. Pim Wongsa',           program: 'MM' },
+  krit:   { name: 'Dr. Krit Thongdee',        program: 'CE' },
+  ploy:   { name: 'Dr. Ploy Chanthra',        program: 'DB' },
+  dara:   { name: 'Khun Dara',                role: 'Secretary' },
+  ekk:    { name: 'Khun Ekkachai',            role: 'Academic office' },
+};
+const PROGRAMS = { SE: 'Software Engineering', MM: 'Multimedia Technology & Animation', CE: 'Computer Engineering', DB: 'Digital Business' };
+const ROLES = [
+  { id: 'lecturer',  label: 'Lecturer',         user: 'anan' },
+  { id: 'buddy',     label: 'Buddy reviewer',   user: 'busaba' },
+  { id: 'program',   label: 'Program reviewer', user: 'chai' },
+  { id: 'secretary', label: 'Secretary',        user: 'dara' },
+  { id: 'office',    label: 'Office',           user: 'ekk' },
+];
+const STATUS = {
+  notsub:   { label: 'Not submitted', cls: 'notsub' },
+  buddy:    { label: 'With buddy',    cls: 'buddy' },
+  program:  { label: 'With program',  cls: 'program' },
+  returned: { label: 'Returned',      cls: 'returned' },
+  approved: { label: 'Approved',      cls: 'approved' },
+};
+const ITEMS = [
+  { id: 'course',  no: '1–5',    label: 'Course details (email, phone, code, name, TQF3 link)', type: 'auto' },
+  { id: 'grade',   no: '6',      label: 'Grade report (from REG)', type: 'auto' },
+  { id: 'summary', no: '7',      label: 'Score summary (Grade Entry export or spreadsheet)', type: 'auto' },
+  { id: 'reg100',  no: '7c · 10', label: 'REG screenshots: every score item "Show", total 100% (A), and grading format (B)', type: 'judge', ev: 'shots' },
+  { id: 'missing', no: '11',     label: 'Missing marks communicated to students', type: 'judge' },
+  { id: 'total',   no: '13',     label: 'Score summary totals 100', type: 'auto' },
+  { id: 'stats',   no: '14',     label: 'Average and SD included', type: 'auto' },
+  { id: 'policy',  no: '15',     label: 'Grading policy is in the TQF3 evaluation plan', type: 'judge', ev: 'cutoffs' },
+  { id: 'special', no: '16–18',  label: 'RESIGNED / W / M students detected and graded correctly', type: 'auto' },
+  { id: 'align',   no: '19',     label: 'Score summary aligns with the TQF3 criteria', type: 'judge', ev: 'cutoffs' },
+  { id: 'ack',     no: '—',      label: 'Acknowledged warning', type: 'judge', onlyIfAck: true },
+  { id: 'exam',    no: '8',      label: 'Signed final-exam name list', type: 'paper', paper: 'exam' },
+  { id: 'absence', no: '9',      label: 'Exam absence forms (one per M)', type: 'paper', paper: 'absence' },
+  { id: 'signed',  no: '12',     label: 'Signed grade report', type: 'paper', paper: 'signed' },
+];
+const COMPONENTS = [['Midterm', 30, 20], ['Final', 60, 30], ['Participation - Forum', 10, 10], ['Frameworks and Patterns', 20, 20], ['Design for case study', 20, 20]];
+const CUTOFFS = [['A', 80], ['B+', 75], ['B', 70], ['C+', 65], ['C', 60], ['D+', 55], ['D', 50], ['F', 0]];
+const SHOT_A = '../img/reg-list-of-score.jpg', SHOT_B = '../img/reg-grading-format.png';
+
+function sec(o) {
+  return Object.assign({
+    sec: 1, hasFinal: true, students: 40, mCount: 0, buddy: null, status: 'notsub',
+    grades: { A: 6, 'B+': 7, B: 9, 'C+': 7, C: 5, 'D+': 3, D: 2, F: 1 },
+    paper: { exam: 'awaiting', absence: 0, signed: 'awaiting' },
+    shots: { a: SHOT_A, b: SHOT_B }, answers: { missing: 'Yes', policy: 'Yes', align: 'Yes', ann: '2026-11-20', dl: '2026-11-25' },
+    ack: null, bv: {}, pv: {}, issues: [], history: [], comments: [],
+  }, o);
+}
+function allVerified(extra) {
+  const v = {}; ITEMS.forEach(i => { if (i.type !== 'paper') v[i.id] = { v: 'verified', auto: i.type === 'auto' }; });
+  return Object.assign(v, extra || {});
+}
+function autoOnly() {
+  const v = {}; ITEMS.forEach(i => { if (i.type === 'auto') v[i.id] = { v: 'verified', auto: true }; });
+  return v;
+}
+function seed() {
+  return [
+    sec({ id: 's1', code: '1305213', name: 'Software Modelling and Architectural Design', program: 'SE', lecturers: ['anan'], students: 48, hasFinal: true,
+          history: [{ t: '1 Nov', x: 'Section created by the office' }] }),
+    sec({ id: 's2', code: '1305309', name: 'Software Construction and Evolution', program: 'SE', lecturers: ['anan'], students: 36, status: 'returned', buddy: 'busaba', returnedBy: 1,
+          paper: { exam: 'received', absence: 0, signed: 'received' },
+          bv: allVerified({ align: { v: 'issue', note: 'Project weight is 30% in REG but 25% in TQF3. Fix REG, or explain why it changed.' } }),
+          issues: [{ id: 1, round: 1, by: 'busaba', item: 'align', text: 'Project weight is 30% in REG but 25% in TQF3. Fix REG, or explain why it changed.', open: true }],
+          history: [{ t: '26 Nov', x: 'Submitted by Dr. Anan Sukjai, buddy: Dr. Busaba Kaewta' }, { t: '27 Nov', x: 'Returned by buddy (1 issue)' }] }),
+    sec({ id: 's3', code: '1305301', name: 'Software Process and Quality Assurance', program: 'SE', lecturers: ['nok'], students: 42, status: 'buddy', buddy: 'busaba', mCount: 1,
+          grades: { A: 5, 'B+': 8, B: 10, 'C+': 8, C: 5, 'D+': 3, D: 1, F: 1 },
+          paper: { exam: 'received', absence: 0, signed: 'awaiting' },
+          ack: 'Student 6631402017 has 69.99, just below B (70). Kept as C+, following my class policy of no rounding.',
+          bv: autoOnly(), history: [{ t: '27 Nov', x: 'Submitted by Dr. Nok Siriwan, buddy: Dr. Busaba Kaewta' }] }),
+    sec({ id: 's4', code: '1305305', name: 'Enterprise Architecture and Digital Strategy', program: 'SE', lecturers: ['busaba'], students: 31, status: 'program', buddy: 'nok',
+          paper: { exam: 'received', absence: 0, signed: 'awaiting' },
+          bv: allVerified(), pv: {},
+          history: [{ t: '24 Nov', x: 'Submitted by Dr. Busaba Kaewta, buddy: Dr. Nok Siriwan' }, { t: '26 Nov', x: 'Buddy verified every item and passed it to the program' }] }),
+    sec({ id: 's5', code: '1305218', name: 'Software Testing', program: 'SE', lecturers: ['nok'], students: 55, status: 'approved', buddy: 'anan',
+          paper: { exam: 'received', absence: 0, signed: 'received' }, bv: allVerified(), pv: allVerified(),
+          history: [{ t: '20 Nov', x: 'Submitted' }, { t: '21 Nov', x: 'Buddy passed' }, { t: '23 Nov', x: 'Approved by the program' }] }),
+    sec({ id: 's6', code: '1306104', name: 'Design Thinking', program: 'MM', lecturers: ['pim'], students: 60, status: 'returned', buddy: 'krit', returnedBy: 1, hasFinal: false, mCount: 2,
+          paper: { exam: 'received', absence: 0, signed: 'received' },
+          bv: allVerified({ special: { v: 'issue', note: '2 students have M, but this course has no final exam. Give I instead.' } }),
+          issues: [{ id: 1, round: 1, by: 'krit', item: 'special', text: '2 students have M, but this course has no final exam. Give I instead.', open: true }],
+          history: [{ t: '25 Nov', x: 'Submitted' }, { t: '26 Nov', x: 'Returned by buddy (1 issue)' }] }),
+    sec({ id: 's7', code: '1501225', name: 'Cloud Computing', program: 'CE', lecturers: ['krit'], students: 38, status: 'buddy', buddy: 'pim',
+          paper: { exam: 'awaiting', absence: 0, signed: 'awaiting' }, bv: autoOnly(), history: [{ t: '27 Nov', x: 'Submitted' }] }),
+    sec({ id: 's8', code: '1301209', name: 'Introduction to Business Data Analytics', program: 'DB', lecturers: ['ploy'], students: 70 }),
+    sec({ id: 's9', code: '1504206', name: 'Cyber Security', program: 'CE', lecturers: ['krit'], students: 44, status: 'approved', buddy: 'ploy',
+          paper: { exam: 'received', absence: 0, signed: 'received' }, bv: allVerified(), pv: allVerified(),
+          history: [{ t: '19 Nov', x: 'Submitted' }, { t: '20 Nov', x: 'Buddy passed' }, { t: '22 Nov', x: 'Approved by the program' }] }),
+    sec({ id: 's10', code: '1306218', name: 'User Interface Design Basic', program: 'MM', lecturers: ['pim'], students: 52 }),
+  ];
+}
+
+/* ------------------------------------------------------------------ state */
+let S;
+function reset() {
+  S = {
+    role: 'lecturer', view: 'list', id: null, filter: null, q: '',
+    sections: seed(),
+    wiz: {},            // per-section wizard state
+    panel: null,        // evidence panel item id
+    officeTab: 'semester',
+    deadlines: { submit: '2026-12-05', buddy: '2026-12-07', program: '2026-12-09' },
+    activeBox: 'a',
+  };
+}
+reset();
+const me = () => ROLES.find(r => r.id === S.role).user;
+const byId = id => S.sections.find(s => s.id === id);
+const pname = id => (PEOPLE[id] || {}).name || id;
+const lecNames = s => s.lecturers.map(pname).join(', ');
+const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 3200);
+}
+function go(view, id) { S.view = view; S.id = id || null; S.panel = null; render(); window.scrollTo(0, 0); }
+
+/* ------------------------------------------------------------------ helpers */
+function chip(status) { const s = STATUS[status]; return `<span class="chip ${s.cls}">${s.label}</span>`; }
+function paperNeeds(s) {
+  const n = [];
+  if (s.hasFinal) n.push({ k: 'exam', label: 'Signed final-exam name list', need: 1, got: s.paper.exam === 'received' ? 1 : 0, st: s.paper.exam });
+  if (s.mCount > 0) n.push({ k: 'absence', label: `Exam absence forms (${s.mCount} × M)`, need: s.mCount, got: s.paper.absence, st: s.paper.absence >= s.mCount ? 'received' : (s.paper.absenceMissing ? 'missing' : 'awaiting') });
+  n.push({ k: 'signed', label: 'Signed grade report', need: 1, got: s.paper.signed === 'received' ? 1 : 0, st: s.paper.signed });
+  return n;
+}
+function paperDone(s) { return paperNeeds(s).every(p => p.st === 'received'); }
+function paperBadge(s) {
+  if (s.status === 'notsub') return '<span class="muted small">—</span>';
+  const n = paperNeeds(s), got = n.filter(p => p.st === 'received').length;
+  const miss = n.some(p => p.st === 'missing');
+  return `<span class="chip ${got === n.length ? 'approved' : miss ? 'err' : 'muted'}">${got}/${n.length} paper</span>`;
+}
+function regBadge(s) {
+  if (s.status === 'notsub') return '<span class="chip muted">REG 100%: missing</span>';
+  const b = (s.bv.reg100 || {}).v, p = (s.pv.reg100 || {}).v;
+  if (b === 'issue' || p === 'issue') return '<span class="chip err">REG 100%: issue</span>';
+  if (p === 'verified') return '<span class="chip approved">REG 100%: confirmed</span>';
+  if (b === 'verified') return '<span class="chip program">REG 100%: buddy ✓</span>';
+  return '<span class="chip buddy">REG 100%: uploaded</span>';
+}
+function itemsFor(s) { return ITEMS.filter(i => !i.onlyIfAck || s.ack); }
+function paperStatusText(s, item) {
+  const p = paperNeeds(s).find(x => x.k === item.paper);
+  if (!p) return { v: 'na', text: item.paper === 'exam' ? 'Not needed: no final exam' : 'Not needed: no M grades' };
+  if (p.st === 'received') return { v: 'ok', text: p.k === 'absence' ? `Received ${p.got}/${p.need} by the secretary` : 'Received by the secretary' };
+  if (p.st === 'missing') return { v: 'missing', text: 'Marked missing by the secretary' };
+  return { v: 'wait', text: p.k === 'absence' ? `Awaiting the secretary (${p.got}/${p.need})` : 'Awaiting the secretary' };
+}
+function answerText(s, item) {
+  const a = s.answers;
+  switch (item.id) {
+    case 'course':  return `${s.code} · ${esc(s.name)} · sec ${s.sec}. TQF3 link generated.`;
+    case 'grade':   return `${s.students} students match the REG roster. Grades valid.`;
+    case 'summary': return 'REG Grade Entry export. 5 components.';
+    case 'reg100':  return `Screenshots A and B attached. Announced ${fmtDate(a.ann)}, students could dispute until ${fmtDate(a.dl)}.`;
+    case 'missing': return `Lecturer: <b>${esc(a.missing)}</b>`;
+    case 'total':   return 'Weights total 100.00. No student is over 100.';
+    case 'stats':   return 'Mean 68.4 · SD 11.2 (computed by the system)';
+    case 'policy':  return `Lecturer: <b>${esc(a.policy)}</b>. FIX-Rate cutoffs A ≥ 80 … D ≥ 50.`;
+    case 'special': return `${s.mCount} M · 0 W · 0 RESIGNED${s.hasFinal ? '' : ' · <b>no final exam</b>'}`;
+    case 'align':   return `Lecturer: <b>${esc(a.align)}</b>${a.alignReason ? ' · reason: ' + esc(a.alignReason) : ''}`;
+    case 'ack':     return `<span class="chip returned">Warning</span> ${esc(s.ack)}`;
+  }
+  return '';
+}
+function fmtDate(d) { if (!d) return '—'; const x = new Date(d + 'T00:00'); return x.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
+function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+function waitingFor(pid) { return S.sections.filter(s => s.status === 'buddy' && s.buddy === pid).length; }
+
+/* ------------------------------------------------------------------ top bar */
+function renderTop() {
+  const r = ROLES.find(r => r.id === S.role);
+  const u = PEOPLE[r.user];
+  const extra = S.role === 'program' ? ' · chair, Software Engineering' : u.role ? ' · ' + u.role : u.program ? ' · ' + PROGRAMS[u.program] : '';
+  document.getElementById('top').innerHTML = `
+    <div class="brand" data-a="home"><span class="dot">GM</span> ADT Grade Manager</div>
+    <div class="roles">${ROLES.map(x => `<button class="${x.id === S.role ? 'on' : ''}" data-a="role" data-v="${x.id}">${x.label}${roleCount(x.id)}</button>`).join('')}</div>
+    <div class="who">Signed in as <b>${esc(u.name)}</b><span class="muted">${esc(extra)}</span> <button class="linkbtn" data-a="reset">Reset demo</button></div>`;
+}
+function roleCount(role) {
+  let n = 0;
+  if (role === 'lecturer') n = S.sections.filter(s => s.lecturers.includes('anan') && (s.status === 'notsub' || s.status === 'returned')).length;
+  if (role === 'buddy') n = S.sections.filter(s => s.status === 'buddy' && s.buddy === 'busaba').length;
+  if (role === 'program') n = S.sections.filter(s => s.status === 'program' && s.program === 'SE').length;
+  if (role === 'secretary') n = S.sections.filter(s => s.status !== 'notsub' && !paperDone(s)).length;
+  return n ? `<span class="pill-count">${n}</span>` : '';
+}
+
+/* ------------------------------------------------------------------ course list */
+const FILTERS = {
+  lecturer:  [['mine', 'My courses'], ['all', 'All ADT courses']],
+  buddy:     [['tobuddy', 'To review as buddy'], ['mine', 'My courses'], ['all', 'All ADT courses']],
+  program:   [['toprogram', 'To review as program'], ['all', 'All ADT courses']],
+  secretary: [['paper', 'Paper to receive'], ['all', 'All ADT courses']],
+  office:    [['all', 'All ADT courses'], ['notsub', 'Not submitted'], ['approved', 'Approved']],
+};
+function filtered() {
+  const f = S.filter || FILTERS[S.role][0][0], u = me(), q = S.q.trim().toLowerCase();
+  return S.sections.filter(s => {
+    if (f === 'mine' && !s.lecturers.includes(u)) return false;
+    if (f === 'tobuddy' && !(s.status === 'buddy' && s.buddy === u)) return false;
+    if (f === 'toprogram' && !(s.status === 'program' && s.program === 'SE')) return false;
+    if (f === 'paper' && !(s.status !== 'notsub' && !paperDone(s))) return false;
+    if (f === 'notsub' && s.status !== 'notsub') return false;
+    if (f === 'approved' && s.status !== 'approved') return false;
+    if (q && !(s.code + ' ' + s.name + ' ' + lecNames(s)).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+function actionFor(s) {
+  const u = me();
+  if (S.role === 'lecturer' && s.lecturers.includes(u)) {
+    if (s.status === 'notsub') return `<button class="btn primary small" data-a="open" data-v="${s.id}">${S.wiz[s.id] ? 'Continue' : 'Start submission'}</button>`;
+    if (s.status === 'returned') return `<button class="btn primary small" data-a="open" data-v="${s.id}">Fix & resubmit</button>`;
+  }
+  if (S.role === 'buddy' && s.status === 'buddy' && s.buddy === u) return `<button class="btn primary small" data-a="open" data-v="${s.id}">Review</button>`;
+  if (S.role === 'program' && s.status === 'program' && s.program === 'SE') return `<button class="btn primary small" data-a="open" data-v="${s.id}">Review</button>`;
+  return `<button class="btn small" data-a="open" data-v="${s.id}">View</button>`;
+}
+function renderList() {
+  if (S.role === 'secretary' && (S.filter || 'paper') === 'paper') return renderSecretary();
+  const f = S.filter || FILTERS[S.role][0][0];
+  const counts = Object.keys(STATUS).map(k => [k, S.sections.filter(s => s.status === k).length]);
+  const rows = filtered();
+  const titles = { lecturer: 'My courses', buddy: 'Buddy reviews', program: 'Program review: Software Engineering', office: 'All sections, semester 1/2569' };
+  return `
+    <h1>${titles[S.role] || 'Courses'}</h1>
+    <p class="sub">Semester 1/2569 · submission deadline ${fmtDate(S.deadlines.submit)} · every ADT lecturer can open every course</p>
+    ${S.role === 'lecturer' ? `<div class="hint" style="margin-bottom:14px">👋 Start with <b>1305213</b>: the wizard takes about 5 minutes. <b>1305309</b> was returned by your buddy with 1 issue.</div>` : ''}
+    ${S.role === 'buddy' ? `<div class="hint" style="margin-bottom:14px">Colleagues chose you as their buddy for these sections. Check each item against the evidence, then pass it to the program, or return it with an issue.</div>` : ''}
+    ${S.role === 'program' ? `<div class="hint" style="margin-bottom:14px">These sections have passed buddy review. Confirm the buddy's verdict on each item, then approve. Approving is the last step in the system.</div>` : ''}
+    <div class="summary">${counts.map(([k, n]) => `<div class="card"><div class="n">${n}</div><div class="l">${STATUS[k].label}</div></div>`).join('')}</div>
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <div class="filters">${FILTERS[S.role].map(([k, l]) => `<button class="${k === f ? 'on' : ''}" data-a="filter" data-v="${k}">${l}</button>`).join('')}</div>
+        <div class="grow"></div>
+        <input class="search" placeholder="Search course code, name or lecturer" data-a="q" value="${esc(S.q)}">
+      </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Course</th><th>Lecturer</th><th>Program</th><th>Status</th><th>Evidence</th><th>Buddy</th><th></th></tr></thead>
+        <tbody>${rows.map(s => `
+          <tr class="clickable" data-a="open" data-v="${s.id}">
+            <td><div class="code">${s.code} <span class="muted">· sec ${s.sec}</span></div><div class="small muted">${esc(s.name)}</div></td>
+            <td class="small">${esc(lecNames(s))}</td>
+            <td><span class="chip muted">${s.program}</span></td>
+            <td>${chip(s.status)}</td>
+            <td><div class="row" style="gap:6px">${regBadge(s)} ${paperBadge(s)}</div></td>
+            <td class="small">${s.buddy ? esc(pname(s.buddy)) : '<span class="muted">—</span>'}</td>
+            <td style="text-align:right">${actionFor(s)}</td>
+          </tr>`).join('') || `<tr><td colspan="7" class="muted" style="text-align:center;padding:30px">Nothing here. You're all caught up 🎉</td></tr>`}
+        </tbody></table></div>
+    </div>`;
+}
+
+/* ------------------------------------------------------------------ secretary */
+function renderSecretary() {
+  const rows = filtered();
+  return `
+    <h1>Paper to receive</h1>
+    <p class="sub">When a lecturer hands in paper documents, tick them here. Nothing is scanned: the paper stays in your file.</p>
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <div class="filters">${FILTERS.secretary.map(([k, l]) => `<button class="${k === (S.filter || 'paper') ? 'on' : ''}" data-a="filter" data-v="${k}">${l}</button>`).join('')}</div>
+        <div class="grow"></div>
+        <input class="search" placeholder="Search course code or lecturer" data-a="q" value="${esc(S.q)}">
+      </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Course</th><th>Lecturer</th><th>Signed final-exam list</th><th>Absence forms</th><th>Signed grade report</th><th></th></tr></thead>
+        <tbody>${rows.map(s => {
+          const cell = (k) => {
+            if (k === 'exam' && !s.hasFinal) return '<span class="muted small">Not needed (no final)</span>';
+            if (k === 'absence') {
+              if (!s.mCount) return '<span class="muted small">Not needed (no M)</span>';
+              return `<div class="row" style="gap:6px"><input type="number" min="0" max="${s.mCount}" value="${s.paper.absence}" style="width:64px" data-a="absence" data-v="${s.id}"> <span class="small muted">of ${s.mCount}</span> ${s.paper.absence >= s.mCount ? '<span class="chip approved">✓</span>' : ''}</div>`;
+            }
+            const st = s.paper[k];
+            return `<label class="row" style="gap:8px;cursor:pointer"><input type="checkbox" ${st === 'received' ? 'checked' : ''} data-a="paper" data-v="${s.id}" data-k="${k}"> ${st === 'received' ? '<span class="chip approved">Received</span>' : st === 'missing' ? '<span class="chip err">Missing</span>' : '<span class="small muted">Awaiting</span>'}</label>`;
+          };
+          return `<tr>
+            <td><div class="code">${s.code}</div><div class="small muted">${esc(s.name)}</div></td>
+            <td class="small">${esc(lecNames(s))}</td>
+            <td>${cell('exam')}</td><td>${cell('absence')}</td><td>${cell('signed')}</td>
+            <td><button class="btn small" data-a="missing" data-v="${s.id}" title="Tell the lecturer something is missing">Mark missing…</button></td>
+          </tr>`;
+        }).join('') || `<tr><td colspan="6" class="muted" style="text-align:center;padding:30px">All paper received 🎉</td></tr>`}
+        </tbody></table></div>
+    </div>
+    <p class="small muted" style="margin-top:10px">Tip: search a lecturer's name to tick everything they hand in at the counter at once.</p>`;
+}
+
+/* ------------------------------------------------------------------ course page router */
+function renderCourse() {
+  const s = byId(S.id), u = me();
+  if (S.role === 'lecturer' && s.lecturers.includes(u) && s.status === 'notsub') return renderWizard(s);
+  if (S.role === 'lecturer' && s.lecturers.includes(u) && s.status === 'returned') return renderReturned(s);
+  if (S.role === 'buddy' && s.status === 'buddy' && s.buddy === u) return renderReview(s, 1);
+  if (S.role === 'program' && s.status === 'program' && s.program === 'SE') return renderReview(s, 2);
+  return renderView(s);
+}
+function courseHead(s, sub) {
+  return `<button class="back" data-a="home">← Back to courses</button>
+    <div class="row" style="align-items:flex-start">
+      <div class="grow"><h1>${s.code} · ${esc(s.name)}</h1>
+      <p class="sub">Section ${s.sec} · ${esc(lecNames(s))} · ${PROGRAMS[s.program]} · ${s.students} students${sub ? ' · ' + sub : ''}</p></div>
+      <div>${chip(s.status)}</div>
+    </div>`;
+}
+
+/* ------------------------------------------------------------------ lecturer wizard */
+const WSTEPS = ['Check course', 'Upload REG files', 'Paste screenshots', 'Fix problems', 'Confirm & submit'];
+function W(s) {
+  if (!S.wiz[s.id]) S.wiz[s.id] = { step: 1, files: {}, shots: {}, c14: false, c13: null, c13reason: 'Following my class policy: no rounding.', ans: { missing: null, policy: null, align: null, alignReason: '', ann: '', dl: '' }, buddy: '' };
+  return S.wiz[s.id];
+}
+function renderWizard(s) {
+  const w = W(s);
+  const stepHtml = [null, wStep1, wStep2, wStep3, wStep4, wStep5][w.step](s, w);
+  return `${courseHead(s, 'submission deadline ' + fmtDate(S.deadlines.submit))}
+    <div class="steps">${WSTEPS.map((t, i) => `<div class="s ${i + 1 < w.step ? 'done' : i + 1 === w.step ? 'cur' : ''}"><span class="num">${i + 1 < w.step ? '✓' : i + 1}</span>${t}</div>`).join('')}</div>
+    <div class="card">${stepHtml}</div>`;
+}
+function foot(back, nextLabel, nextOk, why) {
+  return `<div class="wiz-foot">
+    <div>${back ? '<button class="btn" data-a="wback">← Back</button>' : ''}</div>
+    <div class="row">${!nextOk && why ? `<span class="small muted">${why}</span>` : ''}<button class="btn primary big" data-a="wnext" ${nextOk ? '' : 'disabled'}>${nextLabel}</button></div>
+  </div>`;
+}
+function wStep1(s) {
+  return `<h2>Step 1 · Is this the right course?</h2>
+    <p class="sub">Everything is filled in from the course list. There's nothing to type.</p>
+    <div class="kv">
+      <div>Course</div><div><b>${s.code}</b> ${esc(s.name)}</div>
+      <div>Section</div><div>${s.sec}</div>
+      <div>Semester</div><div>1/2569</div>
+      <div>Lecturer(s)</div><div>${esc(lecNames(s))}</div>
+      <div>Students on REG</div><div>${s.students}</div>
+      <div>Final exam</div><div>${s.hasFinal ? 'Yes' : 'No'} <span class="small muted">(set by the office. Wrong? Tell the office.)</span></div>
+      <div>TQF3</div><div><a href="#" onclick="return false">tqf.mfu.ac.th/#/pdf/2569/1/${s.code}</a> <span class="chip approved">auto</span></div>
+      <div>Your phone</div><div>081-234-5678 <span class="small muted">(from your profile)</span></div>
+    </div>
+    ${foot(false, 'Looks right →', true)}`;
+}
+function wStep2(s, w) {
+  const f = w.files, both = f.grade && f.summary;
+  const fileRow = (k, label) => f[k] ? `<div class="file"><div class="ic">${f[k].split('.').pop().toUpperCase().slice(0, 4)}</div><div class="grow"><b>${esc(f[k])}</b><div class="small muted">Detected: ${label}</div></div><span class="chip approved">✓ read</span><button class="btn small ghost" data-a="rmfile" data-v="${k}">Remove</button></div>` : '';
+  return `<h2>Step 2 · Upload your REG files</h2>
+    <p class="sub">Drag in the <b>grade report</b> and the <b>score summary</b> (the REG Grade Entry export, or your own spreadsheet). The system works out which file is which.</p>
+    <div class="drop" id="drop">
+      <div class="big">Drop files here</div>
+      <div class="muted">or <label class="linkbtn" style="cursor:pointer">choose files<input type="file" multiple hidden id="filepick"></label> · .xlsx, .xls, .csv or a PDF from REG</div>
+      <div style="margin-top:10px"><button class="btn small" data-a="samplefiles">Use sample files (demo)</button></div>
+    </div>
+    <div class="stack" style="margin-top:14px">${fileRow('grade', 'Grade report')}${fileRow('summary', 'Score summary (Grade Entry)')}</div>
+    <div class="hint" style="margin-top:14px">📄 Signed exam lists and absence forms <b>go to the secretary on paper</b>. There's no need to scan them.</div>
+    ${both ? `<div class="hint warn" style="margin-top:10px">Checked ${s.students} students: <b>1 problem to fix</b> and <b>1 thing to confirm</b>. You'll see them in step 4.</div>` : ''}
+    ${foot(true, 'Next →', both, 'Add both files to continue')}`;
+}
+function wStep3(s, w) {
+  const box = (k, title, sample) => {
+    const img = w.shots[k];
+    return `<div class="stack">
+      <h3>${k.toUpperCase()} · ${title}</h3>
+      <div class="paste ${S.activeBox === k ? 'active' : ''} ${img ? 'filled' : ''}" tabindex="0" data-a="box" data-v="${k}">
+        ${img ? `<img src="${img}" alt="">` : `<div><div style="font-size:26px">📋</div><b>Click here, then press <kbd>Ctrl</kbd> + <kbd>V</kbd></b><div class="small muted">or drop an image file</div></div>`}
+      </div>
+      <div class="row small">${img ? `<span class="chip approved">✓ attached</span><button class="linkbtn" data-a="clearshot" data-v="${k}">Replace</button>` : `<button class="linkbtn" data-a="sampleshot" data-v="${k}">Use sample screenshot (demo)</button>`}</div>
+      <div class="guide">
+        <b>How to snap it</b>
+        <ol>
+          <li>In REG, open <b>Grade Entry</b> → ${s.code} sec ${s.sec} → <b>${title}</b>.</li>
+          <li>Press <kbd>Windows</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> and drag a box <b>around the whole table</b>. <span class="muted">(Mac: <kbd>Cmd</kbd>+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>4</kbd>)</span></li>
+          <li>Come back here, click the box above and press <kbd>Ctrl</kbd> + <kbd>V</kbd>. There's no file to save.</li>
+        </ol>
+        <b>It should look like this:</b>
+        <div class="sample" style="margin-top:6px"><span class="tag">✓ GOOD</span><img src="${sample}" alt="Sample"></div>
+        <div class="small" style="margin-top:8px">Make sure you can see: ${k === 'a'
+          ? '<b>every row</b> · the <b>Display Status</b> column (all <b>Show</b>) · the <b>Percent</b> column · the <b>Grand Total = 100.00</b> row'
+          : 'the <b>method</b> (FIX-Rate, T-Score or MEAN-SD) · Grade Format, Lowest and Highest · the <b>whole cutoff table, A to F</b>'}</div>
+        <div class="donts">${k === 'a'
+          ? `<div class="dont"><b>✗ Cut off</b>Display Status or Percent column missing</div><div class="dont"><b>✗ No total</b>Grand Total row not in the snip</div><div class="dont"><b>✗ "Hide"</b>Every item must say Show</div>`
+          : `<div class="dont"><b>✗ Only half</b>The cutoff table is cut off</div><div class="dont"><b>✗ No method</b>FIX-Rate / T-Score / MEAN-SD not visible</div><div class="dont"><b>✗ Wrong course</b>Check the section before snipping</div>`}</div>
+      </div></div>`;
+  };
+  return `<h2>Step 3 · Paste two REG screenshots</h2>
+    <p class="sub">These show that students can see <b>100% of their scores</b> on REG, and which grade cutoffs REG uses. Use the Snipping Tool, then paste.</p>
+    <div class="shots">${box('a', 'Set a List of Score', SHOT_A)}${box('b', 'Set a Grading Format', SHOT_B)}</div>
+    ${foot(true, 'Next →', w.shots.a && w.shots.b, 'Paste both screenshots to continue')}`;
+}
+function wStep4(s, w) {
+  const ok = w.c14 && w.c13;
+  return `<h2>Step 4 · Fix problems</h2>
+    <p class="sub">Only what needs your attention. Fix it in REG, then upload the new file here.</p>
+    <div class="stack">
+      <div class="problem ${w.c14 ? 'done' : ''}">
+        <div class="t">${w.c14 ? '✓ Fixed: ' : ''}2 students have <b>F</b> but no final exam score</div>
+        <div class="muted">6631401012 and 6631401027 have a blank final exam. They were probably absent, so the grade should be <b>M</b>, not F. Change it in REG Grade Entry.</div>
+        ${w.c14 ? '<div class="small" style="margin-top:6px;color:var(--ok)">New grade report uploaded: 2 × M. Remember the absence forms go to the secretary.</div>'
+                : '<div class="row" style="margin-top:10px"><button class="btn primary" data-a="fix14">I fixed it in REG. Upload the new grade report</button></div>'}
+      </div>
+      <div class="problem warn ${w.c13 ? 'done' : ''}">
+        <div class="t">${w.c13 ? '✓ Confirmed: ' : ''}1 student is just below a cutoff</div>
+        <div class="muted">6631401033 has <b>69.99</b>, and B starts at 70. Is C+ correct?</div>
+        <div class="row" style="margin-top:10px">
+          <div class="seg"><button class="${w.c13 === 'keep' ? 'on' : ''}" data-a="c13" data-v="keep">Yes, keep C+</button><button class="${w.c13 === 'fix' ? 'on' : ''}" data-a="c13" data-v="fix">No, I'll change it in REG</button></div>
+        </div>
+        ${w.c13 === 'keep' ? `<div style="margin-top:8px"><input type="text" style="width:100%" data-a="c13reason" value="${esc(w.c13reason)}"><div class="small muted">One sentence for your reviewers.</div></div>` : ''}
+      </div>
+      <div class="hint ok">✓ Everything else passed: totals are 100, the grades match the cutoffs, and all ${s.students} students match REG.</div>
+    </div>
+    ${foot(true, 'Next →', ok, 'Resolve both items to continue')}`;
+}
+function wStep5(s, w) {
+  const a = w.ans;
+  const gap = a.ann && a.dl ? daysBetween(a.ann, a.dl) : null;
+  const dateMsg = !a.ann || !a.dl ? '' : gap < 3 ? `<div class="hint warn" style="margin-top:8px">Students had only ${gap} day(s) to check their scores. The minimum is 3 days.</div>` : `<div class="hint ok" style="margin-top:8px">✓ Students had ${gap} days to check their scores.</div>`;
+  const q = (k, text) => `<div class="q"><div class="grow">${text}</div><div class="seg"><button class="${a[k] === 'Yes' ? 'on' : ''}" data-a="ans" data-k="${k}" data-v="Yes">Yes</button><button class="${a[k] === 'No' ? 'on' : ''}" data-a="ans" data-k="${k}" data-v="No">No</button></div></div>`;
+  const tmp = Object.assign({}, s, { mCount: w.c14 ? 2 : 0 });
+  const buddies = Object.entries(PEOPLE).filter(([id, p]) => p.program && !s.lecturers.includes(id));
+  const why = [];
+  if (!a.ann || !a.dl) why.push('dates');
+  if (!a.missing || !a.policy || !a.align) why.push('3 questions');
+  if (a.align === 'No' && !a.alignReason.trim()) why.push('a reason');
+  if (!w.buddy) why.push('a buddy');
+  return `<h2>Step 5 · Confirm & submit</h2>
+    <p class="sub">The system checked everything it could. These few things only you can answer.</p>
+    <div class="grid2">
+      <div>
+        <h3>When did students see their scores?</h3>
+        <div class="row"><label class="small">Announced on REG<br><input type="date" data-a="date" data-k="ann" value="${a.ann}"></label>
+        <label class="small">Students could dispute until<br><input type="date" data-a="date" data-k="dl" value="${a.dl}"></label></div>
+        ${dateMsg}
+        <div style="margin-top:14px">
+        ${q('missing', 'If any marks were missing, I have told the students. <span class="muted small">#11</span>')}
+        ${q('policy', 'The grading policy is in the TQF3 evaluation plan. <span class="muted small">#15</span>')}
+        ${q('align', 'The score summary matches the evaluation criteria in TQF3. <span class="muted small">#19</span>')}
+        ${a.align === 'No' ? `<div style="padding:8px 0"><input type="text" style="width:100%" placeholder="Why is it different? e.g. changed due to learning activities" data-a="alignReason" value="${esc(a.alignReason)}"></div>` : ''}
+        </div>
+      </div>
+      <div class="stack">
+        <div>
+          <h3>Give these to the secretary 📄</h3>
+          <div class="paperlist">${paperNeeds(tmp).map(p => `<div class="p"><span>📄</span><div class="grow">${p.label}</div><span class="small muted">on paper, no scan</span></div>`).join('')}</div>
+          <div class="small muted" style="margin-top:6px">The secretary ticks them as received. The program can approve once they're all in.</div>
+        </div>
+        <div>
+          <h3>Choose your buddy</h3>
+          <select data-a="buddy" style="width:100%"><option value="">Choose any ADT lecturer…</option>
+            ${buddies.map(([id, p]) => `<option value="${id}" ${w.buddy === id ? 'selected' : ''}>${p.name} · ${p.program} · ${waitingFor(id)} waiting</option>`).join('')}
+          </select>
+          <div class="small muted" style="margin-top:6px">They'll be emailed and can accept or decline. <b>Demo tip:</b> choose Dr. Busaba, then switch to the <i>Buddy reviewer</i> role.</div>
+        </div>
+      </div>
+    </div>
+    ${foot(true, 'Submit to buddy ✓', !why.length, why.length ? 'Still needed: ' + why.join(', ') : '')}`;
+}
+
+/* ------------------------------------------------------------------ returned (lecturer) */
+function renderReturned(s) {
+  const open = s.issues.filter(i => i.open);
+  return `${courseHead(s)}
+    <div class="card stack">
+      <div class="hint warn">Returned by the ${s.returnedBy === 1 ? 'buddy (' + esc(pname(s.buddy)) + ')' : 'program'} with ${open.length} issue(s). Fix them, then resubmit. It goes back to the ${s.returnedBy === 1 ? 'buddy' : 'program'}.</div>
+      ${s.issues.map(i => `<div class="problem ${i.open ? '' : 'done'}"><div class="t">${i.open ? '' : '✓ '}${esc(ITEMS.find(x => x.id === i.item).label)}</div>
+        <div class="muted">"${esc(i.text)}" · <span class="small">${esc(pname(i.by))}</span></div>
+        ${i.open ? `<div class="row" style="margin-top:10px"><button class="btn primary" data-a="fixissue" data-v="${i.id}">I fixed it in REG. Upload the new file</button><button class="btn" data-a="replyissue" data-v="${i.id}">Explain instead</button></div>` : '<div class="small" style="color:var(--ok);margin-top:6px">Fixed. The reviewer will re-check this item.</div>'}
+      </div>`).join('')}
+      <div class="wiz-foot"><div></div><button class="btn primary big" data-a="resubmit" ${open.length ? 'disabled' : ''}>Resubmit →</button></div>
+    </div>`;
+}
+
+/* ------------------------------------------------------------------ review (buddy = 1, program = 2) */
+function renderReview(s, round) {
+  const mine = round === 1 ? s.bv : s.pv, items = itemsFor(s);
+  const judge = items.filter(i => i.type !== 'paper');
+  const decided = judge.filter(i => mine[i.id] && mine[i.id].v);
+  const issues = judge.filter(i => mine[i.id] && mine[i.id].v === 'issue');
+  const issueNoNote = issues.filter(i => !(mine[i.id].note || '').trim());
+  const allDone = decided.length === judge.length;
+  const paperOk = paperDone(s);
+  const canPass = allDone && !issues.length && (round === 1 || paperOk);
+  let block = '';
+  if (!allDone) block = `${judge.length - decided.length} item(s) still need your verdict`;
+  else if (issues.length) block = 'There are issues, so you can only return it';
+  else if (round === 2 && !paperOk) block = 'Waiting for the secretary to receive the paper documents';
+  const row = (i) => {
+    const cur = mine[i.id] || {}, b = s.bv[i.id] || {};
+    if (i.type === 'paper') {
+      const p = paperStatusText(s, i);
+      return `<tr><td class="small muted">${i.no}</td><td><b>${i.label}</b><div class="small muted">Paper document, checked by the secretary</div></td>
+        ${round === 2 ? '<td></td>' : ''}
+        <td colspan="1">${p.v === 'ok' ? `<span class="chip approved">✓ ${p.text}</span>` : p.v === 'na' ? `<span class="chip muted">${p.text}</span>` : p.v === 'missing' ? `<span class="chip err">${p.text}</span>` : `<span class="chip muted">⏳ ${p.text}</span>`}</td><td></td></tr>`;
+    }
+    const seg = `<div class="seg">
+      <button class="v ${cur.v === 'verified' ? 'on' : ''}" data-a="verdict" data-k="${i.id}" data-v="verified">✓ Verified</button>
+      <button class="i ${cur.v === 'issue' ? 'on' : ''}" data-a="verdict" data-k="${i.id}" data-v="issue">✗ Issue</button>
+      <button class="n ${cur.v === 'na' ? 'on' : ''}" data-a="verdict" data-k="${i.id}" data-v="na">N/A</button></div>
+      ${cur.auto && cur.v === 'verified' ? '<span class="v-auto">pre-checked by the system</span>' : ''}
+      ${i.type === 'judge' && !cur.v ? '<span class="v-auto" style="color:var(--accent)">needs your decision</span>' : ''}
+      ${cur.v === 'issue' ? `<div class="issue-note"><input type="text" placeholder="What should the lecturer fix?" data-a="note" data-k="${i.id}" value="${esc(cur.note || '')}"></div>` : ''}`;
+    return `<tr>
+      <td class="small muted">${i.no}</td>
+      <td><b>${i.label}</b><div class="small">${answerText(s, i)}</div>
+        ${i.ev || ['grade', 'summary', 'total', 'special'].includes(i.id) ? `<button class="linkbtn small" data-a="panel" data-v="${i.id}">${S.panel === i.id ? 'Showing evidence →' : 'View evidence →'}</button>` : ''}</td>
+      ${round === 2 ? `<td class="verdict-read">${b.v === 'verified' ? '<span class="chip approved">✓ Verified</span>' : b.v === 'issue' ? '<span class="chip err">✗ Issue</span>' : b.v === 'na' ? '<span class="chip muted">N/A</span>' : '—'}${b.auto ? '<span class="v-auto">auto</span>' : ''}</td>` : ''}
+      <td style="min-width:250px">${seg}</td><td></td>
+    </tr>`;
+  };
+  return `${courseHead(s, round === 1 ? 'buddy review, requested by ' + esc(lecNames(s)) : 'program review')}
+    <div class="hint" style="margin-bottom:14px">${round === 1
+      ? 'Check each item against the evidence. Items marked <i>pre-checked</i> passed the system\'s checks: glance at them, and change any you disagree with. The <b>REG screenshots</b> and the lecturer\'s answers need your decision.'
+      : 'The buddy\'s verdicts are in the <b>Buddy</b> column. You can confirm the auto-checked items in one click, but decide the judgment items one by one. Approving is the <b>last step in the system</b>.'}</div>
+    <div class="layout-review">
+      <div class="card">
+        <div class="row" style="margin-bottom:8px"><h2 class="grow" style="margin:0">Checklist</h2>
+          ${round === 2 ? '<button class="btn small" data-a="confirmauto">✓ Confirm all auto-checked items</button>' : ''}
+          <span class="small muted">${decided.length}/${judge.length} decided</span></div>
+        <div class="tablewrap"><table>
+          <thead><tr><th>#</th><th>Item</th>${round === 2 ? '<th>Buddy</th>' : ''}<th>Your verdict</th><th></th></tr></thead>
+          <tbody>${items.map(row).join('')}</tbody>
+        </table></div>
+        <div class="wiz-foot">
+          <button class="btn" data-a="return" ${issues.length && !issueNoNote.length ? '' : 'disabled'}>↩ Return to lecturer${issues.length ? ` (${issues.length} issue${issues.length > 1 ? 's' : ''})` : ''}</button>
+          <div class="row">${block ? `<span class="small muted">${block}</span>` : ''}<button class="btn primary big" data-a="pass" ${canPass ? '' : 'disabled'}>${round === 1 ? 'Pass to program →' : 'Approve ✓'}</button></div>
+        </div>
+        ${round === 1 ? '<div style="margin-top:8px"><button class="linkbtn small" data-a="decline">Can\'t review this? Decline, and the lecturer will choose someone else</button></div>' : ''}
+      </div>
+      <div class="panel card">${renderPanel(s)}</div>
+    </div>`;
+}
+function renderPanel(s) {
+  const id = S.panel || 'reg100';
+  const compTable = `<table class="mini"><tr><th>From the uploaded score summary</th><th>%</th></tr>${COMPONENTS.map(c => `<tr><td>${c[0]}</td><td>${c[2]}</td></tr>`).join('')}<tr><td><b>Total</b></td><td><b>100</b></td></tr></table>`;
+  const cutTable = `<table class="mini"><tr><th>Grade</th><th>Cutoff in the Grade Entry</th><th>TQF3</th></tr>${CUTOFFS.map(c => `<tr><td>${c[0]}</td><td>${c[1].toFixed(2)}</td><td>${c[1]}</td></tr>`).join('')}</table>`;
+  if (id === 'reg100' || id === 'policy' || id === 'align') {
+    const showA = id === 'reg100';
+    return `<h3>${showA ? 'REG screenshots' : 'Grading format vs TQF3'}</h3>
+      ${showA ? `<div class="small muted">A · Set a List of Score</div><img src="${s.shots.a}" alt="">
+      <div class="ticks small" style="margin:8px 0 14px">
+        <b>Check A</b>
+        <label><input type="checkbox"> Every row says <b>Show</b></label>
+        <label><input type="checkbox"> Grand Total Percent = <b>100.00</b></label>
+        <label><input type="checkbox"> Names and % match the score summary ↓ and TQF3</label>
+      </div>${compTable}<div style="height:14px"></div>` : ''}
+      <div class="small muted">B · Set a Grading Format</div><img src="${s.shots.b}" alt="">
+      <div class="ticks small" style="margin:8px 0">
+        <b>Check B</b>
+        <label><input type="checkbox"> Method is <b>FIX-Rate</b>, as stated in TQF3</label>
+        <label><input type="checkbox"> Cutoffs match TQF3 and the grade report ↓</label>
+      </div>${cutTable}
+      <div class="small" style="margin-top:8px"><a href="#" onclick="return false">Open TQF3 for ${s.code} ↗</a></div>
+      <p class="small muted">These ticks help you look. Your verdict is the button in the checklist.</p>`;
+  }
+  if (id === 'grade' || id === 'special') {
+    return `<h3>Grade report</h3>
+      <div class="small muted" style="margin-bottom:8px">${s.students} students · distribution</div>${bars(s)}
+      <table class="mini" style="margin-top:12px"><tr><th>Student ID</th><th>Total</th><th>Grade</th></tr>
+        <tr><td>6631401003</td><td>84.50</td><td>A</td></tr><tr><td>6631401008</td><td>71.25</td><td>B</td></tr>
+        <tr><td>6631401012</td><td>—</td><td><b>M</b></td></tr><tr><td>6631401033</td><td>69.99</td><td>C+</td></tr>
+        <tr><td colspan="3" class="muted">… ${s.students - 4} more</td></tr></table>`;
+  }
+  return `<h3>Score summary</h3>${compTable}<p class="small muted">Mean 68.4 · SD 11.2 · max 94.0 · min 12.5</p>`;
+}
+function bars(s) {
+  const g = s.grades, keys = Object.keys(g), max = Math.max(...keys.map(k => g[k]));
+  return `<div class="bars">${keys.map(k => `<div class="b" style="height:${(g[k] / max) * 100}%"><span>${g[k]}</span></div>`).join('')}</div>
+    <div class="bars-l">${keys.map(k => `<div>${k}</div>`).join('')}</div>`;
+}
+
+/* ------------------------------------------------------------------ read-only view */
+function renderView(s) {
+  const items = itemsFor(s);
+  const v = (x) => !x || !x.v ? '<span class="muted">—</span>' : x.v === 'verified' ? '<span class="chip approved">✓</span>' : x.v === 'issue' ? '<span class="chip err">✗ Issue</span>' : '<span class="chip muted">N/A</span>';
+  const notMine = !s.lecturers.includes(me());
+  return `${courseHead(s)}
+    ${notMine && ['lecturer', 'buddy', 'program'].includes(S.role) ? '<div class="hint" style="margin-bottom:14px">👁 You\'re viewing a colleague\'s course. Everything is open to ADT lecturers. Only its lecturers, buddy and program reviewer can change it, but anyone can comment.</div>' : ''}
+    ${s.status === 'notsub' ? `<div class="card"><h2>Not submitted yet</h2><p class="muted">The lecturer hasn't started the submission.</p></div>` : `
+    <div class="grid3" style="margin-bottom:16px">
+      <div class="card"><h3>Grades</h3>${bars(s)}</div>
+      <div class="card"><h3>Evidence</h3><div class="stack small">${regBadge(s)}<div>${paperBadge(s)}</div>
+        <div class="row"><img src="${s.shots.a}" style="width:48%;border:1px solid var(--line);border-radius:6px"><img src="${s.shots.b}" style="width:48%;border:1px solid var(--line);border-radius:6px"></div></div></div>
+      <div class="card"><h3>History</h3><ul class="timeline">${s.history.map(h => `<li><span class="muted small">${h.t}</span> ${esc(h.x)}</li>`).join('')}</ul></div>
+    </div>
+    <div class="card" style="margin-bottom:16px"><h2>Checklist and reviews</h2><div class="tablewrap"><table>
+      <thead><tr><th>#</th><th>Item</th><th>Buddy${s.buddy ? ' · ' + esc(pname(s.buddy)) : ''}</th><th>Program</th></tr></thead>
+      <tbody>${items.map(i => i.type === 'paper'
+        ? `<tr><td class="small muted">${i.no}</td><td>${i.label}</td><td colspan="2" class="small">${paperStatusText(s, i).text}</td></tr>`
+        : `<tr><td class="small muted">${i.no}</td><td>${i.label}<div class="small muted">${answerText(s, i)}</div></td><td>${v(s.bv[i.id])}</td><td>${v(s.pv[i.id])}</td></tr>`).join('')}</tbody>
+    </table></div></div>`}
+    <div class="card"><h2>Comments</h2>
+      ${s.comments.map(c => `<div style="padding:8px 0;border-bottom:1px solid var(--line)"><b>${esc(pname(c.by))}</b> <span class="small muted">just now</span><div>${esc(c.text)}</div></div>`).join('') || '<p class="muted small">No comments yet.</p>'}
+      <div class="row" style="margin-top:10px"><input type="text" class="grow" placeholder="Leave a comment for the lecturer (anyone in ADT can)" id="cmt"><button class="btn" data-a="comment" data-v="${s.id}">Post</button></div>
+    </div>`;
+}
+
+/* ------------------------------------------------------------------ office */
+function renderOffice() {
+  const t = S.officeTab;
+  const tabs = [['semester', 'Semester'], ['courses', 'Courses & final-exam flag'], ['pairs', 'Buddy pairings'], ['export', 'Export']];
+  let body = '';
+  if (t === 'semester') body = `
+    <div class="grid2"><div class="stack">
+      <h3>Semester 1/2569</h3>
+      <label class="small">Lecturer submission deadline<br><input type="date" data-a="dl" data-k="submit" value="${S.deadlines.submit}"></label>
+      <label class="small">Buddy review deadline<br><input type="date" data-a="dl" data-k="buddy" value="${S.deadlines.buddy}"></label>
+      <label class="small">Program approval deadline<br><input type="date" data-a="dl" data-k="program" value="${S.deadlines.program}"></label>
+      <div class="small muted">Reminders go out automatically at T-3 days, T-1 day and when overdue.</div>
+    </div><div class="stack">
+      <h3>Import</h3>
+      <div class="file"><div class="ic">XLSX</div><div class="grow"><b>courses-1-2569.xlsx</b><div class="small muted">${S.sections.length} sections · 7 lecturers · imported 1 Nov</div></div><span class="chip approved">✓</span></div>
+      <div class="file"><div class="ic">CSV</div><div class="grow"><b>reg-rosters-1-2569.csv</b><div class="small muted">536 enrollments · imported 1 Nov</div></div><span class="chip approved">✓</span></div>
+      <button class="btn" data-a="noop">Import again…</button>
+      <div class="hint">After program approval, the system is done. Anything after that is handled manually.</div>
+    </div></div>`;
+  if (t === 'courses') body = `
+    <p class="sub">Set whether each section has a final exam. The M/I checks and the paper list depend on it.</p>
+    <div class="tablewrap"><table><thead><tr><th>Course</th><th>Lecturer</th><th>Program</th><th>Has final exam</th><th>Status</th></tr></thead><tbody>
+    ${S.sections.map(s => `<tr><td><b>${s.code}</b> <span class="small muted">${esc(s.name)}</span></td><td class="small">${esc(lecNames(s))}</td><td>${s.program}</td>
+      <td><button class="toggle ${s.hasFinal ? 'on' : ''}" data-a="final" data-v="${s.id}" aria-label="has final exam"></button></td><td>${chip(s.status)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+  if (t === 'pairs') body = `
+    <p class="sub">Lecturers choose their own buddy when they submit. You only step in if someone is unavailable.</p>
+    <div class="tablewrap"><table><thead><tr><th>Course</th><th>Lecturer</th><th>Buddy</th><th>Status</th><th>Reassign</th></tr></thead><tbody>
+    ${S.sections.filter(s => s.buddy).map(s => `<tr><td><b>${s.code}</b></td><td class="small">${esc(lecNames(s))}</td><td class="small">${esc(pname(s.buddy))} <span class="muted">(${waitingFor(s.buddy)} waiting)</span></td><td>${chip(s.status)}</td>
+      <td>${s.status === 'buddy' ? `<select data-a="reassign" data-v="${s.id}">${Object.entries(PEOPLE).filter(([id, p]) => p.program && !s.lecturers.includes(id)).map(([id, p]) => `<option value="${id}" ${id === s.buddy ? 'selected' : ''}>${p.name}</option>`).join('')}</select>` : '<span class="small muted">—</span>'}</td></tr>`).join('')}
+    </tbody></table></div>`;
+  if (t === 'export') {
+    const ap = S.sections.filter(s => s.status === 'approved');
+    body = `<div class="grid2">
+      <div class="card"><h3>Approved sections</h3><p class="small muted">${ap.length} approved. Use this list for the manual steps after approval.</p><button class="btn primary" data-a="export" data-v="approved">Download approved list (.xlsx)</button></div>
+      <div class="card"><h3>Completion report</h3><p class="small muted">Every section with its status, paper and REG evidence.</p><button class="btn" data-a="export" data-v="completion">Download completion report (.xlsx)</button></div>
+      <div class="card"><h3>Old-form layout</h3><p class="small muted">The checklist in the same columns as the old Google Form response sheet.</p><button class="btn" data-a="export" data-v="legacy">Download (.xlsx)</button></div>
+    </div>`;
+  }
+  return `<h1>Office</h1><p class="sub">Semester setup, course flags, buddy pairings and exports.</p>
+    <div class="tabs">${tabs.map(([k, l]) => `<button class="${k === t ? 'on' : ''}" data-a="otab" data-v="${k}">${l}</button>`).join('')}</div>
+    <div class="card">${body}</div>
+    <p style="margin-top:16px"><button class="btn" data-a="officelist">View all courses →</button></p>`;
+}
+
+/* ------------------------------------------------------------------ render */
+function render() {
+  renderTop();
+  const app = document.getElementById('app');
+  if (S.view === 'course') app.innerHTML = renderCourse();
+  else if (S.role === 'office' && S.view !== 'olist') app.innerHTML = renderOffice();
+  else app.innerHTML = renderList();
+  bindDrop();
+}
+
+/* ------------------------------------------------------------------ events */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-a]');
+  if (!el || el.tagName === 'INPUT' && el.type !== 'checkbox' || el.tagName === 'SELECT') return;
+  const a = el.dataset.a, v = el.dataset.v, k = el.dataset.k;
+  const s = S.id ? byId(S.id) : null;
+  if (el.closest('tr.clickable') && e.target.closest('button') && a === 'open' && el.tagName !== 'BUTTON') return;
+  switch (a) {
+    case 'home': go(S.role === 'office' ? 'office' : 'list'); break;
+    case 'role': S.role = v; S.filter = null; S.q = ''; go(v === 'office' ? 'office' : 'list'); break;
+    case 'reset': reset(); render(); toast('Demo reset'); break;
+    case 'filter': S.filter = v; render(); break;
+    case 'open': e.stopPropagation(); go('course', v); break;
+    case 'officelist': S.view = 'olist'; render(); break;
+    case 'otab': S.officeTab = v; render(); break;
+    // wizard
+    case 'wnext': {
+      const w = W(s);
+      if (w.step < 5) { w.step++; render(); window.scrollTo(0, 0); }
+      else submit(s, w);
+      break;
+    }
+    case 'wback': W(s).step--; render(); break;
+    case 'samplefiles': Object.assign(W(s).files, { grade: `grade-report-${s.code}.xlsx`, summary: `grade-entry-${s.code}.xlsx` }); render(); break;
+    case 'rmfile': delete W(s).files[v]; render(); break;
+    case 'box': S.activeBox = v; render(); document.querySelector(`.paste[data-v="${v}"]`)?.focus(); break;
+    case 'sampleshot': W(s).shots[v] = v === 'a' ? SHOT_A : SHOT_B; S.activeBox = v === 'a' ? 'b' : 'a'; render(); break;
+    case 'clearshot': delete W(s).shots[v]; S.activeBox = v; render(); break;
+    case 'fix14': W(s).c14 = true; toast('New grade report read: 2 × M'); render(); break;
+    case 'c13': W(s).c13 = v; render(); break;
+    case 'ans': W(s).ans[k] = v; render(); break;
+    // lecturer returned
+    case 'fixissue': s.issues.find(i => i.id == v).open = false; toast('New file uploaded. The item will be re-checked.'); render(); break;
+    case 'replyissue': { const i = s.issues.find(i => i.id == v); i.open = false; i.reply = true; toast('Explanation added for the reviewer'); render(); break; }
+    case 'resubmit': {
+      const r = s.returnedBy;
+      s.issues.forEach(i => { if (r === 1) delete s.bv[i.item]; else delete s.pv[i.item]; });
+      s.status = r === 1 ? 'buddy' : 'program';
+      s.history.push({ t: 'today', x: `Resubmitted: back to the ${r === 1 ? 'buddy' : 'program'} for the changed items` });
+      toast(`Resubmitted: back to the ${r === 1 ? 'buddy' : 'program'}`); go('list'); break;
+    }
+    // review
+    case 'verdict': {
+      const round = S.role === 'buddy' ? 1 : 2, m = round === 1 ? s.bv : s.pv;
+      const prev = m[k] || {};
+      m[k] = { v, note: v === 'issue' ? prev.note || '' : '', auto: false };
+      render();
+      if (v === 'issue') document.querySelector(`input[data-a="note"][data-k="${k}"]`)?.focus();
+      break;
+    }
+    case 'panel': S.panel = v; render(); break;
+    case 'confirmauto': {
+      ITEMS.filter(i => i.type === 'auto').forEach(i => { if ((s.bv[i.id] || {}).v === 'verified') s.pv[i.id] = { v: 'verified', auto: true }; });
+      render(); toast('Auto-checked items confirmed. The judgment items are still yours to decide.'); break;
+    }
+    case 'pass': {
+      if (S.role === 'buddy') {
+        s.status = 'program'; s.history.push({ t: 'today', x: `${pname(me())} verified every item and passed it to the program` });
+        toast('Passed to the program reviewer'); go('list');
+      } else {
+        s.status = 'approved'; s.history.push({ t: 'today', x: `Approved by ${pname(me())}. The system's part is done.` });
+        toast('Approved ✓. The rest continues manually, outside the system.'); go('list');
+      }
+      break;
+    }
+    case 'return': {
+      const round = S.role === 'buddy' ? 1 : 2, m = round === 1 ? s.bv : s.pv;
+      s.issues = Object.entries(m).filter(([, x]) => x.v === 'issue').map(([item, x], n) => ({ id: n + 1, round, by: me(), item, text: x.note, open: true }));
+      s.status = 'returned'; s.returnedBy = round;
+      s.history.push({ t: 'today', x: `Returned by ${round === 1 ? 'buddy' : 'program'} (${s.issues.length} issue${s.issues.length > 1 ? 's' : ''})` });
+      toast('Returned to the lecturer with your issues'); go('list'); break;
+    }
+    case 'decline': s.status = 'notsub'; s.buddy = null; s.bv = {}; s.history.push({ t: 'today', x: 'Buddy declined. The lecturer will choose someone else.' }); toast('Declined. The lecturer has been told.'); go('list'); break;
+    // view
+    case 'comment': { const inp = document.getElementById('cmt'); if (inp.value.trim()) { s.comments.push({ by: me(), text: inp.value.trim() }); render(); } break; }
+    // secretary
+    case 'paper': { const x = byId(v); x.paper[k] = el.checked ? 'received' : 'awaiting'; render(); toast(el.checked ? 'Marked received' : 'Unmarked'); break; }
+    case 'missing': { const x = byId(v); const n = paperNeeds(x).find(p => p.st !== 'received'); if (!n) { toast('Nothing is missing'); break; }
+      if (n.k === 'absence') x.paper.absenceMissing = true; else x.paper[n.k] = 'missing';
+      toast(`"${n.label}" marked missing. ${pname(x.lecturers[0])} has been emailed.`); render(); break; }
+    // office
+    case 'final': { const x = byId(v); x.hasFinal = !x.hasFinal; render(); break; }
+    case 'export': toast('In the real system, this downloads an .xlsx file'); break;
+    case 'noop': toast('In the real system, this opens a file picker'); break;
+  }
+});
+document.addEventListener('input', e => {
+  const el = e.target, a = el.dataset.a, k = el.dataset.k, s = S.id ? byId(S.id) : null;
+  if (a === 'q') { S.q = el.value; const pos = el.selectionStart; render(); const n = document.querySelector('[data-a="q"]'); n.focus(); n.setSelectionRange(pos, pos); }
+  if (a === 'note') { (S.role === 'buddy' ? s.bv : s.pv)[k].note = el.value; const btn = document.querySelector('[data-a="return"]'); if (btn) { const m = S.role === 'buddy' ? s.bv : s.pv; btn.disabled = Object.values(m).some(x => x.v === 'issue' && !(x.note || '').trim()); } }
+  if (a === 'c13reason') W(s).c13reason = el.value;
+  if (a === 'alignReason') { W(s).ans.alignReason = el.value; }
+});
+document.addEventListener('change', e => {
+  const el = e.target, a = el.dataset.a, k = el.dataset.k, v = el.dataset.v, s = S.id ? byId(S.id) : null;
+  if (a === 'date') { W(s).ans[k] = el.value; render(); }
+  if (a === 'buddy') { W(s).buddy = el.value; render(); }
+  if (a === 'alignReason') render();
+  if (a === 'absence') { const x = byId(v); x.paper.absence = Math.max(0, Math.min(x.mCount, +el.value || 0)); x.paper.absenceMissing = false; render(); }
+  if (a === 'dl') { S.deadlines[k] = el.value; toast('Deadline saved'); }
+  if (a === 'reassign') { const x = byId(v); x.buddy = el.value; x.history.push({ t: 'today', x: `Office reassigned the buddy to ${pname(el.value)}` }); render(); toast('Buddy reassigned, and both lecturers told'); }
+  if (el.id === 'filepick') addFiles(el.files);
+});
+function submit(s, w) {
+  s.status = 'buddy'; s.buddy = w.buddy; s.mCount = w.c14 ? 2 : 0;
+  s.shots = { a: w.shots.a, b: w.shots.b };
+  s.answers = Object.assign({}, w.ans);
+  s.ack = w.c13 === 'keep' ? `Student 6631401033 has 69.99, just below B (70). Kept as C+. "${w.c13reason}"` : null;
+  s.bv = autoOnly();
+  s.grades = { A: 7, 'B+': 8, B: 10, 'C+': 9, C: 6, 'D+': 4, D: 2, F: 0, M: 2 };
+  s.history.push({ t: 'today', x: `Submitted by ${pname(me())}, buddy: ${pname(w.buddy)}` });
+  delete S.wiz[s.id];
+  toast(`Submitted ✓. ${pname(w.buddy)} has been emailed.`);
+  go('list');
+}
+function addFiles(files) {
+  const s = byId(S.id), w = W(s);
+  [...files].forEach(f => { const n = f.name; if (/grade|report|เกรด/i.test(n) && !w.files.grade) w.files.grade = n; else if (!w.files.summary) w.files.summary = n; else w.files.grade = w.files.grade || n; });
+  render();
+}
+function bindDrop() {
+  const d = document.getElementById('drop');
+  if (d) {
+    d.addEventListener('dragover', e => { e.preventDefault(); d.classList.add('over'); });
+    d.addEventListener('dragleave', () => d.classList.remove('over'));
+    d.addEventListener('drop', e => { e.preventDefault(); addFiles(e.dataTransfer.files); });
+  }
+  document.querySelectorAll('.paste').forEach(p => {
+    p.addEventListener('dragover', e => e.preventDefault());
+    p.addEventListener('drop', e => { e.preventDefault(); const f = [...e.dataTransfer.files].find(f => f.type.startsWith('image/')); if (f) readImg(f, p.dataset.v); });
+  });
+}
+function readImg(file, box) {
+  const r = new FileReader();
+  r.onload = () => { const s = byId(S.id); W(s).shots[box] = r.result; S.activeBox = box === 'a' ? 'b' : 'a'; render(); toast(`Screenshot ${box.toUpperCase()} attached`); };
+  r.readAsDataURL(file);
+}
+document.addEventListener('paste', e => {
+  if (S.view !== 'course' || !S.id) return;
+  const s = byId(S.id); if (!S.wiz[s.id] || S.wiz[s.id].step !== 3) return;
+  const item = [...(e.clipboardData || {}).items || []].find(i => i.type.startsWith('image/'));
+  if (!item) { toast('No image on the clipboard. Snip with Windows + Shift + S first.'); return; }
+  e.preventDefault();
+  const w = W(s); const box = w.shots[S.activeBox] && !w.shots[S.activeBox === 'a' ? 'b' : 'a'] ? (S.activeBox === 'a' ? 'b' : 'a') : S.activeBox;
+  readImg(item.getAsFile(), box);
+});
+
+render();
+</script>
+</body>
+</html>
