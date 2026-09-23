@@ -954,6 +954,37 @@ There are no other screens, pop-ups or separate dashboards. The wizard is part o
 <li><strong>FR-8.9</strong> <strong>Forgiving:</strong> drafts save automatically. Re-uploading replaces the file and keeps the history. Nothing is lost by closing the browser.</li>
 <li><strong>FR-8.10</strong> <strong>Usability acceptance test before the pilot:</strong> 5 lecturers and 2 reviewers who have never seen the system complete submit, buddy review and program review <strong>without help</strong>. The median is 10 minutes or less for a submission and 5 minutes or less for a review. Every step where someone got stuck is fixed before launch.</li>
 </ul>
+<h4>6.8.1 Designed so people read, not click through</h4>
+<p>A two-round review only helps if reviewers actually look. The UI makes the careful path the only path, and it makes the important things impossible to miss.</p>
+<ul>
+<li><p><strong>FR-8.11</strong> <strong>Evidence before verdict.</strong> On every judgment item, <strong>✓ Verified</strong> (and N/A) stay <strong>locked</strong> until the reviewer has opened that item&#39;s evidence. A pulsing <strong>eye</strong> button marks unopened evidence, and it turns green once opened. <strong>✗ Issue</strong> is always available.</p>
+</li>
+<li><p><strong>FR-8.12</strong> <strong>Read-back check on the REG screenshot.</strong> To unlock Verified on the REG 100% item, the reviewer must:</p>
+<ul>
+<li><strong>type the Grand Total Percent they see</strong> in screenshot A. If they type anything other than 100, the system tells them to mark it as an Issue.</li>
+<li>tick four specific checks: every row says Show · the names and % match the score summary · the method matches TQF3 · the cutoffs match TQF3 and the grade report.</li>
+</ul>
+<p>Screenshots open <strong>full size with one click</strong>, so the numbers can actually be read.</p>
+</li>
+<li><p><strong>FR-8.13</strong> <strong>The lecturer checks their own screenshot, too.</strong> After pasting each screenshot, the lecturer must tick what they can actually see, for example &quot;every row says Show&quot; and &quot;Grand Total = 100.00&quot;, before <strong>Next</strong> unlocks. The snipping guide folds away once both are ticked.</p>
+</li>
+<li><p><strong>FR-8.14</strong> <strong>A random spot-check of the pre-checked items.</strong> The system pre-checks the items it can verify automatically, and <strong>picks one at random</strong> for the reviewer to open and verify themselves. The program reviewer can only bulk-confirm the remaining pre-checked items <strong>after</strong> doing their own spot-check. The random choice changes between rounds.</p>
+</li>
+<li><p><strong>FR-8.15</strong> <strong>Unusual things first, and highlighted:</strong></p>
+<ul>
+<li>a <strong>&quot;Heads up&quot; strip</strong> at the top of the review lists anything out of the ordinary, with an icon: a warning the lecturer overrode, M grades in a course with no final exam, a lecturer answer of &quot;No&quot;, an M count that means absence forms are due, and paper not yet received</li>
+<li>judgment items with something unusual are <strong>sorted to the top</strong> with an amber <em>Look closely</em> tag (e.g. &quot;Lecturer overrode a warning&quot;, &quot;Buddy raised an issue&quot;)</li>
+</ul>
+</li>
+<li><p><strong>FR-8.16</strong> <strong>No defaults on decisions.</strong> Yes/No questions, the borderline-grade choice and every verdict start <strong>empty</strong>. Nothing is pre-selected for the user to accept by accident, and no decision is made on the user&#39;s behalf.</p>
+</li>
+<li><p><strong>FR-8.17</strong> <strong>Press and hold to finish.</strong> Submit, Pass, Approve and Return open a <strong>summary card</strong> of what is about to happen (what was checked, what was overridden, what paper is outstanding). The action happens only after <strong>pressing and holding</strong> the button for about 1 second. This also works with the keyboard (hold Enter or Space), and Esc cancels.</p>
+</li>
+<li><p><strong>FR-8.18</strong> <strong>Progress you can see:</strong> a bar with &quot;<em>n</em> of <em>m</em> checks done&quot;, and a plain reason next to every disabled button, e.g. &quot;Type the Grand Total % you see in screenshot A&quot; or &quot;Waiting for the secretary to receive the paper&quot;.</p>
+</li>
+<li><p><strong>FR-8.19</strong> <strong>Icons and artwork carry meaning, not decoration.</strong> One consistent icon set: eye = look at evidence, lock = not yet unlocked, dice = spot-check, document = paper for the secretary, warning triangle = look closely. Small illustrations mark the key moments: snipping the REG pages, the 100% gauge, bringing paper to the secretary, returned for fixes, and approval. Colour is never the only signal: every state also has an icon and words.</p>
+</li>
+</ul>
 <h3 id="s24">6.9 Visibility: everything is open to all ADT lecturers</h3>
 <ul>
 <li><p><strong>FR-9.1</strong> <strong>Every signed-in ADT lecturer can view every section in every semester</strong>, whether or not they teach it:</p>
@@ -1272,7 +1303,7 @@ There are no other screens, pop-ups or separate dashboards. The wizard is part o
 </tr>
 <tr>
 <td>R5</td>
-<td>Buddies may rubber-stamp by accepting auto-verified items without looking. Mitigations: judgment items can&#39;t be bulk-marked, a spot-check prompt, and reports comparing Round 2 findings with Round 1.</td>
+<td>Buddies may rubber-stamp by accepting auto-verified items without looking. Mitigations (§6.8.1): evidence must be opened before Verified unlocks, the Grand Total must be typed in from the screenshot, a random spot-check, press-and-hold to finish, and reports comparing Round 2 findings with Round 1.</td>
 <td>Product</td>
 </tr>
 <tr>

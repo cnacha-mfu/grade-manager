@@ -124,7 +124,7 @@
   textarea { width: 100%; min-height: 60px; }
   .paperlist { display: grid; gap: 8px; }
   .paperlist .p { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
-  .layout-review { display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 16px; align-items: start; }
+  .layout-review { display: grid; grid-template-columns: minmax(0, 1fr) 500px; gap: 16px; align-items: start; }
   .panel { position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow: auto; }
   .panel img { max-width: 100%; border: 1px solid var(--line); border-radius: 8px; }
   .ticks label { display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; }
@@ -163,6 +163,74 @@
     .donts { grid-template-columns: 1fr; }
     .kv { grid-template-columns: 1fr; }
   }
+
+  /* ---- attention design ---- */
+  .ic { width: 18px; height: 18px; flex: none; vertical-align: -3px; }
+  .ic.lg { width: 22px; height: 22px; }
+  .art { width: 124px; height: 88px; flex: none; }
+  .notice { display: flex; gap: 16px; align-items: center; border-radius: 14px; padding: 12px 18px; border: 1px solid var(--line); background: var(--card); }
+  .notice.warn { background: #fff8e8; border-color: #f0d9a8; }
+  .notice.brand { background: var(--accent-soft); border-color: #eccdc7; }
+  .notice.ok { background: var(--ok-soft); border-color: #bfe3cf; }
+  .notice h3 { margin: 0 0 2px; }
+  .headsup { display: grid; gap: 8px; margin-bottom: 14px; }
+  .headsup .h { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; border-radius: 10px; background: #fff8e8; border: 1px solid #f0d9a8; color: #5c3d00; }
+  .headsup .h.red { background: var(--err-soft); border-color: #f5c2bd; color: #7a1a12; }
+  .headsup .h .ic { color: inherit; margin-top: 1px; }
+  .progress { height: 8px; border-radius: 999px; background: #ebe7e1; overflow: hidden; }
+  .progress > div { height: 100%; background: var(--ok); border-radius: 999px; transition: width .25s; }
+  .jcard { border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: var(--card); display: grid; grid-template-columns: 42px 1fr; gap: 12px; }
+  .jcard + .jcard { margin-top: 10px; }
+  .jcard.attn { border-color: #f0c36d; box-shadow: 0 0 0 3px #fff1d6; }
+  .jcard.done { border-color: #bfe3cf; }
+  .jcard.bad { border-color: #f5c2bd; }
+  .jcard .jic { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+  .jcard.done .jic { background: var(--ok-soft); color: var(--ok); }
+  .jcard.bad .jic { background: var(--err-soft); color: var(--err); }
+  .jcard .jt { font-weight: 600; }
+  .attn-tag { display: inline-flex; gap: 4px; align-items: center; font-size: 11.5px; font-weight: 700; color: #8a5a00; background: #ffe9b8; border-radius: 999px; padding: 1px 8px; margin-left: 6px; text-transform: uppercase; letter-spacing: .03em; }
+  .lockmsg { font-size: 12.5px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+  .seg button:disabled { opacity: .38; cursor: not-allowed; }
+  .eyebtn { display: inline-flex; gap: 6px; align-items: center; border: 1px solid var(--line); background: var(--card); border-radius: 8px; padding: 6px 11px; cursor: pointer; font-weight: 500; }
+  .eyebtn.seen { border-color: #9fd3b6; color: var(--ok); background: var(--ok-soft); }
+  .eyebtn.need { border-color: var(--accent); color: var(--accent); animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(155,59,47,.35); } 50% { box-shadow: 0 0 0 6px rgba(155,59,47,0); } }
+  @media (prefers-reduced-motion: reduce) { .eyebtn.need { animation: none; } }
+  .group-h { display: flex; gap: 10px; align-items: center; margin: 20px 0 10px; }
+  .group-h h3 { margin: 0; }
+  .group-h .ic { color: var(--muted); }
+  .spot { border: 2px dashed #e0a100; background: #fffaf0; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+  .autolist { display: grid; gap: 4px; }
+  .autolist .a { display: flex; gap: 10px; align-items: center; padding: 6px 4px; border-bottom: 1px dashed var(--line); font-size: 13.5px; }
+  .autolist .a .ic { color: var(--ok); }
+  .modal-bg { position: fixed; inset: 0; background: rgba(20,22,26,.5); display: grid; place-items: center; z-index: 60; padding: 16px; }
+  .modal { background: var(--card); border-radius: 18px; max-width: 580px; width: 100%; padding: 24px; box-shadow: 0 24px 70px rgba(0,0,0,.35); max-height: calc(100vh - 32px); overflow: auto; }
+  .modal .mh { display: flex; gap: 16px; align-items: center; margin-bottom: 8px; }
+  .modal h2 { font-size: 20px; margin: 0 0 4px; }
+  .recap { display: grid; gap: 8px; margin: 14px 0 18px; }
+  .recap .r { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-radius: 10px; background: var(--bg); }
+  .recap .r.good .ic { color: var(--ok); } .recap .r.warn { background: #fff8e8; } .recap .r.warn .ic { color: #b07800; } .recap .r.bad { background: var(--err-soft); } .recap .r.bad .ic { color: var(--err); }
+  .hold { position: relative; overflow: hidden; user-select: none; -webkit-user-select: none; touch-action: none; display: inline-flex; gap: 8px; align-items: center; }
+  .hold .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: rgba(255,255,255,.3); pointer-events: none; }
+  .hold span { position: relative; }
+  .hold-hint { font-size: 12px; color: var(--muted); margin-top: 6px; text-align: right; }
+  .slots { display: inline-flex; gap: 4px; vertical-align: middle; }
+  .slot { width: 22px; height: 28px; border: 1.5px dashed #bdb6ad; border-radius: 4px; display: grid; place-items: center; color: #bdb6ad; }
+  .slot .ic { width: 14px; height: 14px; }
+  .slot.on { border: 1.5px solid var(--ok); background: var(--ok-soft); color: var(--ok); }
+  .lookbox { border: 2px solid #f0c36d; background: #fffaf0; border-radius: 12px; padding: 10px 14px; }
+  .lookbox b.t { display: block; color: #6f4900; margin-bottom: 4px; }
+  .notice > div { font-weight: 400; }
+  .zoomable { cursor: zoom-in; }
+  .lightbox { position: fixed; inset: 0; background: rgba(15,17,20,.85); z-index: 80; display: grid; place-items: center; padding: 20px; cursor: zoom-out; }
+  .lightbox img { max-width: 100%; max-height: 100%; background: #fff; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,.4); }
+  .lightbox .cap { position: fixed; top: 14px; left: 0; right: 0; text-align: center; color: #fff; font-size: 13px; }
+  .lookbox label, .ticks label { display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; cursor: pointer; }
+  .gt { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 6px 0; }
+  .gt input { width: 90px; }
+  .unlocked { color: var(--ok); font-weight: 600; font-size: 13px; display: inline-flex; gap: 6px; align-items: center; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: inline-grid; place-items: center; font-weight: 700; font-size: 12px; flex: none; }
+  .quote { border-left: 3px solid var(--accent); padding: 6px 12px; background: var(--bg); border-radius: 0 8px 8px 0; margin: 6px 0; }
 </style>
 </head>
 <body>
@@ -283,6 +351,7 @@ function reset() {
     officeTab: 'semester',
     deadlines: { submit: '2026-12-05', buddy: '2026-12-07', program: '2026-12-09' },
     activeBox: 'a',
+    seen: {}, rticks: {}, gt: {}, showAuto: {}, modal: null, zoom: null,
   };
 }
 reset();
@@ -351,6 +420,41 @@ function answerText(s, item) {
 function fmtDate(d) { if (!d) return '—'; const x = new Date(d + 'T00:00'); return x.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
 function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
 function waitingFor(pid) { return S.sections.filter(s => s.status === 'buddy' && s.buddy === pid).length; }
+
+/* ------------------------------------------------------------------ icons & artwork */
+const ICONS = {
+  eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  unlock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/>',
+  x: '<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>',
+  alert: '<path d="M12 3.5l9.5 17h-19z"/><path d="M12 10v4.5M12 17.5h.01"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>',
+  doc: '<path d="M6 2.5h8.5l4.5 4.5v14.5H6z"/><path d="M14 2.5V7h5M9 12.5h7M9 16.5h5"/>',
+  scissors: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.2 8.2L20 20M8.2 15.8L20 4"/>',
+  dice: '<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+  hand: '<path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11M11 10.5V4a1.5 1.5 0 0 1 3 0v7M14 10.5V5.5a1.5 1.5 0 0 1 3 0V13M17 11.5a1.5 1.5 0 0 1 3 0V15a7 7 0 0 1-7 7h-1a7 7 0 0 1-6-3.4L3.5 15a1.5 1.5 0 0 1 2.5-1.6L8 16"/>',
+  cpu: '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2.5V6M15 2.5V6M9 18v3.5M15 18v3.5M2.5 9H6M2.5 15H6M18 9h3.5M18 15h3.5"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  clipboard: '<rect x="5" y="4" width="14" height="17.5" rx="2"/><path d="M9 4V2.5h6V4M9 11h6M9 15h6"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/>',
+  percent: '<circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/><path d="M19 5L5 19"/>',
+  send: '<path d="M4 12l16-8-6 17-3-7z"/><path d="M11 14l9-10"/>',
+  undo: '<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+  shield: '<path d="M12 2.5l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+  calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+};
+function ic(n, cls) { return `<svg class="ic ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`; }
+const ART = {
+  snip: `<svg class="art" viewBox="0 0 124 88" aria-hidden="true"><rect x="6" y="8" width="92" height="64" rx="7" fill="#fff" stroke="#2b2f36" stroke-width="2"/><rect x="6" y="8" width="92" height="11" rx="7" fill="#9b3b2f"/><g stroke="#d9d2c8" stroke-width="3" stroke-linecap="round"><path d="M16 30h54M16 40h54M16 50h54M16 60h34"/></g><rect x="12" y="25" width="66" height="41" rx="3" fill="rgba(155,59,47,.07)" stroke="#9b3b2f" stroke-width="2" stroke-dasharray="5 4"/><g transform="translate(86 40) rotate(-20)"><circle cx="0" cy="0" r="7" fill="#f7e9e6" stroke="#2b2f36" stroke-width="2"/><circle cx="0" cy="22" r="7" fill="#f7e9e6" stroke="#2b2f36" stroke-width="2"/><path d="M5 5l26 20M5 17L31 -3" stroke="#2b2f36" stroke-width="2.4" stroke-linecap="round"/></g><rect x="92" y="62" width="28" height="18" rx="4" fill="#2b2f36"/><text x="106" y="75" font-size="9" font-family="Inter,sans-serif" font-weight="700" fill="#fff" text-anchor="middle">Ctrl+V</text></svg>`,
+  paper: `<svg class="art" viewBox="0 0 124 88" aria-hidden="true"><rect x="10" y="16" width="42" height="54" rx="4" fill="#fff" stroke="#2b2f36" stroke-width="2" transform="rotate(-8 31 43)"/><rect x="18" y="12" width="42" height="54" rx="4" fill="#fff" stroke="#2b2f36" stroke-width="2"/><g stroke="#d9d2c8" stroke-width="3" stroke-linecap="round"><path d="M26 24h26M26 33h26M26 42h18"/></g><path d="M28 55c4-6 8 4 12-2s6 3 10-1" stroke="#9b3b2f" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M68 40h16" stroke="#9b3b2f" stroke-width="3" stroke-linecap="round"/><path d="M80 34l7 6-7 6" stroke="#9b3b2f" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="104" cy="30" r="9" fill="#f7e9e6" stroke="#2b2f36" stroke-width="2"/><path d="M90 62a14 14 0 0 1 28 0v8H90z" fill="#9b3b2f"/><rect x="86" y="68" width="36" height="6" rx="2" fill="#2b2f36"/></svg>`,
+  hundred: `<svg class="art" viewBox="0 0 124 88" aria-hidden="true"><circle cx="44" cy="44" r="32" fill="none" stroke="#ebe7e1" stroke-width="10"/><circle cx="44" cy="44" r="32" fill="none" stroke="#1f7a4d" stroke-width="10" stroke-dasharray="201" stroke-dashoffset="0" transform="rotate(-90 44 44)" stroke-linecap="round"/><text x="44" y="50" font-size="17" font-weight="800" font-family="Inter,sans-serif" fill="#1f2328" text-anchor="middle">100%</text><g font-family="Inter,sans-serif" font-size="9" font-weight="700"><rect x="86" y="18" width="34" height="14" rx="7" fill="#e3f3ea"/><text x="103" y="28" fill="#1f7a4d" text-anchor="middle">Show</text><rect x="86" y="37" width="34" height="14" rx="7" fill="#e3f3ea"/><text x="103" y="47" fill="#1f7a4d" text-anchor="middle">Show</text><rect x="86" y="56" width="34" height="14" rx="7" fill="#e3f3ea"/><text x="103" y="66" fill="#1f7a4d" text-anchor="middle">Show</text></g></svg>`,
+  review: `<svg class="art" viewBox="0 0 124 88" aria-hidden="true"><rect x="14" y="10" width="56" height="70" rx="6" fill="#fff" stroke="#2b2f36" stroke-width="2"/><rect x="30" y="5" width="24" height="10" rx="3" fill="#9b3b2f"/><g stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M24 30l4 4 7-7" stroke="#1f7a4d"/><path d="M24 46l4 4 7-7" stroke="#1f7a4d"/><path d="M24 62h11" stroke="#e0a100"/></g><g stroke="#d9d2c8" stroke-width="3" stroke-linecap="round"><path d="M42 31h20M42 47h20M42 62h20"/></g><circle cx="88" cy="50" r="18" fill="rgba(255,255,255,.7)" stroke="#2b2f36" stroke-width="3"/><path d="M101 63l14 14" stroke="#2b2f36" stroke-width="5" stroke-linecap="round"/><circle cx="88" cy="50" r="6" fill="#e0a100"/></svg>`,
+  approve: `<svg class="art" viewBox="0 0 124 88" aria-hidden="true"><path d="M62 8l34 12v22c0 20-15 32-34 38-19-6-34-18-34-38V20z" fill="#e3f3ea" stroke="#1f7a4d" stroke-width="2.5"/><path d="M47 45l10 10 20-22" fill="none" stroke="#1f7a4d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><g fill="#e0a100"><circle cx="16" cy="22" r="3"/><circle cx="108" cy="16" r="2.5"/><circle cx="110" cy="66" r="3"/><circle cx="14" cy="64" r="2"/></g><path d="M20 40l6 2M104 40l-6 2" stroke="#9b3b2f" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  returned: `<svg class="art" viewBox="0 0 124 88" aria-hidden="true"><rect x="40" y="10" width="46" height="62" rx="5" fill="#fff" stroke="#2b2f36" stroke-width="2"/><g stroke="#d9d2c8" stroke-width="3" stroke-linecap="round"><path d="M50 24h26M50 34h26M50 44h16"/></g><circle cx="80" cy="58" r="13" fill="#fbf0d9" stroke="#b07800" stroke-width="2.4"/><path d="M80 51v8M80 64h.01" stroke="#b07800" stroke-width="3" stroke-linecap="round"/><path d="M34 48c-12 0-20-8-20-20" stroke="#9b3b2f" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M8 32l6-6 6 6" stroke="#9b3b2f" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+};
+function avatar(pid) { const n = pname(pid).replace(/^(Asst\. Prof\.|Dr\.|Khun)\s*/, ''); return `<span class="avatar">${n.split(' ').map(x => x[0]).join('').slice(0, 2)}</span>`; }
+function hash(t) { let h = 0; for (const c of t) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
 
 /* ------------------------------------------------------------------ top bar */
 function renderTop() {
@@ -456,7 +560,7 @@ function renderSecretary() {
             if (k === 'exam' && !s.hasFinal) return '<span class="muted small">Not needed (no final)</span>';
             if (k === 'absence') {
               if (!s.mCount) return '<span class="muted small">Not needed (no M)</span>';
-              return `<div class="row" style="gap:6px"><input type="number" min="0" max="${s.mCount}" value="${s.paper.absence}" style="width:64px" data-a="absence" data-v="${s.id}"> <span class="small muted">of ${s.mCount}</span> ${s.paper.absence >= s.mCount ? '<span class="chip approved">✓</span>' : ''}</div>`;
+              return `<div class="row" style="gap:8px"><span class="slots" title="${s.paper.absence} of ${s.mCount} received">${Array.from({ length: s.mCount }, (_, n) => `<span class="slot ${n < s.paper.absence ? 'on' : ''}">${ic('doc')}</span>`).join('')}</span><input type="number" min="0" max="${s.mCount}" value="${s.paper.absence}" style="width:56px" data-a="absence" data-v="${s.id}" aria-label="forms received"> <span class="small muted">of ${s.mCount}</span></div>`;
             }
             const st = s.paper[k];
             return `<label class="row" style="gap:8px;cursor:pointer"><input type="checkbox" ${st === 'received' ? 'checked' : ''} data-a="paper" data-v="${s.id}" data-k="${k}"> ${st === 'received' ? '<span class="chip approved">Received</span>' : st === 'missing' ? '<span class="chip err">Missing</span>' : '<span class="small muted">Awaiting</span>'}</label>`;
@@ -494,7 +598,7 @@ function courseHead(s, sub) {
 /* ------------------------------------------------------------------ lecturer wizard */
 const WSTEPS = ['Check course', 'Upload REG files', 'Paste screenshots', 'Fix problems', 'Confirm & submit'];
 function W(s) {
-  if (!S.wiz[s.id]) S.wiz[s.id] = { step: 1, files: {}, shots: {}, c14: false, c13: null, c13reason: 'Following my class policy: no rounding.', ans: { missing: null, policy: null, align: null, alignReason: '', ann: '', dl: '' }, buddy: '' };
+  if (!S.wiz[s.id]) S.wiz[s.id] = { step: 1, files: {}, shots: {}, c14: false, c13: null, c13reason: 'Following my class policy: no rounding.', ans: { missing: null, policy: null, align: null, alignReason: '', ann: '', dl: '' }, buddy: '', shotChecks: { a: [], b: [] }, declare: false };
   return S.wiz[s.id];
 }
 function renderWizard(s) {
@@ -540,36 +644,41 @@ function wStep2(s, w) {
     ${both ? `<div class="hint warn" style="margin-top:10px">Checked ${s.students} students: <b>1 problem to fix</b> and <b>1 thing to confirm</b>. You'll see them in step 4.</div>` : ''}
     ${foot(true, 'Next →', both, 'Add both files to continue')}`;
 }
+const SHOTCHECK = {
+  a: ['Every row says <b>Show</b>. None say Hide.', 'I can see the <b>Grand Total</b> row, and its Percent is <b>100.00</b>.', 'The <b>whole table</b> is in the picture, including Display Status and Percent.'],
+  b: ['The <b>method</b> is visible (FIX-Rate, T-Score or MEAN-SD).', 'Every grade <b>A to F</b> is visible with its cutoff.'],
+};
+function shotOk(w, k) { return !!w.shots[k] && SHOTCHECK[k].every((_, i) => w.shotChecks[k][i]); }
 function wStep3(s, w) {
   const box = (k, title, sample) => {
     const img = w.shots[k];
     return `<div class="stack">
-      <h3>${k.toUpperCase()} · ${title}</h3>
+      <h3>${k.toUpperCase()} · ${title} ${shotOk(w, k) ? '<span class="chip approved">✓ checked</span>' : ''}</h3>
       <div class="paste ${S.activeBox === k ? 'active' : ''} ${img ? 'filled' : ''}" tabindex="0" data-a="box" data-v="${k}">
-        ${img ? `<img src="${img}" alt="">` : `<div><div style="font-size:26px">📋</div><b>Click here, then press <kbd>Ctrl</kbd> + <kbd>V</kbd></b><div class="small muted">or drop an image file</div></div>`}
+        ${img ? `<img class="zoomable" data-a="zoom" src="${img}" alt="">` : `<div><div style="font-size:26px">📋</div><b>Click here, then press <kbd>Ctrl</kbd> + <kbd>V</kbd></b><div class="small muted">or drop an image file</div></div>`}
       </div>
-      <div class="row small">${img ? `<span class="chip approved">✓ attached</span><button class="linkbtn" data-a="clearshot" data-v="${k}">Replace</button>` : `<button class="linkbtn" data-a="sampleshot" data-v="${k}">Use sample screenshot (demo)</button>`}</div>
-      <div class="guide">
+      <div class="row small">${img ? `<button class="linkbtn" data-a="clearshot" data-v="${k}">Replace</button>` : `<button class="linkbtn" data-a="sampleshot" data-v="${k}">Use sample screenshot (demo)</button>`}</div>
+      ${img ? `<div class="lookbox"><b class="t">${ic('eye')} Now look at your screenshot. Tick only what you can actually see:</b>
+        ${SHOTCHECK[k].map((t, i) => `<label><input type="checkbox" data-a="shotcheck" data-k="${k}" data-v="${i}" ${w.shotChecks[k][i] ? 'checked' : ''}> <span>${t}</span></label>`).join('')}
+        <div class="small muted">If you can't tick one, fix it in REG or snip again. Your buddy will check the same things.</div></div>` : ''}
+      ${shotOk(w, k) ? `<button class="linkbtn small" data-a="noop2">✓ Looks good</button>` : `<div class="guide">
         <b>How to snap it</b>
         <ol>
           <li>In REG, open <b>Grade Entry</b> → ${s.code} sec ${s.sec} → <b>${title}</b>.</li>
           <li>Press <kbd>Windows</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> and drag a box <b>around the whole table</b>. <span class="muted">(Mac: <kbd>Cmd</kbd>+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>4</kbd>)</span></li>
-          <li>Come back here, click the box above and press <kbd>Ctrl</kbd> + <kbd>V</kbd>. There's no file to save.</li>
+          <li>Come back here, click the box above and press <kbd>Ctrl</kbd> + <kbd>V</kbd>.</li>
         </ol>
         <b>It should look like this:</b>
         <div class="sample" style="margin-top:6px"><span class="tag">✓ GOOD</span><img src="${sample}" alt="Sample"></div>
-        <div class="small" style="margin-top:8px">Make sure you can see: ${k === 'a'
-          ? '<b>every row</b> · the <b>Display Status</b> column (all <b>Show</b>) · the <b>Percent</b> column · the <b>Grand Total = 100.00</b> row'
-          : 'the <b>method</b> (FIX-Rate, T-Score or MEAN-SD) · Grade Format, Lowest and Highest · the <b>whole cutoff table, A to F</b>'}</div>
         <div class="donts">${k === 'a'
           ? `<div class="dont"><b>✗ Cut off</b>Display Status or Percent column missing</div><div class="dont"><b>✗ No total</b>Grand Total row not in the snip</div><div class="dont"><b>✗ "Hide"</b>Every item must say Show</div>`
           : `<div class="dont"><b>✗ Only half</b>The cutoff table is cut off</div><div class="dont"><b>✗ No method</b>FIX-Rate / T-Score / MEAN-SD not visible</div><div class="dont"><b>✗ Wrong course</b>Check the section before snipping</div>`}</div>
-      </div></div>`;
+      </div>`}</div>`;
   };
-  return `<h2>Step 3 · Paste two REG screenshots</h2>
-    <p class="sub">These show that students can see <b>100% of their scores</b> on REG, and which grade cutoffs REG uses. Use the Snipping Tool, then paste.</p>
+  return `<div class="notice brand" style="margin-bottom:16px">${ART.snip}<div><h3>Snip two REG pages and paste them here</h3>
+      <div>These prove students can see <b>100% of their scores</b>, and show which cutoffs REG uses. Your buddy and the program will read them closely.</div></div></div>
     <div class="shots">${box('a', 'Set a List of Score', SHOT_A)}${box('b', 'Set a Grading Format', SHOT_B)}</div>
-    ${foot(true, 'Next →', w.shots.a && w.shots.b, 'Paste both screenshots to continue')}`;
+    ${foot(true, 'Next →', shotOk(w, 'a') && shotOk(w, 'b'), !w.shots.a || !w.shots.b ? 'Paste both screenshots' : 'Tick what you can see in each screenshot')}`;
 }
 function wStep4(s, w) {
   const ok = w.c14 && w.c13;
@@ -577,18 +686,18 @@ function wStep4(s, w) {
     <p class="sub">Only what needs your attention. Fix it in REG, then upload the new file here.</p>
     <div class="stack">
       <div class="problem ${w.c14 ? 'done' : ''}">
-        <div class="t">${w.c14 ? '✓ Fixed: ' : ''}2 students have <b>F</b> but no final exam score</div>
+        <div class="t row" style="gap:8px">${w.c14 ? ic('check') : ic('x')} ${w.c14 ? 'Fixed: ' : ''}2 students have <b>F</b> but no final exam score</div>
         <div class="muted">6631401012 and 6631401027 have a blank final exam. They were probably absent, so the grade should be <b>M</b>, not F. Change it in REG Grade Entry.</div>
-        ${w.c14 ? '<div class="small" style="margin-top:6px;color:var(--ok)">New grade report uploaded: 2 × M. Remember the absence forms go to the secretary.</div>'
+        ${w.c14 ? `<div class="small" style="margin-top:6px;color:var(--ok)">New grade report uploaded: 2 × M. You'll need <b>2 absence forms</b> for the secretary.</div>`
                 : '<div class="row" style="margin-top:10px"><button class="btn primary" data-a="fix14">I fixed it in REG. Upload the new grade report</button></div>'}
       </div>
       <div class="problem warn ${w.c13 ? 'done' : ''}">
-        <div class="t">${w.c13 ? '✓ Confirmed: ' : ''}1 student is just below a cutoff</div>
-        <div class="muted">6631401033 has <b>69.99</b>, and B starts at 70. Is C+ correct?</div>
+        <div class="t row" style="gap:8px">${w.c13 ? ic('check') : ic('alert')} ${w.c13 ? 'Confirmed: ' : ''}1 student is just below a cutoff</div>
+        <div class="muted">6631401033 has <b>69.99</b>, and B starts at 70. Is C+ correct? <b>Choose one.</b> There's no default.</div>
         <div class="row" style="margin-top:10px">
           <div class="seg"><button class="${w.c13 === 'keep' ? 'on' : ''}" data-a="c13" data-v="keep">Yes, keep C+</button><button class="${w.c13 === 'fix' ? 'on' : ''}" data-a="c13" data-v="fix">No, I'll change it in REG</button></div>
         </div>
-        ${w.c13 === 'keep' ? `<div style="margin-top:8px"><input type="text" style="width:100%" data-a="c13reason" value="${esc(w.c13reason)}"><div class="small muted">One sentence for your reviewers.</div></div>` : ''}
+        ${w.c13 === 'keep' ? `<div style="margin-top:8px"><input type="text" style="width:100%" data-a="c13reason" value="${esc(w.c13reason)}"><div class="small muted">One sentence for your reviewers. They'll see it highlighted.</div></div>` : ''}
       </div>
       <div class="hint ok">✓ Everything else passed: totals are 100, the grades match the cutoffs, and all ${s.students} students match REG.</div>
     </div>
@@ -597,7 +706,7 @@ function wStep4(s, w) {
 function wStep5(s, w) {
   const a = w.ans;
   const gap = a.ann && a.dl ? daysBetween(a.ann, a.dl) : null;
-  const dateMsg = !a.ann || !a.dl ? '' : gap < 3 ? `<div class="hint warn" style="margin-top:8px">Students had only ${gap} day(s) to check their scores. The minimum is 3 days.</div>` : `<div class="hint ok" style="margin-top:8px">✓ Students had ${gap} days to check their scores.</div>`;
+  const dateMsg = !a.ann || !a.dl ? '' : gap < 3 ? `<div class="hint warn" style="margin-top:8px">${ic('alert')} Students had only ${gap} day(s) to check their scores. The minimum is 3 days.</div>` : `<div class="hint ok" style="margin-top:8px">✓ Students had ${gap} days to check their scores.</div>`;
   const q = (k, text) => `<div class="q"><div class="grow">${text}</div><div class="seg"><button class="${a[k] === 'Yes' ? 'on' : ''}" data-a="ans" data-k="${k}" data-v="Yes">Yes</button><button class="${a[k] === 'No' ? 'on' : ''}" data-a="ans" data-k="${k}" data-v="No">No</button></div></div>`;
   const tmp = Object.assign({}, s, { mCount: w.c14 ? 2 : 0 });
   const buddies = Object.entries(PEOPLE).filter(([id, p]) => p.program && !s.lecturers.includes(id));
@@ -606,11 +715,12 @@ function wStep5(s, w) {
   if (!a.missing || !a.policy || !a.align) why.push('3 questions');
   if (a.align === 'No' && !a.alignReason.trim()) why.push('a reason');
   if (!w.buddy) why.push('a buddy');
+  if (!w.declare) why.push('the declaration');
   return `<h2>Step 5 · Confirm & submit</h2>
-    <p class="sub">The system checked everything it could. These few things only you can answer.</p>
+    <p class="sub">The system checked everything it could. These few things only you can answer. None are pre-filled.</p>
     <div class="grid2">
       <div>
-        <h3>When did students see their scores?</h3>
+        <h3>${ic('calendar')} When did students see their scores?</h3>
         <div class="row"><label class="small">Announced on REG<br><input type="date" data-a="date" data-k="ann" value="${a.ann}"></label>
         <label class="small">Students could dispute until<br><input type="date" data-a="date" data-k="dl" value="${a.dl}"></label></div>
         ${dateMsg}
@@ -618,17 +728,15 @@ function wStep5(s, w) {
         ${q('missing', 'If any marks were missing, I have told the students. <span class="muted small">#11</span>')}
         ${q('policy', 'The grading policy is in the TQF3 evaluation plan. <span class="muted small">#15</span>')}
         ${q('align', 'The score summary matches the evaluation criteria in TQF3. <span class="muted small">#19</span>')}
-        ${a.align === 'No' ? `<div style="padding:8px 0"><input type="text" style="width:100%" placeholder="Why is it different? e.g. changed due to learning activities" data-a="alignReason" value="${esc(a.alignReason)}"></div>` : ''}
+        ${a.align === 'No' ? `<div style="padding:8px 0"><input type="text" style="width:100%" placeholder="Why is it different? e.g. changed due to learning activities" data-a="alignReason" value="${esc(a.alignReason)}"><div class="small muted">Your reviewers will see this highlighted.</div></div>` : ''}
         </div>
       </div>
       <div class="stack">
+        <div class="notice warn">${ART.paper}<div><h3>Bring ${paperNeeds(tmp).length} paper documents to the secretary</h3>
+          <div class="small">${paperNeeds(tmp).map(p => `${ic('doc')} ${p.label}`).join('<br>')}</div>
+          <div class="small muted" style="margin-top:4px">On paper, no scanning. The program can approve once they're all ticked in.</div></div></div>
         <div>
-          <h3>Give these to the secretary 📄</h3>
-          <div class="paperlist">${paperNeeds(tmp).map(p => `<div class="p"><span>📄</span><div class="grow">${p.label}</div><span class="small muted">on paper, no scan</span></div>`).join('')}</div>
-          <div class="small muted" style="margin-top:6px">The secretary ticks them as received. The program can approve once they're all in.</div>
-        </div>
-        <div>
-          <h3>Choose your buddy</h3>
+          <h3>${ic('user')} Choose your buddy</h3>
           <select data-a="buddy" style="width:100%"><option value="">Choose any ADT lecturer…</option>
             ${buddies.map(([id, p]) => `<option value="${id}" ${w.buddy === id ? 'selected' : ''}>${p.name} · ${p.program} · ${waitingFor(id)} waiting</option>`).join('')}
           </select>
@@ -636,17 +744,19 @@ function wStep5(s, w) {
         </div>
       </div>
     </div>
-    ${foot(true, 'Submit to buddy ✓', !why.length, why.length ? 'Still needed: ' + why.join(', ') : '')}`;
+    <div class="lookbox" style="margin-top:16px"><label><input type="checkbox" data-a="declare" ${w.declare ? 'checked' : ''}> <span><b>I declare</b> that all score items (100%) are announced to students on REG, the screenshots are of this section, and the grades in the report are final.</span></label></div>
+    ${foot(true, 'Review & submit →', !why.length, why.length ? 'Still needed: ' + why.join(', ') : '')}`;
 }
 
 /* ------------------------------------------------------------------ returned (lecturer) */
 function renderReturned(s) {
   const open = s.issues.filter(i => i.open);
   return `${courseHead(s)}
+    <div class="notice warn" style="margin-bottom:14px">${ART.returned}<div><h3>Returned with ${open.length} issue${open.length === 1 ? '' : 's'} to fix</h3>
+      <div>From the ${s.returnedBy === 1 ? 'buddy, ' + esc(pname(s.buddy)) : 'program'}. Fix each one, then resubmit. It goes back to the ${s.returnedBy === 1 ? 'buddy' : 'program'}, who re-checks only what changed.</div></div></div>
     <div class="card stack">
-      <div class="hint warn">Returned by the ${s.returnedBy === 1 ? 'buddy (' + esc(pname(s.buddy)) + ')' : 'program'} with ${open.length} issue(s). Fix them, then resubmit. It goes back to the ${s.returnedBy === 1 ? 'buddy' : 'program'}.</div>
-      ${s.issues.map(i => `<div class="problem ${i.open ? '' : 'done'}"><div class="t">${i.open ? '' : '✓ '}${esc(ITEMS.find(x => x.id === i.item).label)}</div>
-        <div class="muted">"${esc(i.text)}" · <span class="small">${esc(pname(i.by))}</span></div>
+      ${s.issues.map(i => `<div class="problem ${i.open ? '' : 'done'}"><div class="t row" style="gap:8px">${i.open ? ic('alert') : ic('check')} ${esc(ITEMS.find(x => x.id === i.item).label)}</div>
+        <div class="row" style="gap:10px;align-items:flex-start">${avatar(i.by)}<div class="quote grow">"${esc(i.text)}"<div class="small muted">${esc(pname(i.by))}</div></div></div>
         ${i.open ? `<div class="row" style="margin-top:10px"><button class="btn primary" data-a="fixissue" data-v="${i.id}">I fixed it in REG. Upload the new file</button><button class="btn" data-a="replyissue" data-v="${i.id}">Explain instead</button></div>` : '<div class="small" style="color:var(--ok);margin-top:6px">Fixed. The reviewer will re-check this item.</div>'}
       </div>`).join('')}
       <div class="wiz-foot"><div></div><button class="btn primary big" data-a="resubmit" ${open.length ? 'disabled' : ''}>Resubmit →</button></div>
@@ -654,87 +764,157 @@ function renderReturned(s) {
 }
 
 /* ------------------------------------------------------------------ review (buddy = 1, program = 2) */
+const JICON = { reg100: 'percent', missing: 'user', policy: 'clipboard', align: 'clipboard', ack: 'alert' };
+const RTICKS = ['Every row in A says <b>Show</b>', 'The names and % in A match the score summary', 'The method in B matches TQF3', 'The cutoffs in B match TQF3 and the grade report'];
+function rkey(s, round) { return s.id + ':' + round; }
+function spotItem(s, round) { const autos = itemsFor(s).filter(i => i.type === 'auto'); return autos[(hash(s.id) + round * 3) % autos.length]; }
+function unlockState(s, round, id) {
+  const k = rkey(s, round), seen = (S.seen[k] || {})[id];
+  if (id !== 'reg100') return { ok: !!seen, why: seen ? '' : 'Open the evidence to unlock ✓ Verified' };
+  const ticks = S.rticks[k] || [], gt = (S.gt[k] || '').trim();
+  const ticked = RTICKS.every((_, i) => ticks[i]);
+  if (!seen) return { ok: false, why: 'Open the screenshots to unlock ✓ Verified' };
+  if (gt === '') return { ok: false, why: 'Type the Grand Total % you see in screenshot A' };
+  if (parseFloat(gt) !== 100) return { ok: false, why: `You read ${esc(gt)}%, which isn't 100%. Mark it as an Issue.`, bad: true };
+  if (!ticked) return { ok: false, why: 'Tick the 4 checks beside the screenshots' };
+  return { ok: true, why: '' };
+}
+function attention(s, round, i) {
+  const a = s.answers, b = s.bv[i.id] || {};
+  if (i.id === 'ack') return 'Lecturer overrode a warning';
+  if (['missing', 'policy', 'align'].includes(i.id) && a[i.id] === 'No') return 'Lecturer answered No';
+  if (i.id === 'align' && a.alignReason) return 'Differs from TQF3';
+  if (round === 2 && b.v === 'issue') return 'Buddy raised an issue';
+  if (round === 2 && b.v === 'na') return 'Buddy marked N/A';
+  return '';
+}
+function headsUp(s, round) {
+  const h = [];
+  if (s.ack) h.push(['alert', 'The lecturer <b>overrode a warning</b>: ' + esc(s.ack), '']);
+  if (!s.hasFinal && s.mCount) h.push(['alert', `<b>${s.mCount} M grades</b> in a course with <b>no final exam</b>. M is only for final-exam absence.`, 'red']);
+  if (s.mCount && s.hasFinal) h.push(['doc', `<b>${s.mCount} M grade${s.mCount > 1 ? 's' : ''}</b>, so ${s.mCount} absence form${s.mCount > 1 ? 's' : ''} should reach the secretary.`, '']);
+  if (s.answers.align === 'No') h.push(['clipboard', 'The lecturer says the score summary <b>differs from TQF3</b>. Read their reason.', '']);
+  if (round === 2 && !paperDone(s)) h.push(['doc', `Paper documents <b>not all received</b> yet (${paperNeeds(s).filter(p => p.st === 'received').length}/${paperNeeds(s).length}). You can review now, but not approve.`, '']);
+  return h.length ? `<div class="headsup">${h.map(([i, t, c]) => `<div class="h ${c}">${ic(i)}<div>${t}</div></div>`).join('')}</div>` : '';
+}
+function segFor(s, round, id, cur, lock) {
+  return `<div class="seg">
+    <button class="v ${cur.v === 'verified' ? 'on' : ''}" data-a="verdict" data-k="${id}" data-v="verified" ${lock.ok ? '' : 'disabled'}>✓ Verified</button>
+    <button class="i ${cur.v === 'issue' ? 'on' : ''}" data-a="verdict" data-k="${id}" data-v="issue">✗ Issue</button>
+    <button class="n ${cur.v === 'na' ? 'on' : ''}" data-a="verdict" data-k="${id}" data-v="na" ${lock.ok ? '' : 'disabled'}>N/A</button></div>`;
+}
+function reviewStats(s, round) {
+  const mine = round === 1 ? s.bv : s.pv, items = itemsFor(s), spot = spotItem(s, round);
+  const judge = items.filter(i => i.type === 'judge');
+  const autos = items.filter(i => i.type === 'auto' && i.id !== spot.id);
+  const decided = x => mine[x.id] && mine[x.id].v;
+  const need = [...judge, spot, ...(round === 2 ? autos : [])];
+  const done = need.filter(x => decided(x) && !(x.id === spot.id && mine[x.id].auto));
+  const issues = items.filter(i => i.type !== 'paper' && (mine[i.id] || {}).v === 'issue');
+  return { mine, judge, autos, spot, need, done, issues, noNote: issues.filter(i => !(mine[i.id].note || '').trim()) };
+}
 function renderReview(s, round) {
-  const mine = round === 1 ? s.bv : s.pv, items = itemsFor(s);
-  const judge = items.filter(i => i.type !== 'paper');
-  const decided = judge.filter(i => mine[i.id] && mine[i.id].v);
-  const issues = judge.filter(i => mine[i.id] && mine[i.id].v === 'issue');
-  const issueNoNote = issues.filter(i => !(mine[i.id].note || '').trim());
-  const allDone = decided.length === judge.length;
+  const st = reviewStats(s, round), { mine, judge, autos, spot } = st, k = rkey(s, round);
   const paperOk = paperDone(s);
-  const canPass = allDone && !issues.length && (round === 1 || paperOk);
+  const allDone = st.done.length === st.need.length;
+  const canPass = allDone && !st.issues.length && (round === 1 || paperOk);
   let block = '';
-  if (!allDone) block = `${judge.length - decided.length} item(s) still need your verdict`;
-  else if (issues.length) block = 'There are issues, so you can only return it';
-  else if (round === 2 && !paperOk) block = 'Waiting for the secretary to receive the paper documents';
-  const row = (i) => {
-    const cur = mine[i.id] || {}, b = s.bv[i.id] || {};
-    if (i.type === 'paper') {
-      const p = paperStatusText(s, i);
-      return `<tr><td class="small muted">${i.no}</td><td><b>${i.label}</b><div class="small muted">Paper document, checked by the secretary</div></td>
-        ${round === 2 ? '<td></td>' : ''}
-        <td colspan="1">${p.v === 'ok' ? `<span class="chip approved">✓ ${p.text}</span>` : p.v === 'na' ? `<span class="chip muted">${p.text}</span>` : p.v === 'missing' ? `<span class="chip err">${p.text}</span>` : `<span class="chip muted">⏳ ${p.text}</span>`}</td><td></td></tr>`;
-    }
-    const seg = `<div class="seg">
-      <button class="v ${cur.v === 'verified' ? 'on' : ''}" data-a="verdict" data-k="${i.id}" data-v="verified">✓ Verified</button>
-      <button class="i ${cur.v === 'issue' ? 'on' : ''}" data-a="verdict" data-k="${i.id}" data-v="issue">✗ Issue</button>
-      <button class="n ${cur.v === 'na' ? 'on' : ''}" data-a="verdict" data-k="${i.id}" data-v="na">N/A</button></div>
-      ${cur.auto && cur.v === 'verified' ? '<span class="v-auto">pre-checked by the system</span>' : ''}
-      ${i.type === 'judge' && !cur.v ? '<span class="v-auto" style="color:var(--accent)">needs your decision</span>' : ''}
-      ${cur.v === 'issue' ? `<div class="issue-note"><input type="text" placeholder="What should the lecturer fix?" data-a="note" data-k="${i.id}" value="${esc(cur.note || '')}"></div>` : ''}`;
-    return `<tr>
-      <td class="small muted">${i.no}</td>
-      <td><b>${i.label}</b><div class="small">${answerText(s, i)}</div>
-        ${i.ev || ['grade', 'summary', 'total', 'special'].includes(i.id) ? `<button class="linkbtn small" data-a="panel" data-v="${i.id}">${S.panel === i.id ? 'Showing evidence →' : 'View evidence →'}</button>` : ''}</td>
-      ${round === 2 ? `<td class="verdict-read">${b.v === 'verified' ? '<span class="chip approved">✓ Verified</span>' : b.v === 'issue' ? '<span class="chip err">✗ Issue</span>' : b.v === 'na' ? '<span class="chip muted">N/A</span>' : '—'}${b.auto ? '<span class="v-auto">auto</span>' : ''}</td>` : ''}
-      <td style="min-width:250px">${seg}</td><td></td>
-    </tr>`;
+  if (!allDone) block = `${st.need.length - st.done.length} check${st.need.length - st.done.length > 1 ? 's' : ''} left`;
+  else if (st.issues.length) block = 'There are issues, so you can only return it';
+  else if (round === 2 && !paperOk) block = 'Waiting for the secretary to receive the paper';
+  const sorted = [...judge].sort((a, b) => (attention(s, round, b) ? 1 : 0) - (attention(s, round, a) ? 1 : 0));
+  const card = (i) => {
+    const cur = mine[i.id] || {}, lock = unlockState(s, round, i.id), attn = attention(s, round, i), b = s.bv[i.id] || {};
+    const seen = (S.seen[k] || {})[i.id];
+    const state = cur.v === 'verified' || cur.v === 'na' ? 'done' : cur.v === 'issue' ? 'bad' : '';
+    return `<div class="jcard ${state} ${attn && !state ? 'attn' : ''}">
+      <div class="jic">${ic(state === 'done' ? 'check' : state === 'bad' ? 'x' : JICON[i.id] || 'clipboard', 'lg')}</div>
+      <div>
+        <div class="jt">${i.label} ${i.no !== '—' ? `<span class="small muted">#${i.no}</span>` : ''}${attn ? `<span class="attn-tag">${ic('alert')} ${attn}</span>` : ''}</div>
+        <div class="small" style="margin:3px 0 8px">${answerText(s, i)}</div>
+        ${round === 2 ? `<div class="small" style="margin-bottom:8px">Buddy: ${b.v === 'verified' ? '<span class="chip approved">✓ Verified</span>' : b.v === 'issue' ? '<span class="chip err">✗ Issue</span>' : b.v === 'na' ? '<span class="chip muted">N/A</span>' : '—'} ${b.note ? `<span class="muted">"${esc(b.note)}"</span>` : ''}</div>` : ''}
+        <div class="row">
+          <button class="eyebtn ${seen ? 'seen' : 'need'}" data-a="panel" data-v="${i.id}">${ic('eye')} ${seen ? 'Evidence opened' : 'Open evidence'}</button>
+          ${segFor(s, round, i.id, cur, lock)}
+          ${!lock.ok && cur.v !== 'issue' ? `<span class="lockmsg" style="${lock.bad ? 'color:var(--err)' : ''}">${ic('lock')} ${lock.why}</span>` : ''}
+        </div>
+        ${cur.v === 'issue' ? `<div class="issue-note"><input type="text" placeholder="What should the lecturer fix? (required)" data-a="note" data-k="${i.id}" value="${esc(cur.note || '')}"></div>` : ''}
+      </div></div>`;
   };
+  const sp = mine[spot.id] || {}, spLock = unlockState(s, round, spot.id);
+  const spotDone = sp.v && !sp.auto;
+  const pct = Math.round(st.done.length / st.need.length * 100);
   return `${courseHead(s, round === 1 ? 'buddy review, requested by ' + esc(lecNames(s)) : 'program review')}
-    <div class="hint" style="margin-bottom:14px">${round === 1
-      ? 'Check each item against the evidence. Items marked <i>pre-checked</i> passed the system\'s checks: glance at them, and change any you disagree with. The <b>REG screenshots</b> and the lecturer\'s answers need your decision.'
-      : 'The buddy\'s verdicts are in the <b>Buddy</b> column. You can confirm the auto-checked items in one click, but decide the judgment items one by one. Approving is the <b>last step in the system</b>.'}</div>
+    ${headsUp(s, round)}
     <div class="layout-review">
       <div class="card">
-        <div class="row" style="margin-bottom:8px"><h2 class="grow" style="margin:0">Checklist</h2>
-          ${round === 2 ? '<button class="btn small" data-a="confirmauto">✓ Confirm all auto-checked items</button>' : ''}
-          <span class="small muted">${decided.length}/${judge.length} decided</span></div>
-        <div class="tablewrap"><table>
-          <thead><tr><th>#</th><th>Item</th>${round === 2 ? '<th>Buddy</th>' : ''}<th>Your verdict</th><th></th></tr></thead>
-          <tbody>${items.map(row).join('')}</tbody>
-        </table></div>
+        <div class="row" style="margin-bottom:6px"><h2 class="grow" style="margin:0">${round === 1 ? 'Buddy review' : 'Program review'}</h2><span class="small muted">${st.done.length} of ${st.need.length} checks done</span></div>
+        <div class="progress" style="margin-bottom:6px"><div style="width:${pct}%"></div></div>
+        <div class="small muted">${round === 1 ? 'Open each piece of evidence before you verify it. "Verified" stays locked until you do.' : "Check the buddy's work. You decide the judgment items and one spot-check yourself."}</div>
+
+        <div class="group-h">${ic('eye', 'lg')}<h3>Needs your judgment (${judge.length})</h3></div>
+        ${sorted.map(card).join('')}
+
+        <div class="group-h">${ic('cpu', 'lg')}<h3>Pre-checked by the system (${autos.length + 1})</h3></div>
+        <div class="spot">
+          <div class="row" style="gap:8px;margin-bottom:6px">${ic('dice', 'lg')}<b>Random spot-check:</b> the system picked <b>${spot.label}</b> for you to look at yourself.</div>
+          <div class="small" style="margin-bottom:8px">${answerText(s, spot)}</div>
+          <div class="row">
+            <button class="eyebtn ${(S.seen[k] || {})[spot.id] ? 'seen' : 'need'}" data-a="panel" data-v="${spot.id}">${ic('eye')} ${(S.seen[k] || {})[spot.id] ? 'Evidence opened' : 'Open evidence'}</button>
+            ${segFor(s, round, spot.id, spotDone ? sp : {}, spLock)}
+            ${!spLock.ok ? `<span class="lockmsg">${ic('lock')} ${spLock.why}</span>` : ''}
+          </div>
+          ${sp.v === 'issue' ? `<div class="issue-note"><input type="text" placeholder="What should the lecturer fix? (required)" data-a="note" data-k="${spot.id}" value="${esc(sp.note || '')}"></div>` : ''}
+        </div>
+        ${round === 2 ? `<div class="row" style="margin-bottom:8px"><button class="btn small" data-a="confirmrest" ${spotDone ? '' : 'disabled'}>✓ Confirm the other ${autos.length} pre-checked items</button>${spotDone ? '' : `<span class="lockmsg">${ic('lock')} Do the spot-check first</span>`}</div>` : ''}
+        <button class="linkbtn small" data-a="showauto">${S.showAuto[k] ? 'Hide' : 'Show'} the other ${autos.length} items</button>
+        ${S.showAuto[k] ? `<div class="autolist" style="margin-top:8px">${autos.map(i => { const c = mine[i.id] || {}; return `<div class="a">${c.v === 'issue' ? ic('x') : ic('check')}<div class="grow"><b>${i.label}</b><div class="small muted">${answerText(s, i)}</div></div>
+          <button class="btn small ghost" data-a="${c.v === 'issue' ? 'unflag' : 'flag'}" data-v="${i.id}">${c.v === 'issue' ? 'Undo issue' : 'Flag an issue'}</button></div>
+          ${c.v === 'issue' ? `<div class="issue-note"><input type="text" placeholder="What should the lecturer fix? (required)" data-a="note" data-k="${i.id}" value="${esc(c.note || '')}"></div>` : ''}`; }).join('')}</div>` : ''}
+
+        <div class="group-h">${ic('doc', 'lg')}<h3>Paper documents (checked by the secretary)</h3></div>
+        <div class="paperlist">${itemsFor(s).filter(i => i.type === 'paper').map(i => { const p = paperStatusText(s, i); return `<div class="p">${ic('doc')}<div class="grow">${i.label}</div>${p.v === 'ok' ? `<span class="chip approved">✓ ${p.text}</span>` : p.v === 'na' ? `<span class="chip muted">${p.text}</span>` : p.v === 'missing' ? `<span class="chip err">${p.text}</span>` : `<span class="chip muted">⏳ ${p.text}</span>`}</div>`; }).join('')}</div>
+
         <div class="wiz-foot">
-          <button class="btn" data-a="return" ${issues.length && !issueNoNote.length ? '' : 'disabled'}>↩ Return to lecturer${issues.length ? ` (${issues.length} issue${issues.length > 1 ? 's' : ''})` : ''}</button>
+          <button class="btn" data-a="return" ${st.issues.length && !st.noNote.length ? '' : 'disabled'}>${ic('undo')} Return to lecturer${st.issues.length ? ` (${st.issues.length})` : ''}</button>
           <div class="row">${block ? `<span class="small muted">${block}</span>` : ''}<button class="btn primary big" data-a="pass" ${canPass ? '' : 'disabled'}>${round === 1 ? 'Pass to program →' : 'Approve ✓'}</button></div>
         </div>
         ${round === 1 ? '<div style="margin-top:8px"><button class="linkbtn small" data-a="decline">Can\'t review this? Decline, and the lecturer will choose someone else</button></div>' : ''}
       </div>
-      <div class="panel card">${renderPanel(s)}</div>
+      <div class="panel card">${renderPanel(s, round)}</div>
     </div>`;
 }
-function renderPanel(s) {
-  const id = S.panel || 'reg100';
+function renderPanel(s, round) {
+  const id = S.panel;
+  if (!id) return `<div style="text-align:center;padding:20px 6px">${ART.review}<h3 style="margin-top:8px">Evidence appears here</h3><p class="small muted">Click <b>Open evidence</b> on any item. "Verified" unlocks once you've looked.</p></div>`;
+  const k = rkey(s, round), ticks = S.rticks[k] || [];
   const compTable = `<table class="mini"><tr><th>From the uploaded score summary</th><th>%</th></tr>${COMPONENTS.map(c => `<tr><td>${c[0]}</td><td>${c[2]}</td></tr>`).join('')}<tr><td><b>Total</b></td><td><b>100</b></td></tr></table>`;
   const cutTable = `<table class="mini"><tr><th>Grade</th><th>Cutoff in the Grade Entry</th><th>TQF3</th></tr>${CUTOFFS.map(c => `<tr><td>${c[0]}</td><td>${c[1].toFixed(2)}</td><td>${c[1]}</td></tr>`).join('')}</table>`;
-  if (id === 'reg100' || id === 'policy' || id === 'align') {
-    const showA = id === 'reg100';
-    return `<h3>${showA ? 'REG screenshots' : 'Grading format vs TQF3'}</h3>
-      ${showA ? `<div class="small muted">A · Set a List of Score</div><img src="${s.shots.a}" alt="">
-      <div class="ticks small" style="margin:8px 0 14px">
-        <b>Check A</b>
-        <label><input type="checkbox"> Every row says <b>Show</b></label>
-        <label><input type="checkbox"> Grand Total Percent = <b>100.00</b></label>
-        <label><input type="checkbox"> Names and % match the score summary ↓ and TQF3</label>
-      </div>${compTable}<div style="height:14px"></div>` : ''}
-      <div class="small muted">B · Set a Grading Format</div><img src="${s.shots.b}" alt="">
-      <div class="ticks small" style="margin:8px 0">
-        <b>Check B</b>
-        <label><input type="checkbox"> Method is <b>FIX-Rate</b>, as stated in TQF3</label>
-        <label><input type="checkbox"> Cutoffs match TQF3 and the grade report ↓</label>
-      </div>${cutTable}
-      <div class="small" style="margin-top:8px"><a href="#" onclick="return false">Open TQF3 for ${s.code} ↗</a></div>
-      <p class="small muted">These ticks help you look. Your verdict is the button in the checklist.</p>`;
+  if (id === 'reg100') {
+    const lock = unlockState(s, round, 'reg100');
+    return `<div class="row" style="gap:10px">${ART.hundred}<div><h3 style="margin:0">REG screenshots</h3><div class="small muted">Read them. Don't just glance.</div></div></div>
+      <div class="small muted" style="margin-top:8px">A · Set a List of Score <span class="muted">(click to zoom)</span></div><img class="zoomable" data-a="zoom" src="${s.shots.a}" alt="Screenshot A">
+      <div class="lookbox" style="margin:10px 0">
+        <b class="t">${ic('eye')} What is the Grand Total <u>Percent</u> in screenshot A?</b>
+        <div class="gt"><input type="text" inputmode="decimal" placeholder="type it" data-a="gt" value="${esc(S.gt[k] || '')}"> <span class="small muted">Type what you see, not what it should be.</span></div>
+      </div>
+      ${compTable}
+      <div class="small muted" style="margin-top:12px">B · Set a Grading Format <span class="muted">(click to zoom)</span></div><img class="zoomable" data-a="zoom" src="${s.shots.b}" alt="Screenshot B">
+      ${cutTable}
+      <div class="ticks small" style="margin-top:10px"><b>Tick only what you checked:</b>
+        ${RTICKS.map((t, i) => `<label><input type="checkbox" data-a="rtick" data-v="${i}" ${ticks[i] ? 'checked' : ''}> <span>${t}</span></label>`).join('')}</div>
+      <div style="margin-top:8px">${lock.ok ? `<span class="unlocked">${ic('unlock')} ✓ Verified is unlocked</span>` : `<span class="lockmsg" style="${lock.bad ? 'color:var(--err)' : ''}">${ic('lock')} ${lock.why}</span>`}</div>
+      <div class="small" style="margin-top:8px"><a href="#" onclick="return false">Open TQF3 for ${s.code} ↗</a></div>`;
   }
+  if (id === 'policy' || id === 'align') {
+    return `<h3>Grading format vs TQF3</h3><div class="small muted">B · Set a Grading Format <span class="muted">(click to zoom)</span></div><img class="zoomable" data-a="zoom" src="${s.shots.b}" alt="Screenshot B">${cutTable}
+      ${s.answers.alignReason ? `<div class="quote" style="margin-top:10px"><b>Lecturer's reason:</b> ${esc(s.answers.alignReason)}</div>` : ''}
+      <div class="small" style="margin-top:8px"><a href="#" onclick="return false">Open TQF3 for ${s.code} ↗</a></div>`;
+  }
+  if (id === 'ack') return `<h3>The lecturer overrode a warning</h3><div class="quote">${esc(s.ack)}</div>
+      <table class="mini" style="margin-top:10px"><tr><th>Student ID</th><th>Total</th><th>Grade</th><th>Cutoff</th></tr><tr><td>6631402017</td><td><b>69.99</b></td><td>C+</td><td>B ≥ 70</td></tr></table>
+      <p class="small muted">Is the reason acceptable under the course's TQF3 policy?</p>`;
+  if (id === 'missing') return `<h3>Missing marks</h3><p class="small">Students with a blank component:</p><table class="mini"><tr><th>Student ID</th><th>Blank component</th><th>Grade</th></tr><tr><td>6631401012</td><td>Final</td><td>M</td></tr></table><p class="small muted">The lecturer says they told the students. You can ask for proof in a comment.</p>`;
   if (id === 'grade' || id === 'special') {
     return `<h3>Grade report</h3>
       <div class="small muted" style="margin-bottom:8px">${s.students} students · distribution</div>${bars(s)}
@@ -743,8 +923,59 @@ function renderPanel(s) {
         <tr><td>6631401012</td><td>—</td><td><b>M</b></td></tr><tr><td>6631401033</td><td>69.99</td><td>C+</td></tr>
         <tr><td colspan="3" class="muted">… ${s.students - 4} more</td></tr></table>`;
   }
+  if (id === 'course') return `<h3>Course details</h3><div class="kv small"><div>Course</div><div>${s.code} sec ${s.sec}</div><div>TQF3</div><div>tqf.mfu.ac.th/#/pdf/2569/1/${s.code}</div><div>Students</div><div>${s.students}</div></div>`;
   return `<h3>Score summary</h3>${compTable}<p class="small muted">Mean 68.4 · SD 11.2 · max 94.0 · min 12.5</p>`;
 }
+
+/* ------------------------------------------------------------------ confirmation modal (press and hold) */
+function renderModal() {
+  const m = S.modal; if (!m) return '';
+  const s = byId(m.sid);
+  let art = ART.review, title = '', sub = '', rows = [], label = '';
+  const r = (cls, icon, html) => `<div class="r ${cls}">${ic(icon)}<div>${html}</div></div>`;
+  if (m.kind === 'submit') {
+    const w = W(s), a = w.ans, gap = daysBetween(a.ann, a.dl);
+    art = ART.review; title = 'Ready to submit?'; sub = `${s.code} · ${esc(s.name)}`; label = 'Hold to submit';
+    rows = [r('good', 'check', `Grade report and score summary for <b>${s.students} students</b>`),
+      r('good', 'percent', 'Two REG screenshots, checked by you: <b>all items Show, total 100%</b>'),
+      r(w.c14 ? 'good' : 'warn', 'check', `Fixed: <b>F → M</b> for 2 students`),
+      r(w.c13 === 'keep' ? 'warn' : 'good', 'alert', w.c13 === 'keep' ? `Kept <b>69.99 as C+</b>. Your reason will be highlighted for reviewers.` : 'Borderline total changed in REG'),
+      r(gap >= 3 ? 'good' : 'warn', 'calendar', `Students had <b>${gap} days</b> to check their scores`),
+      r(a.align === 'No' ? 'warn' : 'good', 'clipboard', a.align === 'No' ? `Differs from TQF3: "${esc(a.alignReason)}"` : 'Matches TQF3'),
+      r('warn', 'doc', `<b>Bring ${paperNeeds(Object.assign({}, s, { mCount: w.c14 ? 2 : 0 })).length} paper documents</b> to the secretary`),
+      r('good', 'user', `Buddy: <b>${esc(pname(w.buddy))}</b>`)];
+  } else {
+    const round = m.kind === 'pass' ? 1 : m.kind === 'approve' ? 2 : S.role === 'buddy' ? 1 : 2;
+    const st = reviewStats(s, round), mine = st.mine;
+    const counts = { v: 0, n: 0 }; Object.values(mine).forEach(x => { if (x.v === 'verified') counts.v++; if (x.v === 'na') counts.n++; });
+    if (m.kind === 'return') {
+      art = ART.returned; title = `Return to the lecturer with ${st.issues.length} issue${st.issues.length > 1 ? 's' : ''}?`; sub = `${s.code} · ${esc(lecNames(s))} will be emailed`; label = 'Hold to return';
+      rows = st.issues.map(i => r('bad', 'x', `<b>${i.label}</b><br>"${esc(mine[i.id].note)}"`));
+    } else {
+      art = m.kind === 'approve' ? ART.approve : ART.review;
+      title = m.kind === 'approve' ? 'Approve this section?' : 'Pass to the program?';
+      sub = m.kind === 'approve' ? 'This is the last step in the system. Everything after it is manual.' : 'The SE program reviewer will check your work next.';
+      label = m.kind === 'approve' ? 'Hold to approve' : 'Hold to pass';
+      const seenN = Object.keys(S.seen[rkey(s, round)] || {}).length;
+      rows = [r('good', 'eye', `You opened the evidence for <b>${seenN} items</b>`),
+        parseFloat(S.gt[rkey(s, round)]) === 100 ? r('good', 'percent', 'REG 100%: you read Grand Total = <b>100</b> and ticked all 4 checks') : r('good', 'percent', 'REG 100% already verified in an earlier round'),
+        r('good', 'dice', `Spot-check done: <b>${st.spot.label}</b>`),
+        r('good', 'check', `<b>${counts.v}</b> verified · <b>${counts.n}</b> N/A · <b>0</b> issues`),
+        s.ack ? r('warn', 'alert', `You accepted the lecturer's override: "${esc(s.ack)}"`) : '',
+        r(paperDone(s) ? 'good' : 'warn', 'doc', paperDone(s) ? 'All paper documents received by the secretary' : 'Paper not all received yet')].filter(Boolean);
+    }
+  }
+  return `<div class="modal-bg" data-a="mbg"><div class="modal" role="dialog" aria-modal="true">
+    <div class="mh">${art}<div><h2>${title}</h2><div class="muted">${sub}</div></div></div>
+    <div class="recap">${rows.join('')}</div>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn" data-a="mcancel">Go back</button>
+      <button class="btn primary big hold" data-hold="1"><span class="fill"></span><span>${ic('hand')}</span><span>${label}</span></button>
+    </div>
+    <div class="hold-hint">Press and hold for about a second. This stops accidental clicks.</div>
+  </div></div>`;
+}
+
 function bars(s) {
   const g = s.grades, keys = Object.keys(g), max = Math.max(...keys.map(k => g[k]));
   return `<div class="bars">${keys.map(k => `<div class="b" style="height:${(g[k] / max) * 100}%"><span>${g[k]}</span></div>`).join('')}</div>
@@ -829,6 +1060,8 @@ function render() {
   if (S.view === 'course') app.innerHTML = renderCourse();
   else if (S.role === 'office' && S.view !== 'olist') app.innerHTML = renderOffice();
   else app.innerHTML = renderList();
+  app.insertAdjacentHTML('beforeend', renderModal());
+  if (S.zoom) app.insertAdjacentHTML('beforeend', `<div class="lightbox" data-a="unzoom"><div class="cap">Click anywhere or press Esc to close</div><img src="${S.zoom}" alt=""></div>`);
   bindDrop();
 }
 
@@ -851,7 +1084,7 @@ document.addEventListener('click', e => {
     case 'wnext': {
       const w = W(s);
       if (w.step < 5) { w.step++; render(); window.scrollTo(0, 0); }
-      else submit(s, w);
+      else { S.modal = { kind: 'submit', sid: s.id }; render(); }
       break;
     }
     case 'wback': W(s).step--; render(); break;
@@ -859,7 +1092,9 @@ document.addEventListener('click', e => {
     case 'rmfile': delete W(s).files[v]; render(); break;
     case 'box': S.activeBox = v; render(); document.querySelector(`.paste[data-v="${v}"]`)?.focus(); break;
     case 'sampleshot': W(s).shots[v] = v === 'a' ? SHOT_A : SHOT_B; S.activeBox = v === 'a' ? 'b' : 'a'; render(); break;
-    case 'clearshot': delete W(s).shots[v]; S.activeBox = v; render(); break;
+    case 'clearshot': delete W(s).shots[v]; W(s).shotChecks[v] = []; S.activeBox = v; render(); break;
+    case 'shotcheck': W(s).shotChecks[k][+v] = el.checked; render(); break;
+    case 'declare': W(s).declare = el.checked; render(); break;
     case 'fix14': W(s).c14 = true; toast('New grade report read: 2 × M'); render(); break;
     case 'c13': W(s).c13 = v; render(); break;
     case 'ans': W(s).ans[k] = v; render(); break;
@@ -875,6 +1110,7 @@ document.addEventListener('click', e => {
     }
     // review
     case 'verdict': {
+      if (el.disabled) break;
       const round = S.role === 'buddy' ? 1 : 2, m = round === 1 ? s.bv : s.pv;
       const prev = m[k] || {};
       m[k] = { v, note: v === 'issue' ? prev.note || '' : '', auto: false };
@@ -882,12 +1118,25 @@ document.addEventListener('click', e => {
       if (v === 'issue') document.querySelector(`input[data-a="note"][data-k="${k}"]`)?.focus();
       break;
     }
-    case 'panel': S.panel = v; render(); break;
+    case 'panel': { const round = S.role === 'buddy' ? 1 : 2, key = rkey(s, round); (S.seen[key] = S.seen[key] || {})[v] = true; S.panel = v; render();
+      if (window.innerWidth < 980) document.querySelector('.panel')?.scrollIntoView({ behavior: 'smooth' }); break; }
+    case 'rtick': { const key = rkey(s, S.role === 'buddy' ? 1 : 2); (S.rticks[key] = S.rticks[key] || [])[+v] = el.checked; render(); break; }
+    case 'showauto': { const key = rkey(s, S.role === 'buddy' ? 1 : 2); S.showAuto[key] = !S.showAuto[key]; render(); break; }
+    case 'flag': { const m = S.role === 'buddy' ? s.bv : s.pv; m[v] = { v: 'issue', note: '', auto: false }; render(); document.querySelector(`input[data-a="note"][data-k="${v}"]`)?.focus(); break; }
+    case 'unflag': { const m = S.role === 'buddy' ? s.bv : s.pv; if (S.role === 'buddy') m[v] = { v: 'verified', auto: true }; else delete m[v]; render(); break; }
+    case 'confirmrest': { const st = reviewStats(s, 2); st.autos.forEach(i => { if (!s.pv[i.id] || s.pv[i.id].auto) s.pv[i.id] = { v: 'verified', auto: true }; }); render(); toast('Pre-checked items confirmed'); break; }
+    case 'mcancel': S.modal = null; render(); break;
+    case 'zoom': e.stopPropagation(); S.zoom = el.getAttribute('src'); render(); break;
+    case 'unzoom': S.zoom = null; render(); break;
+    case 'noop2': break;
+    case 'mbg': if (e.target === el) { S.modal = null; render(); } break;
     case 'confirmauto': {
       ITEMS.filter(i => i.type === 'auto').forEach(i => { if ((s.bv[i.id] || {}).v === 'verified') s.pv[i.id] = { v: 'verified', auto: true }; });
       render(); toast('Auto-checked items confirmed. The judgment items are still yours to decide.'); break;
     }
-    case 'pass': {
+    case 'pass': S.modal = { kind: S.role === 'buddy' ? 'pass' : 'approve', sid: s.id }; render(); break;
+    case 'return': S.modal = { kind: 'return', sid: s.id }; render(); break;
+    case '__pass': {
       if (S.role === 'buddy') {
         s.status = 'program'; s.history.push({ t: 'today', x: `${pname(me())} verified every item and passed it to the program` });
         toast('Passed to the program reviewer'); go('list');
@@ -897,7 +1146,7 @@ document.addEventListener('click', e => {
       }
       break;
     }
-    case 'return': {
+    case '__return': {
       const round = S.role === 'buddy' ? 1 : 2, m = round === 1 ? s.bv : s.pv;
       s.issues = Object.entries(m).filter(([, x]) => x.v === 'issue').map(([item, x], n) => ({ id: n + 1, round, by: me(), item, text: x.note, open: true }));
       s.status = 'returned'; s.returnedBy = round;
@@ -934,6 +1183,31 @@ document.addEventListener('change', e => {
   if (a === 'dl') { S.deadlines[k] = el.value; toast('Deadline saved'); }
   if (a === 'reassign') { const x = byId(v); x.buddy = el.value; x.history.push({ t: 'today', x: `Office reassigned the buddy to ${pname(el.value)}` }); render(); toast('Buddy reassigned, and both lecturers told'); }
   if (el.id === 'filepick') addFiles(el.files);
+});
+let holdRaf = null;
+function holdStart(btn) {
+  const fill = btn.querySelector('.fill'), t0 = performance.now();
+  const step = t => { const p = Math.min(1, (t - t0) / 1000); fill.style.width = (p * 100) + '%';
+    if (p >= 1) { holdRaf = null; performModal(); } else holdRaf = requestAnimationFrame(step); };
+  holdRaf = requestAnimationFrame(step);
+}
+function holdCancel() { if (holdRaf) { cancelAnimationFrame(holdRaf); holdRaf = null; } document.querySelectorAll('.hold .fill').forEach(f => f.style.width = '0'); }
+document.addEventListener('pointerdown', e => { const b = e.target.closest('[data-hold]'); if (b) { e.preventDefault(); holdStart(b); } });
+['pointerup', 'pointerleave', 'pointercancel'].forEach(t => document.addEventListener(t, e => { if (holdRaf && (t !== 'pointerleave' || e.target.closest && e.target.closest('[data-hold]'))) holdCancel(); }, true));
+document.addEventListener('keydown', e => { const b = document.activeElement && document.activeElement.closest && document.activeElement.closest('[data-hold]'); if (b && (e.key === 'Enter' || e.key === ' ') && !e.repeat) { e.preventDefault(); holdStart(b); } if (e.key === 'Escape' && (S.modal || S.zoom)) { if (S.zoom) S.zoom = null; else S.modal = null; render(); } });
+document.addEventListener('keyup', e => { if (e.key === 'Enter' || e.key === ' ') holdCancel(); });
+function performModal() {
+  const m = S.modal; if (!m) return;
+  const s = byId(m.sid); S.modal = null;
+  if (m.kind === 'submit') return submit(s, W(s));
+  const fake = { closest: () => null, dataset: { a: m.kind === 'return' ? '__return' : '__pass' }, tagName: 'DIV' };
+  const btn = document.createElement('div'); btn.dataset.a = fake.dataset.a; btn.style.display = 'none'; document.body.appendChild(btn);
+  btn.dispatchEvent(new MouseEvent('click', { bubbles: true })); btn.remove();
+}
+document.addEventListener('input', e => {
+  const el = e.target; if (el.dataset.a !== 'gt') return;
+  const s = byId(S.id), key = rkey(s, S.role === 'buddy' ? 1 : 2); S.gt[key] = el.value;
+  const pos = el.selectionStart; render(); const n = document.querySelector('[data-a="gt"]'); if (n) { n.focus(); n.setSelectionRange(pos, pos); }
 });
 function submit(s, w) {
   s.status = 'buddy'; s.buddy = w.buddy; s.mCount = w.c14 ? 2 : 0;

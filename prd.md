@@ -400,6 +400,26 @@ The system must be usable by every lecturer, including those who rarely use web 
 - **FR-8.9** **Forgiving:** drafts save automatically. Re-uploading replaces the file and keeps the history. Nothing is lost by closing the browser.
 - **FR-8.10** **Usability acceptance test before the pilot:** 5 lecturers and 2 reviewers who have never seen the system complete submit, buddy review and program review **without help**. The median is 10 minutes or less for a submission and 5 minutes or less for a review. Every step where someone got stuck is fixed before launch.
 
+#### 6.8.1 Designed so people read, not click through
+
+A two-round review only helps if reviewers actually look. The UI makes the careful path the only path, and it makes the important things impossible to miss.
+
+- **FR-8.11** **Evidence before verdict.** On every judgment item, **✓ Verified** (and N/A) stay **locked** until the reviewer has opened that item's evidence. A pulsing **eye** button marks unopened evidence, and it turns green once opened. **✗ Issue** is always available.
+- **FR-8.12** **Read-back check on the REG screenshot.** To unlock Verified on the REG 100% item, the reviewer must:
+  - **type the Grand Total Percent they see** in screenshot A. If they type anything other than 100, the system tells them to mark it as an Issue.
+  - tick four specific checks: every row says Show · the names and % match the score summary · the method matches TQF3 · the cutoffs match TQF3 and the grade report.
+
+  Screenshots open **full size with one click**, so the numbers can actually be read.
+- **FR-8.13** **The lecturer checks their own screenshot, too.** After pasting each screenshot, the lecturer must tick what they can actually see, for example "every row says Show" and "Grand Total = 100.00", before **Next** unlocks. The snipping guide folds away once both are ticked.
+- **FR-8.14** **A random spot-check of the pre-checked items.** The system pre-checks the items it can verify automatically, and **picks one at random** for the reviewer to open and verify themselves. The program reviewer can only bulk-confirm the remaining pre-checked items **after** doing their own spot-check. The random choice changes between rounds.
+- **FR-8.15** **Unusual things first, and highlighted:**
+  - a **"Heads up" strip** at the top of the review lists anything out of the ordinary, with an icon: a warning the lecturer overrode, M grades in a course with no final exam, a lecturer answer of "No", an M count that means absence forms are due, and paper not yet received
+  - judgment items with something unusual are **sorted to the top** with an amber *Look closely* tag (e.g. "Lecturer overrode a warning", "Buddy raised an issue")
+- **FR-8.16** **No defaults on decisions.** Yes/No questions, the borderline-grade choice and every verdict start **empty**. Nothing is pre-selected for the user to accept by accident, and no decision is made on the user's behalf.
+- **FR-8.17** **Press and hold to finish.** Submit, Pass, Approve and Return open a **summary card** of what is about to happen (what was checked, what was overridden, what paper is outstanding). The action happens only after **pressing and holding** the button for about 1 second. This also works with the keyboard (hold Enter or Space), and Esc cancels.
+- **FR-8.18** **Progress you can see:** a bar with "*n* of *m* checks done", and a plain reason next to every disabled button, e.g. "Type the Grand Total % you see in screenshot A" or "Waiting for the secretary to receive the paper".
+- **FR-8.19** **Icons and artwork carry meaning, not decoration.** One consistent icon set: eye = look at evidence, lock = not yet unlocked, dice = spot-check, document = paper for the secretary, warning triangle = look closely. Small illustrations mark the key moments: snipping the REG pages, the 100% gauge, bringing paper to the secretary, returned for fixes, and approval. Colour is never the only signal: every state also has an icon and words.
+
 ### 6.9 Visibility: everything is open to all ADT lecturers
 
 - **FR-9.1** **Every signed-in ADT lecturer can view every section in every semester**, whether or not they teach it:
@@ -523,7 +543,7 @@ Signed documents stay on paper. The system tracks **whether they have been recei
 | Q12 | How many days does a buddy have to review? Suggested: 2 working days. | School office |
 | R1 | REG export formats may change without notice. Mitigation: versioned parsers, plus a manual column mapping as fallback. | Product |
 | R2 | The 100% evidence is a screenshot, which can be cropped, from the wrong section, or out of date. Mitigations: an example image, the screenshot shown next to the Grade Entry components, and required confirmation by both the buddy and the program. | Product |
-| R5 | Buddies may rubber-stamp by accepting auto-verified items without looking. Mitigations: judgment items can't be bulk-marked, a spot-check prompt, and reports comparing Round 2 findings with Round 1. | Product |
+| R5 | Buddies may rubber-stamp by accepting auto-verified items without looking. Mitigations (§6.8.1): evidence must be opened before Verified unlocks, the Grand Total must be typed in from the screenshot, a random spot-check, press-and-hold to finish, and reports comparing Round 2 findings with Round 1. | Product |
 | R6 | A buddy review adds a stage, which squeezes a tight deadline. Mitigations: a separate buddy deadline, reminders, a buddy can decline quickly, and the office can reassign. | School office |
 | R4 | If automatic screenshot reading is added later, its accuracy on Thai and English screenshots is uncertain. Mitigation: it would only assist, never block, and reviewers would still confirm by eye. | Product |
 | R3 | PDPA: **every ADT lecturer can see all students' grades and scores**, including students they don't teach, and the system also stores lecturer phone numbers. Mitigations:<br>• a DPO review of the open-visibility policy before the pilot, with the lawful purpose documented as academic quality assurance and peer review<br>• ADT staff only (FR-9.3)<br>• views and downloads are logged<br>• phone numbers are restricted (FR-9.4)<br>If the DPO requires it, fallback option: other lecturers see **student IDs masked** (e.g. 6531xxxx12) while everything else stays visible. | Product / DPO |
