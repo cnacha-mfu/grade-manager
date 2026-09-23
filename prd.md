@@ -94,6 +94,7 @@ The response data also has many **data-quality problems** that a structured syst
 - Replacing REG's Grade Entry or a lecturer's own calculation spreadsheet.
 - Handling student grade appeals.
 - Schools other than ADT, although the design should allow them later.
+- **Anything after program approval.** The system's job ends when the program approves a section. Everything after that is handled **manually, outside the system**: any school committee check, passing the paper documents on, and sending grades to the Registrar's Office.
 
 ## 4. Users and roles
 
@@ -104,8 +105,8 @@ The response data also has many **data-quality problems** that a structured syst
 | **Buddy reviewer** (Round 1) | A peer lecturer assigned to the section, not an instructor of it | Verify each checklist item against the evidence, raise issues, pass or return |
 | **Program reviewer** (Round 2) | Program chair or delegate for each ADT program | Confirm the buddy's verification item by item, raise issues, approve or return |
 | **School secretary** | ADT secretary who receives the paper documents | Mark each required paper document as **received** (or missing) for each section. Keep the physical file. |
-| **School committee** | ADT academic committee / Dean's office | Overview across programs. Receives the approved sections for sending to the Registrar (Q9). |
-| **School office (admin)** | ADT academic services staff | Set up the semester and courses, import rosters, set deadlines, send reminders, export for the Registrar |
+| **School committee** | ADT academic committee / Dean's office | View only, like every lecturer. Any later steps they take are manual, outside the system. |
+| **School office (admin)** | ADT academic services staff | Set up the semester and courses, import rosters, set deadlines, send reminders, export the approved list |
 | **System admin** | IT | Users, roles, integrations, backups |
 
 Sign-in uses MFU Google Workspace SSO (`@mfu.ac.th` only). In 2/2025 at least one lecturer submitted from a personal Gmail address, so the system should prevent that.
@@ -160,7 +161,7 @@ Roles decide only who can **change** things. **Every ADT lecturer can view every
 ### 5.4 School office
 1. Create the semester, for example 1/2569. Import the ADT course/section/lecturer list and the REG rosters. Set the deadlines for submission, buddy review and program review. **Assign buddies** (§6.5, FR-5.6).
 2. Monitor completion. Sections with no submission are visible from day one, instead of being found by hand.
-3. Send reminders. Export the package for the Registrar's Office.
+3. Send reminders. When a program approves a section, the system's work on it is done. The office exports the approved list and continues the rest of the process **manually**.
 
 ## 6. Functional requirements
 
@@ -289,7 +290,7 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
 | 18 | This class includes students absent from the final exam (M is given). | Yes / No | **Auto** | Detected from the grades. Checks C-14, C-15 and C-18. |
 | 19 | Grading policy: does the score summary align with the evaluation criteria in the course syllabus (TQF3)? If not, give the reason in "Other". | Yes / Other (reason) | Auto + Confirm | C-21. A reason is required when they differ, e.g. "changed due to learning activities". |
 | — | *(Review sheet)* Program Check | TRUE / FALSE | Workflow | Replaced by **Round 1 (buddy)** and **Round 2 (program)**, with a verdict for each item (§6.5). |
-| — | *(Review sheet)* School Check | TRUE / FALSE | Workflow | School committee sign-off before sending to the Registrar, if kept (Q9). |
+| — | *(Review sheet)* School Check | TRUE / FALSE | Not in system | Beyond program approval, so handled manually. The historical values are kept in the import (FR-4.2). |
 | — | *(Review sheet)* Comments / fix status | free text | Workflow | Issues on each item, with open/resolved status. |
 
 **Review verdicts for each item.** Every row above (#1–#19, #7a–#7c) has two review columns: **Buddy verdict** and **Program verdict**. Each is Verified / Issue (with a note) / N/A. The table below sets how each item is reviewed:
@@ -315,7 +316,7 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
   Draft → Submitted
         → Round 1: Buddy review ──(Issue)──→ Returned → Resubmitted → Round 1
         → Round 2: Program review ──(Issue)──→ Returned → Resubmitted → Round 2 (or Round 1, see Q10)
-        → Approved → [School sign-off, optional, Q9] → Sent to Registrar (locked)
+        → Program approved (locked). The system's scope ends here. Everything after is manual.
   ```
 - **FR-5.2** **Verification against the checklist:** each round stores a verdict for **every checklist item** (Verified / Issue / N/A), along with the reviewer, a timestamp, and a note that is required for Issue and N/A. A round can't be completed while any item has no verdict.
 - **FR-5.3** **Issues:** reviewers raise issues on a checklist item, an automatic check, a student row, or the whole section. Each issue stays open until the lecturer fixes it and **the reviewer who raised it** resolves it. This replaces the "Comments" and "แก้ไขแล้ว" ("fixed") cells.
@@ -335,7 +336,7 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
   - Assignments can be bulk-imported from a sheet.
   - Each buddy's workload is shown, and assignments can be changed while review is in progress.
   - Default: a buddy from the **same program**. The admin can change this.
-- **FR-5.7** A **review summary** is generated for each section: the checklist, both rounds' verdicts, and the issue history. It replaces the summary sheet reviewers receive today, and can be exported as PDF for the Registrar package.
+- **FR-5.7** A **review summary** is generated for each section: the checklist, both rounds' verdicts, and the issue history. It replaces the summary sheet reviewers receive today, and can be exported as PDF for the manual steps after approval.
 - **FR-5.8** Only an admin can reopen a locked section, and must record a reason, for example a grade change after an appeal.
 
 ### 6.6 Dashboards and exports
@@ -349,7 +350,7 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
   - the grade distribution for each course, compared with previous offerings
 - **FR-6.3** Exports:
   - a completion report (`.xlsx`)
-  - a Registrar package (a ZIP of the final files plus a summary)
+  - an **approved-sections list** (`.xlsx`) for the manual process after approval
   - a checklist export in the same column layout as the old response sheet, so it stays continuous with past records
 
 ### 6.7 Audit and records
@@ -488,9 +489,9 @@ Signed documents stay on paper. The system tracks **whether they have been recei
 | Q4 | What is the minimum review period between announcing scores and submitting grades? | Academic committee |
 | Q5 | Final rules for M, I, U and RESIGNED. For example: is M always wrong in a course with no final exam? Should I always have blank components? | Academic committee |
 | Q6 | Which courses have no final exam (TDS, projects, co-op)? This must be a flag on each section so that C-14 and C-15 can run. | Program chairs |
-| Q7 | Which paper documents does the secretary pass on to the Registrar's Office, and when? Should the system record that hand-over as well? | School office |
+| ~~Q7~~ | **Resolved:** the system doesn't track anything after program approval. Passing paper on and sending grades to the Registrar are manual. | — |
 | Q8 | Should borderline rounding (C-13) follow one ADT-wide rule, or each lecturer's policy? | Academic committee |
-| Q9 | Does the **school committee** still sign off after the two review rounds (the old "School Check" column)? Or is program approval final, with the school only overseeing? | Dean's office |
+| ~~Q9~~ | **Resolved:** program approval is the last step in the system. Any school-level check afterwards is manual. | — |
 | Q10 | After a Round 2 return and a fix, does the section go back to the buddy, or straight to the program? The proposed default is Round 2 only, unless the fix touches items beyond those the program raised. | Academic committee |
 | Q11 | How are buddies assigned: pairs within the same program, rotation, or across programs? How long does a buddy have to review? | Program chairs |
 | R1 | REG export formats may change without notice. Mitigation: versioned parsers, plus a manual column mapping as fallback. | Product |

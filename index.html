@@ -248,6 +248,7 @@
 <li>Replacing REG&#39;s Grade Entry or a lecturer&#39;s own calculation spreadsheet.</li>
 <li>Handling student grade appeals.</li>
 <li>Schools other than ADT, although the design should allow them later.</li>
+<li><strong>Anything after program approval.</strong> The system&#39;s job ends when the program approves a section. Everything after that is handled <strong>manually, outside the system</strong>: any school committee check, passing the paper documents on, and sending grades to the Registrar&#39;s Office.</li>
 </ul>
 <h2 id="s9">4. Users and roles</h2>
 <div class="table"><table>
@@ -286,12 +287,12 @@
 <tr>
 <td><strong>School committee</strong></td>
 <td>ADT academic committee / Dean&#39;s office</td>
-<td>Overview across programs. Receives the approved sections for sending to the Registrar (Q9).</td>
+<td>View only, like every lecturer. Any later steps they take are manual, outside the system.</td>
 </tr>
 <tr>
 <td><strong>School office (admin)</strong></td>
 <td>ADT academic services staff</td>
-<td>Set up the semester and courses, import rosters, set deadlines, send reminders, export for the Registrar</td>
+<td>Set up the semester and courses, import rosters, set deadlines, send reminders, export the approved list</td>
 </tr>
 <tr>
 <td><strong>System admin</strong></td>
@@ -370,7 +371,7 @@
 <ol>
 <li>Create the semester, for example 1/2569. Import the ADT course/section/lecturer list and the REG rosters. Set the deadlines for submission, buddy review and program review. <strong>Assign buddies</strong> (§6.5, FR-5.6).</li>
 <li>Monitor completion. Sections with no submission are visible from day one, instead of being found by hand.</li>
-<li>Send reminders. Export the package for the Registrar&#39;s Office.</li>
+<li>Send reminders. When a program approves a section, the system&#39;s work on it is done. The office exports the approved list and continues the rest of the process <strong>manually</strong>.</li>
 </ol>
 <h2 id="s15">6. Functional requirements</h2>
 <h3 id="s16">6.1 Uploads</h3>
@@ -776,8 +777,8 @@
 <td>—</td>
 <td><em>(Review sheet)</em> School Check</td>
 <td>TRUE / FALSE</td>
-<td>Workflow</td>
-<td>School committee sign-off before sending to the Registrar, if kept (Q9).</td>
+<td>Not in system</td>
+<td>Beyond program approval, so handled manually. The historical values are kept in the import (FR-4.2).</td>
 </tr>
 <tr>
 <td>—</td>
@@ -835,7 +836,7 @@
 <li><strong>FR-5.1</strong> Status flow:<pre><code>Draft → Submitted
       → Round 1: Buddy review ──(Issue)──→ Returned → Resubmitted → Round 1
       → Round 2: Program review ──(Issue)──→ Returned → Resubmitted → Round 2 (or Round 1, see Q10)
-      → Approved → [School sign-off, optional, Q9] → Sent to Registrar (locked)
+      → Program approved (locked). The system&#39;s scope ends here. Everything after is manual.
 </code></pre>
 </li>
 <li><strong>FR-5.2</strong> <strong>Verification against the checklist:</strong> each round stores a verdict for <strong>every checklist item</strong> (Verified / Issue / N/A), along with the reviewer, a timestamp, and a note that is required for Issue and N/A. A round can&#39;t be completed while any item has no verdict.</li>
@@ -862,7 +863,7 @@
 <li>Default: a buddy from the <strong>same program</strong>. The admin can change this.</li>
 </ul>
 </li>
-<li><strong>FR-5.7</strong> A <strong>review summary</strong> is generated for each section: the checklist, both rounds&#39; verdicts, and the issue history. It replaces the summary sheet reviewers receive today, and can be exported as PDF for the Registrar package.</li>
+<li><strong>FR-5.7</strong> A <strong>review summary</strong> is generated for each section: the checklist, both rounds&#39; verdicts, and the issue history. It replaces the summary sheet reviewers receive today, and can be exported as PDF for the manual steps after approval.</li>
 <li><strong>FR-5.8</strong> Only an admin can reopen a locked section, and must record a reason, for example a grade change after an appeal.</li>
 </ul>
 <h3 id="s21">6.6 Dashboards and exports</h3>
@@ -879,7 +880,7 @@
 </li>
 <li><strong>FR-6.3</strong> Exports:<ul>
 <li>a completion report (<code>.xlsx</code>)</li>
-<li>a Registrar package (a ZIP of the final files plus a summary)</li>
+<li>an <strong>approved-sections list</strong> (<code>.xlsx</code>) for the manual process after approval</li>
 <li>a checklist export in the same column layout as the old response sheet, so it stays continuous with past records</li>
 </ul>
 </li>
@@ -1180,9 +1181,9 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <td>Program chairs</td>
 </tr>
 <tr>
-<td>Q7</td>
-<td>Which paper documents does the secretary pass on to the Registrar&#39;s Office, and when? Should the system record that hand-over as well?</td>
-<td>School office</td>
+<td><del>Q7</del></td>
+<td><strong>Resolved:</strong> the system doesn&#39;t track anything after program approval. Passing paper on and sending grades to the Registrar are manual.</td>
+<td>—</td>
 </tr>
 <tr>
 <td>Q8</td>
@@ -1190,9 +1191,9 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 <td>Academic committee</td>
 </tr>
 <tr>
-<td>Q9</td>
-<td>Does the <strong>school committee</strong> still sign off after the two review rounds (the old &quot;School Check&quot; column)? Or is program approval final, with the school only overseeing?</td>
-<td>Dean&#39;s office</td>
+<td><del>Q9</del></td>
+<td><strong>Resolved:</strong> program approval is the last step in the system. Any school-level check afterwards is manual.</td>
+<td>—</td>
 </tr>
 <tr>
 <td>Q10</td>
