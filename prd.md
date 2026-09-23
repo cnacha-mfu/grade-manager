@@ -5,7 +5,7 @@
 | **Product** | ADT Grade Manager (working name) |
 | **Owner** | School of Applied Digital Technology (ADT), Mae Fah Luang University |
 | **Author** | nacha.cho@mfu.ac.th |
-| **Status** | Draft v0.2 |
+| **Status** | Draft v0.3 (open questions answered by the Acting Dean, 2026-09-23) |
 | **Last updated** | 2026-09-23 |
 | **Replaces** | Google Form "ADT Grade Submission" (`docs.google.com/forms/d/1Vp8lhabfDXFABCzy8axUCtqeegiq_6Mvmqmrv4W11wA`), its response Sheets, and the "School Check" sheet |
 
@@ -131,7 +131,7 @@ Roles decide only who can **change** things. **Every ADT lecturer can view every
 5. Fix the problems. Typically this means correcting the grades or criteria in REG, exporting again, and re-uploading. Warnings can also be **acknowledged with a reason**, for example "Criteria changed from TQF3 because of a change in learning activities".
 6. Complete the **checklist** (§6.4). Items the system has already verified are ticked, locked and linked to their evidence.
 7. Confirm that the paper documents have been, or will be, handed to the secretary. Their status shows as *Awaiting secretary* until the secretary marks them received.
-8. **Submit**. This is blocked while any error is open. The assigned **buddy** is notified.
+8. **Choose a buddy** (any ADT lecturer except yourself and your co-instructors) and **Submit**. Submitting is blocked while any error is open. The buddy is notified.
 9. If the section is returned in either round, the lecturer sees the issues one by one, fixes them, and resubmits. Every version is kept.
 
 ### 5.2 Round 1: buddy review
@@ -156,10 +156,10 @@ Roles decide only who can **change** things. **Every ADT lecturer can view every
    - the grade distribution, including I/M/W/RESIGNED counts
    - a comparison with previous offerings of the course
 3. For **every checklist item**, the reviewer **confirms** the buddy's verdict or marks an **Issue**. "Confirm all verified" is allowed only for items the system checked automatically. The judgment items (#7c/#10, #15, #19) must each be confirmed individually.
-4. **Approve**, or **Return to lecturer**. Approval is blocked until the secretary has marked every required paper document **received**. When a returned section is resubmitted, it goes back to **Round 2 only** if the fix affects only items the program raised, and to **Round 1** otherwise (configurable, Q10).
+4. **Approve**, or **Return to lecturer**. Approval is blocked until the secretary has marked every required paper document **received**. When a returned section is resubmitted, it goes **straight back to the program (Round 2)**. The only exception is when the fix changes items the buddy had already verified: those items go back to the buddy first.
 
 ### 5.4 School office
-1. Create the semester, for example 1/2569. Import the ADT course/section/lecturer list and the REG rosters. Set the deadlines for submission, buddy review and program review. **Assign buddies** (§6.5, FR-5.6).
+1. Create the semester, for example 1/2569. Import the ADT course/section/lecturer list and the REG rosters. Set the deadlines for submission, buddy review and program review. Lecturers choose their own buddies (FR-5.6).
 2. Monitor completion. Sections with no submission are visible from day one, instead of being found by hand.
 3. Send reminders. When a program approves a section, the system's work on it is done. The office exports the approved list and continues the rest of the process **manually**.
 
@@ -238,22 +238,23 @@ Severity levels:
 
 **Rule:** before grades are submitted, students must have been able to see their accumulated scores on REG for **every** evaluation component, adding up to **100%** of the course mark. They must also have been given a deadline to review and dispute them (*Grading Guideline*, steps 2–3).
 
-The current form only asks whether *some* results were shared ("I have shared some part of evaluation results to the students"). The *Grading Guideline* also advises lecturers to "consider disclosing less than 100%". This PRD **raises the requirement to 100%** (see Q3).
+The current form only asks whether *some* results were shared ("I have shared some part of evaluation results to the students"). The *Grading Guideline* also advises lecturers to "consider disclosing less than 100%". **Decision:** 100% is required. Every component must be announced before submission, and the *Grading Guideline* will be updated to match.
 
 **Constraint:** REG has no export or API that shows which score components have been announced to students. The **only evidence is a screenshot of the REG page** where the lecturer announces scores, as the current Google Form requires. The system is therefore built around that screenshot. Automated reading of it only assists the reviewer, whose confirmation is the final check.
 
-- **FR-3.1** **Required upload:** one or more screenshots (PNG or JPG, or a PDF) of the REG score-announcement page for the section. Together they must show every score component with its weight and its announced/published status. The system blocks submission until there is at least one screenshot.
-- **FR-3.2** **Upload guidance:** the upload screen shows an annotated example of the correct REG page and what must be visible (the course code and section, every component row, the weights, the announcement status, and ideally the date). It also warns about common mistakes, such as a cropped list, the wrong section, or only some of the components.
-- **FR-3.3** **Assisted reading (OCR):** the system tries to read the course code, section, component names, weights and announcement status from the screenshot, then pre-fills a summary for the reviewer:
-  - **R-1 (Warning):** the course code or section in the screenshot doesn't match the submission.
-  - **R-2 (Warning):** the announced weights read from the screenshot don't add up to **100%**.
-  - **R-3 (Warning):** a component in the Grade Entry criteria (from the uploaded score summary) doesn't appear as announced in the screenshot. For example, group or individual project marks are missing, as happened in 2/2025.
-  - If OCR can't read the screenshot, the section is marked "needs manual reading". This never blocks submission, because the reviewer checks it anyway.
+- **FR-3.1** **Required upload:** one or more screenshots (PNG or JPG, or a PDF) of the **REG Grade Entry score items page** for the section, which is the lecturer's page listing every score item with its weight and its announced status. Together they must show every score component with its weight and its announced/published status. The system blocks submission until there is at least one screenshot.
+- **FR-3.2** **Upload guidance:** the upload screen shows an annotated example of the Grade Entry score items page and what must be visible (the course code and section, every component row, the weights, the announcement status, and ideally the date). It also warns about common mistakes, such as a cropped list, the wrong section, or only some of the components.
+- **FR-3.3** **No automatic reading in v1: reviewers read the screenshot by eye.** So that this is quick, the review screen shows the screenshot **next to the list of components and weights from the uploaded Grade Entry** and a short checklist:
+  - the course code and section match
+  - the announced weights add up to **100%**
+  - every Grade Entry component is shown as announced, including group or individual project marks, which were missing in 2/2025
+
+  **No AI model and no API key are needed for v1.** Automatic screenshot reading (AI or OCR) is a possible later phase, if the pilot shows that reading by eye is slow. It would need DPO approval, because screenshots would be sent to an outside service.
 - **FR-3.4** **Lecturer declaration (Confirm):**
   - "All evaluation components, totalling 100%, are announced to students on REG, as shown in the attached screenshot."
-  - The **announcement date** and the **review/dispute deadline** given to students. The deadline must be before submission (Warning otherwise).
+  - The **announcement date** and the **review/dispute deadline** given to students. Students must have had **at least 3 days** between the announcement and the deadline, and the deadline must be before submission. The system warns otherwise.
   - "If there are any missing marks, I have already communicated with the students."
-- **FR-3.5** **Two-round confirmation (required):** in both rounds, the reviewer sees the screenshot next to the OCR summary and the Grade Entry criteria. The **buddy** must mark **"REG 100% announcement verified"** (or Issue), and the **program reviewer** must confirm it. Neither can pre-mark it automatically.
+- **FR-3.5** **Two-round confirmation (required):** in both rounds, the reviewer sees the screenshot next to the Grade Entry components and weights. The **buddy** must mark **"REG 100% announcement verified"** (or Issue), and the **program reviewer** must confirm it. Neither can pre-mark it automatically.
 - **FR-3.6** The dashboard shows a badge for each section: **REG 100%: Missing / Uploaded / Verified by buddy / Confirmed by program / Issue raised**.
 - **FR-3.7** Future: if REG ever provides an export or API for announcement status, it replaces the screenshot (Q2).
 
@@ -276,10 +277,10 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
 | 7 | Score summary (or Grade entry from REG) | *Grade entry from REG (with criteria details noted)* / *In custom spreadsheet* (either or both) | Upload + Auto | Parsed. Checks C-07 to C-10. The source type is recorded. |
 | 7a | *(2/2024 form)* URL link to the custom spreadsheet used to calculate scores (if any) | text | Upload (optional) | Upload the file itself instead of a link. |
 | 7b | *(2/2024 form)* Set list of scores (from REG, at the bottom of the Grade Entry Criterion page) | Yes | Upload | Supporting document. |
-| 7c | **Screenshot of the REG score-announcement page** (current form) | file | **Upload (required)** + Reviewer confirm | The REG 100% evidence (§6.3). Read by OCR to help the reviewer, then confirmed by the reviewer. |
+| 7c | **Screenshot of the REG score-announcement page** (to be added to the form) | file | **Upload (required)** + Reviewer confirm | The REG 100% evidence (§6.3). A screenshot of the Grade Entry score items page, read and confirmed by the buddy and the program. |
 | 8 | Exam's student list with signature for the final exam | Yes / blank | **Paper → secretary** | Required if the course has a final exam. The secretary marks it received. Not scanned. |
 | 9 | Student's Exam Absence form (if available) | Yes / No | **Paper → secretary** | Required for each M grade. The secretary marks how many were received against the M count (C-18). Not scanned. |
-| 10 | I have shared some part of the evaluation results with the students. | Yes / No | Confirm (stricter) + Reviewer confirm | Replaced by the **100% declaration** plus the screenshot (#7c). OCR-assisted and confirmed by the reviewer (§6.3). |
+| 10 | I have shared some part of the evaluation results with the students. | Yes / No | Confirm (stricter) + Reviewer confirm | Replaced by the **100% declaration** plus the screenshot (#7c). Confirmed by the buddy and the program (§6.3). |
 | 11 | If there are any missing marks, I have already communicated with the students. | Yes / No | Confirm | §6.3, R-6. Warning if the answer is No while I grades exist. |
 | 12 | I have signed the grade report. | Yes / No | **Paper → secretary** | The signed grade report is handed to the secretary, who marks it received. Not scanned. |
 | 13 | The score summary includes a total score of 100. | Yes / No | **Auto** | C-07, C-08. |
@@ -305,7 +306,7 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
 
 **Result:** 8 of the 16 self-declared Yes/No items (#6–#19) become fully or partly **automatic**. Three (#8, #9, #12) are confirmed by the **secretary's receipt of the paper document**. The REG 100% item (#10) is backed by a required screenshot and a reviewer's confirmation, and the only purely self-declared item left is #11.
 
-> Note: the Drive connector can't read the Google Form itself. This list is built from the column headers of the 1/2024, 2/2024 and 2/2025 response sheets. The linked form was edited on 2026-09-22, so any question added since 2/2025 (such as the screenshot upload) needs checking against the live form.
+> **Baseline (decided):** the **2/2025 form as-is**, plus the REG screenshot upload (#7c). The list was built from the column headers of the 2/2025 response sheet. The extra 2/2024 items (#7a, #7b) are kept as optional uploads.
 
 - **FR-4.1** Admins can edit the checklist for each semester (add, reorder, change type) without a code change. The version used is stored with each submission.
 - **FR-4.2** A one-time **import of past response sheets** (2/2024, 1/2024 and 2/2025), including the Program Check / School Check / Comments columns, so reports cover earlier semesters.
@@ -315,7 +316,8 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
   ```
   Draft → Submitted
         → Round 1: Buddy review ──(Issue)──→ Returned → Resubmitted → Round 1
-        → Round 2: Program review ──(Issue)──→ Returned → Resubmitted → Round 2 (or Round 1, see Q10)
+        → Round 2: Program review ──(Issue)──→ Returned → Resubmitted → Round 2
+                                     (items the buddy had verified and the fix changed go back to the buddy first)
         → Program approved (locked). The system's scope ends here. Everything after is manual.
   ```
 - **FR-5.2** **Verification against the checklist:** each round stores a verdict for **every checklist item** (Verified / Issue / N/A), along with the reviewer, a timestamp, and a note that is required for Issue and N/A. A round can't be completed while any item has no verdict.
@@ -331,11 +333,11 @@ Every question of the **2/2025 ADT Grade Submission form** is kept, in its origi
   - on return and on new issues (to the lecturer)
   - on approval
   - deadline reminders for each stage (T-3 days, T-1 day, overdue)
-- **FR-5.6** **Buddy assignment:**
-  - The office or the program chair assigns a buddy to each section, either one by one or by rule. Rules include reciprocal pairs, a rotation within the program, or buddies across programs.
-  - Assignments can be bulk-imported from a sheet.
-  - Each buddy's workload is shown, and assignments can be changed while review is in progress.
-  - Default: a buddy from the **same program**. The admin can change this.
+- **FR-5.6** **The lecturer chooses their buddy when submitting:**
+  - The Submit step has a single "Choose your buddy" box, which searches **any ADT lecturer**. It excludes the lecturer themselves and anyone teaching the section.
+  - Beside each name, the box shows how many sections that person already has waiting, so lecturers can spread the load.
+  - The buddy is notified, and can **accept** or **decline**. If they decline, the section returns to the lecturer, who chooses someone else.
+  - The office can see every pairing and can step in if needed, for example when a buddy is unavailable. No up-front assignment is needed.
 - **FR-5.7** A **review summary** is generated for each section: the checklist, both rounds' verdicts, and the issue history. It replaces the summary sheet reviewers receive today, and can be exported as PDF for the manual steps after approval.
 - **FR-5.8** Only an admin can reopen a locked section, and must record a reason, for example a grade change after an appeal.
 
@@ -396,7 +398,8 @@ The system must be usable by every lecturer, including those who rarely use web 
   | Round 2 verdicts, approve or return | The program reviewer |
   | Comment on any section (without a verdict) | Any ADT lecturer |
   | Mark paper documents received or missing | School secretary |
-  | Setup, buddy assignment, reopen, exports | Office / admin |
+  | Choose the buddy | The section's lecturer (at submission) |
+  | Setup, reassign a buddy if needed, reopen, exports | Office / admin |
 
 - **FR-9.3** **Access is limited to ADT staff.** Viewing requires MFU SSO *and* membership of the ADT staff list maintained by the office. Students and staff outside ADT have no access.
 - **FR-9.4** **Personal contact data isn't part of the "open" set.** Lecturer phone numbers are visible only to the office and to the section's reviewers.
@@ -409,7 +412,7 @@ Signed documents stay on paper. The system tracks **whether they have been recei
 
   | Document | Required when |
   |---|---|
-  | Signed final-exam name list | The section has a final exam (set per section, Q6) |
+  | Signed final-exam name list | The section has a final exam (flag set by the office, FR-10.7) |
   | Student Exam Absence form | Once for each student with an **M** grade (count taken from the grade report) |
   | Signed grade report | Always |
 
@@ -418,6 +421,7 @@ Signed documents stay on paper. The system tracks **whether they have been recei
 - **FR-10.4** The secretary can search by course code or lecturer, so they can tick everything a lecturer hands in at the counter at once.
 - **FR-10.5** A buddy can review before the paper arrives. **Program approval is blocked** until every required paper document is *Received*.
 - **FR-10.6** No scan or photo of a paper document is stored anywhere in the system. The physical file stays with the secretary.
+- **FR-10.7** **The "has a final exam" flag is set by the office** for each section, when the course list is imported each semester. It is used by C-14, C-15 and FR-10.1. Lecturers can see it, and can ask the office to correct it.
 
 ## 7. Non-functional requirements
 
@@ -437,7 +441,7 @@ Signed documents stay on paper. The system tracks **whether they have been recei
 - **Program → Course → Section**: lecturers, roster, whether the course has a final exam, REG criteria, TQF3 plan.
 - **Student**: ID and name. **Enrollment** links a student to a section.
 - **Submission → Version**: the files, parsed rows, validation results, REG announcement evidence, checklist answers and acknowledgements.
-- **BuddyAssignment**: section, buddy, assigned by, and when.
+- **BuddyAssignment**: section, buddy, chosen by (the lecturer), when, and accepted or declined.
 - **ReviewRound**: round (1 = buddy, 2 = program), reviewer, version reviewed, started and completed times, outcome (passed/approved or returned).
 - **ItemVerdict**: review round, checklist item, verdict (Verified / Issue / N/A), whether it was set automatically, and a note.
 - **PaperDocument**: section, type (exam list / absence form / signed grade report), number required, number received, status, received by, and when.
@@ -472,34 +476,36 @@ Signed documents stay on paper. The system tracks **whether they have been recei
 
 | Phase | Scope | Timing (proposed) |
 |---|---|---|
-| **0: Discovery** | Collect sample REG exports (Grade report, Grade Entry) and **10 or more sample screenshots of the REG announcement page** for the OCR and the example image. Confirm the rules for I, M and RESIGNED with the committee. Interview 3–5 lecturers and reviewers. | Oct 2026 |
-| **1: MVP** | Uploads and parsers, checks C-01 to C-19, REG screenshot evidence, the migrated checklist, buddy assignment, the **two-round review (buddy → program)** with a verdict on each item, the dashboard | Nov 2026 |
+| **0: Discovery** | Collect sample REG exports (Grade report, Grade Entry) and **10 or more sample screenshots of the REG Grade Entry score items page** for the example image. Update the *Grading Guideline* to require 100% announcement. Interview 3–5 lecturers and reviewers. | Oct 2026 |
+| **1: MVP** | Uploads and parsers, checks C-01 to C-19, REG screenshot evidence (read by eye, no AI), the migrated checklist, buddy chosen by the lecturer, the **two-round review (buddy → program)** with a verdict on each item, the dashboard | Nov 2026 |
 | **2: Pilot** | Semester 1/2569 (grades due early Dec 2026), 1–2 programs, with the Google Form kept as backup | Dec 2026 |
 | **3: School-wide** | All ADT programs for semester 2/2569 (May 2027). Retire the Google Form and the printed checklist. Import historical responses. | May 2027 |
-| **4: Enhancements** | Automating C-21 against TQF3, REG API integration, appeals | Ongoing |
+| **4: Enhancements** | Automating C-21 against TQF3, REG API integration, optional automatic reading of the REG screenshot (AI or OCR, after DPO approval), appeals | Ongoing |
 
 ## 12. Open questions and risks
 
 | # | Item | Owner |
 |---|---|---|
-| Q1 | The linked form ("ADT Grade Submission 1-2024", edited 2026-09-22) and the 2/2025 form have different question sets. Which version is the current baseline for 1/2569? | School office |
+| ~~Q1~~ | **Resolved:** the baseline is the 2/2025 form as-is, plus the REG screenshot upload. | — |
 | Q2 | Can REG export the Grade report and Grade Entry criteria in a stable format? Could it ever expose the announcement status, so the screenshot is no longer needed? | IT / REG office |
-| Q2b | Which REG page, exactly, is the required screenshot of, and what must be visible in it? This defines the example image in FR-3.2 and the OCR layout. | School office |
-| Q3 | **Policy change:** the new system requires **100%** of accumulated marks to be announced, but the current *Grading Guideline* suggests disclosing less than 100%. Does the committee approve this change, and will the guideline be updated? | Academic committee |
-| Q4 | What is the minimum review period between announcing scores and submitting grades? | Academic committee |
-| Q5 | Final rules for M, I, U and RESIGNED. For example: is M always wrong in a course with no final exam? Should I always have blank components? | Academic committee |
-| Q6 | Which courses have no final exam (TDS, projects, co-op)? This must be a flag on each section so that C-14 and C-15 can run. | Program chairs |
+| ~~Q2b~~ | **Resolved:** the lecturer's **REG Grade Entry score items page**, showing every score item with its weight and announced status. | — |
+| ~~Q3~~ | **Resolved:** 100% announcement is required, and the *Grading Guideline* will be updated. | — |
+| ~~Q4~~ | **Resolved:** at least **3 days** between the announcement and the students' dispute deadline, with the deadline before submission. | — |
+| ~~Q5~~ | **Resolved:** follow the *Grading Guideline* as it is. **M** means absent from the final exam, and is only used in courses with a final. **I** means missing work with no contact from the student, and the incomplete score fields are left blank. Courses with no final never use M. | — |
+| ~~Q6~~ | **Resolved:** the **office** sets the "has a final exam" flag for each section when it imports the course list (FR-10.7). | — |
 | ~~Q7~~ | **Resolved:** the system doesn't track anything after program approval. Passing paper on and sending grades to the Registrar are manual. | — |
-| Q8 | Should borderline rounding (C-13) follow one ADT-wide rule, or each lecturer's policy? | Academic committee |
+| ~~Q8~~ | **Resolved:** there is no ADT-wide rule. The system warns on borderline totals, and the **lecturer decides and confirms**. | — |
 | ~~Q9~~ | **Resolved:** program approval is the last step in the system. Any school-level check afterwards is manual. | — |
-| Q10 | After a Round 2 return and a fix, does the section go back to the buddy, or straight to the program? The proposed default is Round 2 only, unless the fix touches items beyond those the program raised. | Academic committee |
-| Q11 | How are buddies assigned: pairs within the same program, rotation, or across programs? How long does a buddy have to review? | Program chairs |
+| ~~Q10~~ | **Resolved:** the section goes back to the **program**. Items the buddy had verified and the fix changed go back to the buddy first. | — |
+| ~~Q11~~ | **Resolved:** the **lecturer chooses** any ADT lecturer as buddy when submitting. The buddy can decline. | — |
+| Q12 | How many days does a buddy have to review? Suggested: 2 working days. | School office |
 | R1 | REG export formats may change without notice. Mitigation: versioned parsers, plus a manual column mapping as fallback. | Product |
-| R2 | The 100% evidence is a screenshot, which can be cropped, from the wrong section, or out of date. Mitigations: an example image, OCR cross-checks against the course code and Grade Entry, and a required reviewer confirmation. | Product |
+| R2 | The 100% evidence is a screenshot, which can be cropped, from the wrong section, or out of date. Mitigations: an example image, the screenshot shown next to the Grade Entry components, and required confirmation by both the buddy and the program. | Product |
 | R5 | Buddies may rubber-stamp by accepting auto-verified items without looking. Mitigations: judgment items can't be bulk-marked, a spot-check prompt, and reports comparing Round 2 findings with Round 1. | Product |
-| R6 | A buddy review adds a stage, which squeezes a tight deadline. Mitigations: a separate buddy deadline, reminders, and buddies can be reassigned. | School office |
-| R4 | OCR accuracy on REG screenshots (Thai and English text, varying resolutions). Mitigation: OCR only assists and never blocks; falls back to reading by hand. | Product |
+| R6 | A buddy review adds a stage, which squeezes a tight deadline. Mitigations: a separate buddy deadline, reminders, a buddy can decline quickly, and the office can reassign. | School office |
+| R4 | If automatic screenshot reading is added later, its accuracy on Thai and English screenshots is uncertain. Mitigation: it would only assist, never block, and reviewers would still confirm by eye. | Product |
 | R3 | PDPA: **every ADT lecturer can see all students' grades and scores**, including students they don't teach, and the system also stores lecturer phone numbers. Mitigations:<br>• a DPO review of the open-visibility policy before the pilot, with the lawful purpose documented as academic quality assurance and peer review<br>• ADT staff only (FR-9.3)<br>• views and downloads are logged<br>• phone numbers are restricted (FR-9.4)<br>If the DPO requires it, fallback option: other lecturers see **student IDs masked** (e.g. 6531xxxx12) while everything else stays visible. | Product / DPO |
+| R8 | When lecturers choose their own buddy, friends may review each other lightly. Mitigations: the program still verifies every judgment item one by one, and reports compare what Round 2 found with Round 1 for each buddy. | Dean's office |
 | R7 | Open visibility may make some lecturers uncomfortable, for example about their grade distributions being compared. Mitigations: communicate that the purpose is shared quality and peer learning, not ranking, and don't build a lecturer leaderboard. | Dean's office |
 
 ## 13. Future ideas
