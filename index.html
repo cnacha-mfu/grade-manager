@@ -43,6 +43,7 @@
   th, td { border: 1px solid var(--line); padding: 7px 10px; vertical-align: top; text-align: left; }
   th { background: var(--th); font-weight: 600; }
   li { margin: 3px 0; }
+  main img { max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; margin: 8px 0; }
   .loading { color: var(--muted); }
   @media (max-width: 900px) {
     .wrap { grid-template-columns: 1fr; gap: 16px; padding: 24px 16px; }
@@ -64,7 +65,7 @@
 <a class="h3" href="#s8">Non-goals (v1)</a>
 <a class="h2" href="#s9">4. Users and roles</a>
 <a class="h2" href="#s10">5. User journeys</a>
-<a class="h3" href="#s11">5.1 Lecturer: submit grades</a>
+<a class="h3" href="#s11">5.1 Lecturer: submit grades (a 5-step wizard)</a>
 <a class="h3" href="#s12">5.2 Round 1: buddy review</a>
 <a class="h3" href="#s13">5.3 Round 2: program review</a>
 <a class="h3" href="#s14">5.4 School office</a>
@@ -303,38 +304,43 @@
 <p>Sign-in uses MFU Google Workspace SSO (<code>@mfu.ac.th</code> only). In 2/2025 at least one lecturer submitted from a personal Gmail address, so the system should prevent that.</p>
 <p>Roles decide only who can <strong>change</strong> things. <strong>Every ADT lecturer can view everything</strong> (§6.9).</p>
 <h2 id="s10">5. User journeys</h2>
-<h3 id="s11">5.1 Lecturer: submit grades</h3>
-<ol>
-<li><p>Sign in with MFU SSO. The <strong>course list</strong> opens, filtered to <strong>My courses</strong>, showing each section&#39;s status and deadline. Clearing the filter shows every ADT section (§6.9).</p>
-</li>
-<li><p>Open a section. Course code, course name, section, credits, the enrolled roster and the <strong>TQF3 link</strong> (<code>https://tqf.mfu.ac.th/#/pdf/{year}/{semester}/{course}</code>) are generated and filled in automatically.</p>
-</li>
-<li><p>Upload the <strong>digital</strong> files. Nothing is scanned.</p>
-<ul>
-<li><strong>Grade report</strong> (from REG)</li>
-<li><strong>Score summary</strong>: either the REG Grade Entry export with criteria details, or a custom spreadsheet</li>
-<li><strong>Screenshot of the REG score-announcement page</strong>, showing that every component, 100% in total, is announced to students. This is the evidence for the 100% announcement (§6.3).</li>
-</ul>
-<p><strong>Hand the paper documents to the secretary</strong> (§6.10). Don&#39;t scan them. The course page lists which ones the section needs:</p>
-<ul>
-<li>the <strong>signed final-exam name list</strong> (if there was a final exam)</li>
-<li>the <strong>Student Exam Absence forms</strong> (one for each M grade)</li>
-<li>the <strong>signed grade report</strong></li>
-</ul>
-</li>
-<li><p>The system parses the files and shows the <strong>validation report</strong> (§6.2): blocking errors, warnings, and info items.</p>
-</li>
-<li><p>Fix the problems. Typically this means correcting the grades or criteria in REG, exporting again, and re-uploading. Warnings can also be <strong>acknowledged with a reason</strong>, for example &quot;Criteria changed from TQF3 because of a change in learning activities&quot;.</p>
-</li>
-<li><p>Complete the <strong>checklist</strong> (§6.4). Items the system has already verified are ticked, locked and linked to their evidence.</p>
-</li>
-<li><p>Confirm that the paper documents have been, or will be, handed to the secretary. Their status shows as <em>Awaiting secretary</em> until the secretary marks them received.</p>
-</li>
-<li><p><strong>Choose a buddy</strong> (any ADT lecturer except yourself and your co-instructors) and <strong>Submit</strong>. Submitting is blocked while any error is open. The buddy is notified.</p>
-</li>
-<li><p>If the section is returned in either round, the lecturer sees the issues one by one, fixes them, and resubmits. Every version is kept.</p>
-</li>
-</ol>
+<h3 id="s11">5.1 Lecturer: submit grades (a 5-step wizard)</h3>
+<p>Sign in with MFU SSO. The <strong>course list</strong> opens, filtered to <strong>My courses</strong>. Clearing the filter shows every ADT section (§6.9). Clicking a course starts or resumes the <strong>submission wizard</strong>. There is one step per screen, with <strong>Back / Next</strong> buttons and a progress bar, and each step asks for one thing (§6.8):</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What the lecturer does</th>
+<th>What the system does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. Check course</strong></td>
+<td>Glances at the pre-filled course code, name, section, lecturers and TQF3 link, then clicks <strong>Next</strong>.</td>
+<td>Fills everything in from the imported course list. Nothing is typed.</td>
+</tr>
+<tr>
+<td><strong>2. Upload REG files</strong></td>
+<td>Drags in the <strong>grade report</strong> and the <strong>score summary</strong> (the REG Grade Entry export or their own spreadsheet).</td>
+<td>Detects the file types and runs the checks (§6.2) straight away.</td>
+</tr>
+<tr>
+<td><strong>3. Paste two REG screenshots</strong></td>
+<td>Follows the on-screen guide (§6.3.1), snips two REG pages with the Snipping Tool, and <strong>pastes</strong> each one with <strong>Ctrl+V</strong> into its box:<br><strong>(A) Set a List of Score</strong> and <strong>(B) Set a Grading Format</strong>.</td>
+<td>Shows the example image next to each box, with &quot;make sure you can see…&quot; hints.</td>
+</tr>
+<tr>
+<td><strong>4. Fix problems</strong></td>
+<td>Sees only the problems, each written in plain language with the fix, e.g. &quot;3 students have F but no final exam score. Change to M in REG.&quot; Fixes them in REG and re-uploads, or explains a warning in one sentence.</td>
+<td>Re-runs the checks on every upload. Skips this step entirely if there&#39;s nothing to fix.</td>
+</tr>
+<tr>
+<td><strong>5. Confirm &amp; submit</strong></td>
+<td>Answers the few checklist questions the system can&#39;t check itself (§6.4). Enters the announcement date and the students&#39; dispute deadline. Sees the <strong>&quot;Give to secretary&quot;</strong> list of paper documents (§6.10). <strong>Chooses a buddy</strong>, then clicks <strong>Submit</strong>.</td>
+<td>Blocks Submit while any error is open. Notifies the buddy.</td>
+</tr>
+</tbody></table></div>
+<p>The wizard saves after every step, so the lecturer can close it and come back. If a section is returned in either round, the wizard reopens at the step that has the issue, and the issues are listed one by one. Every version is kept.</p>
 <h3 id="s12">5.2 Round 1: buddy review</h3>
 <ol>
 <li>The buddy opens the course list with the <strong>To review as buddy</strong> filter (or follows the link in the email), and sees their assigned sections with the review deadlines.</li>
@@ -573,19 +579,45 @@
 <h3 id="s18">6.3 REG 100% score announcement verification</h3>
 <p><strong>Rule:</strong> before grades are submitted, students must have been able to see their accumulated scores on REG for <strong>every</strong> evaluation component, adding up to <strong>100%</strong> of the course mark. They must also have been given a deadline to review and dispute them (<em>Grading Guideline</em>, steps 2–3).</p>
 <p>The current form only asks whether <em>some</em> results were shared (&quot;I have shared some part of evaluation results to the students&quot;). The <em>Grading Guideline</em> also advises lecturers to &quot;consider disclosing less than 100%&quot;. <strong>Decision:</strong> 100% is required. Every component must be announced before submission, and the <em>Grading Guideline</em> will be updated to match.</p>
-<p><strong>Constraint:</strong> REG has no export or API that shows which score components have been announced to students. The <strong>only evidence is a screenshot of the REG page</strong> where the lecturer announces scores, as the current Google Form requires. The system is therefore built around that screenshot. Automated reading of it only assists the reviewer, whose confirmation is the final check.</p>
+<p><strong>Constraint:</strong> REG has no export or API that shows which score components are announced to students. The <strong>only evidence is screenshots of two REG pages</strong>, captured by the lecturer with the Windows <strong>Snipping Tool</strong> and pasted in. No AI or OCR is used in v1. Reviewers read the screenshots by eye.</p>
+<h4>6.3.1 The two required screenshots</h4>
+<p><strong>(A) &quot;Set a List of Score&quot;</strong>: proves that 100% was announced.</p>
+<p><img src="img/reg-list-of-score.jpg" alt="Sample: REG &quot;Set a List of Score&quot; page"></p>
+<p>What must be visible, and what the reviewers check:</p>
 <ul>
-<li><p><strong>FR-3.1</strong> <strong>Required upload:</strong> one or more screenshots (PNG or JPG, or a PDF) of the <strong>REG Grade Entry score items page</strong> for the section, which is the lecturer&#39;s page listing every score item with its weight and its announced status. Together they must show every score component with its weight and its announced/published status. The system blocks submission until there is at least one screenshot.</p>
-</li>
-<li><p><strong>FR-3.2</strong> <strong>Upload guidance:</strong> the upload screen shows an annotated example of the Grade Entry score items page and what must be visible (the course code and section, every component row, the weights, the announcement status, and ideally the date). It also warns about common mistakes, such as a cropped list, the wrong section, or only some of the components.</p>
-</li>
-<li><p><strong>FR-3.3</strong> <strong>No automatic reading in v1: reviewers read the screenshot by eye.</strong> So that this is quick, the review screen shows the screenshot <strong>next to the list of components and weights from the uploaded Grade Entry</strong> and a short checklist:</p>
-<ul>
-<li>the course code and section match</li>
-<li>the announced weights add up to <strong>100%</strong></li>
-<li>every Grade Entry component is shown as announced, including group or individual project marks, which were missing in 2/2025</li>
+<li><strong>every row</strong> of the table, with the List Name, Raw Score, <strong>Display Status</strong>, <strong>Percent</strong> and Responsible Instructor columns</li>
+<li><strong>Display Status = &quot;Show&quot; on every row.</strong> A single &quot;Hide&quot; means the 100% rule is not met.</li>
+<li>the <strong>Grand Total row</strong>, with <strong>Percent = 100.00</strong>. REG allows at most 10 score items, and the percentages must total 100 before REG lets the lecturer continue.</li>
+<li>the list names match the evaluation components in TQF3 and in the uploaded score summary, including group and individual project marks, which were missing in 2/2025</li>
 </ul>
-<p><strong>No AI model and no API key are needed for v1.</strong> Automatic screenshot reading (AI or OCR) is a possible later phase, if the pilot shows that reading by eye is slow. It would need DPO approval, because screenshots would be sent to an outside service.</p>
+<p><strong>(B) &quot;Set a Grading Format&quot;</strong>: shows the grade cutoffs REG uses.</p>
+<p><img src="img/reg-grading-format.png" alt="Sample: REG &quot;Set a Grading Format&quot; page"></p>
+<p>What must be visible, and what the reviewers check:</p>
+<ul>
+<li><p>the <strong>Grade Format</strong>, <strong>Lowest Grade</strong> and <strong>Highest Grade</strong>, and which method is selected: <strong>FIX-Rate</strong>, <strong>T-Score</strong> or <strong>MEAN-SD</strong></p>
+</li>
+<li><p>the <strong>whole cutoff table</strong> (A … F)</p>
+</li>
+<li><p>for FIX-Rate, the cutoffs match the grading policy in TQF3 (checklist #15 and #19). For T-Score or MEAN-SD, the method matches what TQF3 states.</p>
+</li>
+<li><p>the cutoffs match the ones the grade report was calculated with. The system shows the cutoffs it found in the uploaded Grade Entry next to the screenshot (C-11, C-21).</p>
+</li>
+<li><p><strong>FR-3.1</strong> <strong>Both screenshots are required.</strong> Submit is blocked until box (A) and box (B) each contain an image. Each box accepts <strong>paste from the clipboard (Ctrl+V)</strong>, drag-and-drop, or file select. PNG and JPG are accepted. More than one image per box is allowed, for example if the list of scores needs scrolling.</p>
+</li>
+<li><p><strong>FR-3.2</strong> <strong>Built-in snipping guide</strong> next to each box, visible without clicking:</p>
+<ol>
+<li>Open REG → <strong>Grade Entry</strong> → your course and section → the <strong>Set a List of Score</strong> page (or <strong>Set a Grading Format</strong>).</li>
+<li>Press <strong>Windows + Shift + S</strong> (Snipping Tool), then drag a rectangle <strong>around the whole table</strong>, including the header row and the Grand Total row. On a Mac, press <strong>Cmd + Ctrl + Shift + 4</strong>.</li>
+<li>Come back and press <strong>Ctrl + V</strong> in the box. The snip is copied automatically, so there&#39;s no need to save a file.</li>
+</ol>
+<p>Under the steps, the <strong>sample image</strong> (above) is shown with the must-see parts highlighted: Display Status, Percent, Grand Total, and the cutoff table. Three &quot;Don&#39;t&quot; thumbnails follow: a table cut off at the right so the Display Status or Percent columns are missing, the Grand Total row missing, and a row showing &quot;Hide&quot;.</p>
+</li>
+<li><p><strong>FR-3.3</strong> <strong>No automatic reading in v1.</strong> The review screen shows each screenshot <strong>large, next to what the system knows</strong>: the components and weights from the uploaded score summary for (A), and the cutoffs from the Grade Entry for (B). A tick list for the reviewer sits beside them:</p>
+<ul>
+<li>(A): every row is &quot;Show&quot; · Grand Total Percent = 100.00 · the names match the score summary and TQF3</li>
+<li>(B): the method is right · the cutoffs match TQF3 · the cutoffs match the grade report</li>
+</ul>
+<p><strong>No AI model and no API key are needed for v1.</strong> Automatic reading is a possible later phase (§11), and would need DPO approval.</p>
 </li>
 <li><p><strong>FR-3.4</strong> <strong>Lecturer declaration (Confirm):</strong></p>
 <ul>
@@ -594,7 +626,7 @@
 <li>&quot;If there are any missing marks, I have already communicated with the students.&quot;</li>
 </ul>
 </li>
-<li><p><strong>FR-3.5</strong> <strong>Two-round confirmation (required):</strong> in both rounds, the reviewer sees the screenshot next to the Grade Entry components and weights. The <strong>buddy</strong> must mark <strong>&quot;REG 100% announcement verified&quot;</strong> (or Issue), and the <strong>program reviewer</strong> must confirm it. Neither can pre-mark it automatically.</p>
+<li><p><strong>FR-3.5</strong> <strong>Two-round confirmation (required):</strong> in both rounds, the reviewer sees both screenshots next to the Grade Entry components, weights and cutoffs, with the tick list from FR-3.3. The <strong>buddy</strong> must mark <strong>&quot;REG 100% announcement verified&quot;</strong> (or Issue), and the <strong>program reviewer</strong> must confirm it. Neither can pre-mark it automatically.</p>
 </li>
 <li><p><strong>FR-3.6</strong> The dashboard shows a badge for each section: <strong>REG 100%: Missing / Uploaded / Verified by buddy / Confirmed by program / Issue raised</strong>.</p>
 </li>
@@ -684,10 +716,10 @@
 </tr>
 <tr>
 <td>7c</td>
-<td><strong>Screenshot of the REG score-announcement page</strong> (to be added to the form)</td>
-<td>file</td>
-<td><strong>Upload (required)</strong> + Reviewer confirm</td>
-<td>The REG 100% evidence (§6.3). A screenshot of the Grade Entry score items page, read and confirmed by the buddy and the program.</td>
+<td><strong>Screenshots of the REG &quot;Set a List of Score&quot; and &quot;Set a Grading Format&quot; pages</strong> (to be added to the form)</td>
+<td>image</td>
+<td><strong>Paste (required)</strong> + Reviewer confirm</td>
+<td>The REG 100% evidence and the cutoff evidence (§6.3.1). Both are checked by eye by the buddy and the program.</td>
 </tr>
 <tr>
 <td>8</td>
@@ -903,13 +935,13 @@
 <ul>
 <li><strong>FR-8.1</strong> <strong>Three screens in total:</strong><ol>
 <li><strong>Course list</strong>: everyone, every section (FR-6.1).</li>
-<li><strong>Course page</strong>: one page per section with everything about it (files, checks, checklist, reviews, issues, history).</li>
+<li><strong>Course page</strong>: one page per section. It opens as the <strong>submission wizard</strong> for the section&#39;s lecturer until submitted, and otherwise shows everything about the section (files, checks, checklist, reviews, issues, history).</li>
 <li><strong>Admin</strong>: office only.
-There are no other screens, pop-up wizards or separate dashboards.</li>
+There are no other screens, pop-ups or separate dashboards. The wizard is part of the course page.</li>
 </ol>
 </li>
-<li><strong>FR-8.2</strong> <strong>The course page is one vertical page with three numbered steps:</strong> <strong>① Upload → ② Fix → ③ Submit</strong>. Each step shows a clear state (done / needs attention / not started), and the page always shows <strong>one obvious next action</strong> as the only primary button: <em>Upload files</em>, <em>Fix 3 problems</em>, <em>Submit</em>, <em>Review</em>, <em>Approve</em>.</li>
-<li><strong>FR-8.3</strong> <strong>Upload is drag-and-drop into one box.</strong> The system detects each file&#39;s type (grade report, score summary, REG screenshot) and asks only when it can&#39;t tell. Paper documents never appear as uploads. They appear as a short &quot;Give to secretary&quot; list with tick marks. Nothing is typed that the system already knows (FR-1, §6.4 Prefill).</li>
+<li><strong>FR-8.2</strong> <strong>Submission is a 5-step wizard</strong> (§5.1): <strong>① Check course → ② Upload REG files → ③ Paste screenshots → ④ Fix problems → ⑤ Confirm &amp; submit</strong>. Each step is one screen asking for one thing, with a progress bar, <strong>Back / Next</strong>, and one primary button. Step ④ is skipped when there is nothing to fix. When the wizard is finished, the course page shows the section&#39;s status, its review rounds and its history.</li>
+<li><strong>FR-8.3</strong> <strong>Uploading is effortless.</strong> Files are dragged into one box, and the system works out which is the grade report and which is the score summary. Screenshots are <strong>pasted with Ctrl+V</strong> straight from the Snipping Tool, with the guide and sample image beside each box (FR-3.2). Nothing is typed that the system already knows. Paper documents never appear as uploads. They appear as a short &quot;Give to secretary&quot; list.</li>
 <li><strong>FR-8.4</strong> <strong>Problems are written in plain language, with the fix</strong>, for example &quot;3 students have F but no final exam score. They were probably absent: change to M in REG.&quot; Error codes (C-xx) are hidden from lecturers and shown only in a details view for reviewers and admins.</li>
 <li><strong>FR-8.5</strong> <strong>The checklist and the review use the same table.</strong> One row per item, with at most three buttons per row: <strong>✓ Verified</strong>, <strong>✗ Issue</strong>, <strong>N/A</strong>. The evidence opens in a side panel without leaving the page. A buddy or program reviewer sees exactly what the lecturer saw, with their own column added.</li>
 <li><strong>FR-8.6</strong> <strong>Five statuses everywhere</strong>, shown as coloured labels with text: <em>Not submitted · With buddy · With program · Returned · Approved</em>. The same words are used in the list, the page and the emails.</li>
@@ -1171,7 +1203,7 @@ There are no other screens, pop-up wizards or separate dashboards.</li>
 </tr>
 <tr>
 <td><del>Q2b</del></td>
-<td><strong>Resolved:</strong> the lecturer&#39;s <strong>REG Grade Entry score items page</strong>, showing every score item with its weight and announced status.</td>
+<td><strong>Resolved:</strong> two Snipping Tool screenshots, of the REG <strong>Set a List of Score</strong> page and the <strong>Set a Grading Format</strong> page (§6.3.1, with samples).</td>
 <td>—</td>
 </tr>
 <tr>
